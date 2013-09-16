@@ -23,6 +23,38 @@
 				popup.style.display = state;
 				popupWrapper.style.display = state;
 			}
+			
+			function checkDrag(event)
+			{
+				event.preventDefault();
+			}
+			
+			function doDrop(event)
+			{
+				var id = event.dataTransfer.getData("Text");
+				var stripped = id.split("-");
+				if(stripped[0] == "item"){
+					console.log(event.target.nodeName);
+					var li = document.createElement('li');
+					var item = document.createTextNode(document.getElementById(id).innerHTML);
+					li.appendChild(item);
+					if(event.target.nodeName == "LI"){
+						event.target.parentNode.appendChild(li);
+					}
+					else if(event.target.nodeName == "UL"){
+						event.target.appendChild(li);
+					}
+				}
+				else if(stripped[0] == "user"){
+					console.log("user");
+					//event.target.appendChild(document.getElementById(id));
+				}
+				event.preventDefault();
+			}
+			
+			function drag(event){
+				event.dataTransfer.setData("Text",event.target.id);
+			}
 		</script>
 	</head>
 	
@@ -36,11 +68,78 @@
 				?>
 				<br />
 				<div style="text-align: left;" class="featured-node-copy">
-					<?php 
-					print($run->getName());
-					print("<br>");
-					print($run->getTime());
-					?>
+					<table style="width: 100%;">
+						<thead>
+							<tr>
+								<td colspan="2" style="font-size: 14px; font-weight: bold;">
+								<?php 
+								print($run->getName());
+								print(" -- ");
+								print($run->getTime());
+								?>
+								</td>
+							</tr>
+						</thead>
+						<tbody>
+							<tr>
+								<td>
+									<span style="font-size: 12px; font-weight: bold;">Participants</span>
+									<ul style="padding-left: 20px;">
+										<?php
+										foreach($run->getParticipants() as $participant){
+											?>
+											<li><?php print($participant->getName());?></li>
+										<?php
+										}
+										?>
+									</ul>
+									<br />
+									<br />
+								</td>
+								<td>
+									<?php 
+									foreach($userList as $user){
+										print("<span id='user-". $user->getId() ."' draggable=true ondragstart='drag(event)'>");
+										print($user->getName());
+										print("</span>");
+										print("<br >");
+									} 
+									?>
+								</td>
+							</tr>
+							<tr>
+								<td colspan="2">
+									<hr />
+								</td>
+							</tr>
+							<tr>
+								<td/>
+									<span style="font-size: 12px; font-weight: bold;">drops</span>
+									<ul style="padding-left: 20px;min-height: 20px;" ondragover="return checkDrag(event)" ondrop="doDrop(event)">
+										<?php
+										foreach($run->getDrops() as $drop){
+											?>
+											<li><?php print($drop->getName()); ?></li>
+										<?php
+										}
+										?>
+									</ul>
+									<br />
+									<br />
+								</td>
+								<td>
+									<?php 
+									foreach($itemList as $item){
+										print("<span id='item-". $item->getId() ."' draggable=true ondragstart='drag(event)'>");
+										print($item->getName());
+										print("</span>");
+										print("<br >");
+									} 
+									?>
+								</td>
+							</tr>
+						</tbody>
+					</table>
 				</div>
 				<br />
 				<br />

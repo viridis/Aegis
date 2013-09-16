@@ -1,6 +1,9 @@
 <?php
 require_once("../service/page.service.php");
 require_once("../service/runs.service.php");
+require_once("../service/items.service.php");
+require_once("../service/users.service.php");
+
 
 
 
@@ -24,6 +27,10 @@ if(isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["runName"]) &&
 $editing = 0;
 if(isset($_GET["editrun"]) && is_numeric($_GET["editrun"])){
 	$run = $runservice->getRunById($_GET["editrun"]);
+	$itemservice = new itemservice();
+	$itemList = $itemservice->listAllItems();
+	$userservice = new userservice();
+	$userList = $userservice->listAllUsers();
 	$editing = 1;
 }
 
