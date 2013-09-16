@@ -2,7 +2,6 @@
 require_once("../data/dbconfig.DAO.php");
 require_once("../class/events.class.php");
 require_once("../class/drop.class.php");
-require_once("../class/user.class.php");
 require_once("../class/participant.class.php");
 
 class EVENTDAO{

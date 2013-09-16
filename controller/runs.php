@@ -21,9 +21,10 @@ if(isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["runName"]) &&
 	}
 	
 }
-
+$editing = 0;
 if(isset($_GET["editrun"]) && is_numeric($_GET["editrun"])){
-	$runinfo = $runservice->getRunById($_GET["editrun"]);
+	$run = $runservice->getRunById($_GET["editrun"]);
+	$editing = 1;
 }
 
 $eventlist = $runservice->listAllEvents();

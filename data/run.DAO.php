@@ -1,6 +1,8 @@
 <?php
 require_once("../data/dbconfig.DAO.php");
 require_once("../class/events.class.php");
+require_once("../class/drop.class.php");
+require_once("../class/participant.class.php");
 
 class RUNDAO{
 	public function getAllEvents(){
@@ -44,8 +46,8 @@ class RUNDAO{
 	}
 	
 	public function getRunById($id){
-		$result = array();
-		$sqldrops = "SELECT  
+		$result;
+		$sqldrops = "select
 					events.id AS eventID,
 					events.name AS eventName,
 					events.time AS eventTime,
@@ -56,19 +58,21 @@ class RUNDAO{
 					items.name AS itemName,
 					items.talonID AS itemTalonID,
 					table2.totalValue as totalValue
-					FROM events, drops, items, (
-							SELECT drops.runID, SUM(drops.value) AS totalValue
-							FROM  drops 
-							GROUP BY drops.runID 
-						) as table2
-					WHERE 
-					events.id = drops.runID AND 
-					drops.itemID = items.id AND
-					table2.runID = events.id AND
+					FROM events events
+					left JOIN drops drops
+						ON events.id = drops.runID
+					left JOIN items items
+						ON drops.itemID = items.id
+					left join (SELECT drops.runID, SUM(drops.value) AS totalValue
+								FROM  drops 
+								GROUP BY drops.runID 
+								) as table2
+						ON drops.runID = table2.runID
+					WHERE
 					events.id = ". $id ."
 					ORDER BY events.time DESC, items.name ASC;";
 				
-		$sqlparticipants = "SELECT
+		$sqlparticipants = "select
 							events.id AS eventID,
 							events.name AS eventName,
 							events.time AS eventTime,
@@ -79,15 +83,16 @@ class RUNDAO{
 							participants.id AS participantID,
 							participants.paidOut AS participantsPaidOut,
 							table2.totalParticipants AS totalParticipants
-							FROM events, participants, users, (
-									SELECT participants.runID, count(participants.userID) AS totalParticipants
-									FROM participants
-									GROUP BY participants.runID
-								) AS table2
+							FROM events events
+							left JOIN participants participants
+								ON events.id = participants.runID
+							left JOIN users users
+								ON participants.userID = users.id
+							left join (SELECT participants.runID, count(participants.userID) AS totalParticipants
+										FROM participants
+										GROUP BY participants.runID) table2
+								ON participants.runID = table2.runID
 							WHERE
-							events.id = participants.runID AND 
-							participants.userID = users.id AND
-							table2.runID = events.id AND
 							events.id = ". $id ."
 							ORDER BY events.time DESC, users.name ASC;";
 
@@ -96,17 +101,21 @@ class RUNDAO{
 		$resultSet2 = $dbh->query($sqlparticipants);
 		foreach ($resultSet1 as $row){
 			$event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
-			$drop = DROP::create($row["dropID"], $row["itemName"], $row["itemTalonID"], $row["dropValue"]);
-			$event->setTotalValue($row["totalValue"]);
-			$event->appendDrop($drop);
-			$result[$row["eventID"]] = $event;
+			if(isset($row["dropID"])){
+				$drop = DROP::create($row["dropID"], $row["itemName"], $row["itemTalonID"], $row["dropValue"]);
+				$event->setTotalValue($row["totalValue"]);
+				$event->appendDrop($drop);
+			}
+			$result = $event;
 		}
 		foreach($resultSet2 as $row){
 			$event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
-			$participant = PARTICIPANT::create($row["participantID"], $row["userID"], $row["userName"], $row["userMailname"], $row["participantsPaidOut"]);
-			$event->setTotalParticipants($row["totalParticipants"]);
-			$event->appendParticipant($participant);
-			$result[$row["eventID"]] = $event;
+			if(isset($row["participantID"])){
+				$participant = PARTICIPANT::create($row["participantID"], $row["userID"], $row["userName"], $row["userMailname"], $row["participantsPaidOut"]);
+				$event->setTotalParticipants($row["totalParticipants"]);
+				$event->appendParticipant($participant);
+			}
+			$result = $event;
 		}
 		return $result;
 	}

@@ -15,7 +15,7 @@ class runservice{
 	}
 	
 	public function getRunById($id){
-		$rundao = new RUNDAO();
+	$rundao = new RUNDAO();
 		$run = $rundao->getRunById($id);
 		return $run;
 	}

@@ -87,6 +87,15 @@ a, a:hover{
 	background: rgb(215, 180, 135); /* Fall-back for browsers that don't support rgba */
     background: rgba(215, 180, 135, .3);
 }
+.featured-node-copy{
+	text-align:justify;
+	text-justify:kashida;
+	padding: 5px;
+	border-radius: 5px;
+	border: 1px solid #4A0317;
+	background: rgb(215, 180, 135); /* Fall-back for browsers that don't support rgba */
+    background: rgba(215, 180, 135, .3);
+}
 
 input{
 	border-radius: 6px;

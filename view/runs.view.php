@@ -34,9 +34,16 @@
 			<?php 
 			if($editing == 1){
 				?>
-				<div>
-				
+				<br />
+				<div style="text-align: left;" class="featured-node-copy">
+					<?php 
+					print($run->getName());
+					print("<br>");
+					print($run->getTime());
+					?>
 				</div>
+				<br />
+				<br />
 				<?php
 			}
 			?>
@@ -74,7 +81,7 @@
 								</a>
 							</td>
 							<td style="padding: 2px 5px;"><?php print($event->getTime());?></td>
-						</tr>									
+						</tr>
 						<?php
 					}
 					?>
