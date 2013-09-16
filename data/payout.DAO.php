@@ -1,7 +1,5 @@
 <?php
 require_once("../data/dbconfig.DAO.php");
-require_once("../class/user.class.php");
-require_once("../class/payout.class.php");
 require_once("../class/events.class.php");
 
 class PAYOUTDAO{
