@@ -8,6 +8,7 @@ class EVENT{
 	private $participants = array();
 	private $drops = array();
 	private $totalValue;
+	private $totalParticipants;
 	
 	function __construct($id, $name, $time, $description){
 		$this->id = $id;
@@ -44,6 +45,9 @@ class EVENT{
 	public function getTotalValue(){
 		return $this->totalValue;
 	}
+	public function getTotalParticipants(){
+		return $this->totalParticipants;
+	}
 	
 	public function setID($id){
 		$this->id = $id;
@@ -67,11 +71,13 @@ class EVENT{
 		//Keep Unique DROPIDs
 		if(!isset($this->drops[$item->getDropID()])){
 			$this->drops[$item->getDropID()] = $item;
-			$this->totalValue += $item->getDropValue();
 		}
 	}
 	public function setTotalValue($totalValue){
 		$this->totalValue = $totalValue;
+	}
+	public function setTotalParticipants($totalParticipants){
+		$this->totalParticipants = $totalParticipants;
 	}
 }
 

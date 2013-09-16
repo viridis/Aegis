@@ -9,7 +9,7 @@ class PAYOUTDAO{
 		$userList = array();
 		foreach($eventList as $event){
 			$eventTotalWorth = $event->getTotalValue();
-			$totalParticipants = count($event->getParticipants())+1; //+1 = guild bank share.
+			$totalParticipants = $event->getTotalParticipants()+1; //+1 = guild bank share.
 			foreach($event->getParticipants() as $participant){
 				$paidOut = $participant->getPaidOut();
 				$toBePaid = floor($eventTotalWorth / $totalParticipants) - $paidOut;
@@ -32,7 +32,7 @@ class PAYOUTDAO{
 		foreach($eventList as $event){
 			if($event->getTotalValue() > 0){
 				$eventTotalWorth = $event->getTotalValue();
-				$totalParticipants = count($event->getParticipants())+1; //+1 = guild bank share.
+				$totalParticipants = $event->getTotalParticipants()+1; //+1 = guild bank share.
 				$sql .= "UPDATE  `aegis`.`participants` SET  `paidOut` =  '". floor($eventTotalWorth / $totalParticipants) ."' WHERE  `participants`.`runID` = ". $event->getID() ." AND `participants`.`userID` = ". $id ."; ";
 			}
 		}

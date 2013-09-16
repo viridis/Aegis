@@ -13,5 +13,11 @@ class runservice{
 		$run = $rundao->addRun($name, $date);
 		return $run;
 	}
+	
+	public function getRunById($id){
+		$rundao = new RUNDAO();
+		$run = $rundao->getRunById($id);
+		return $run;
+	}
 }
 ?>

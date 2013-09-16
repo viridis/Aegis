@@ -7,7 +7,7 @@ require_once("../service/items.service.php");
 $pageservice = new PAGESERVICE();
 $currentPageID = "Manage Items";
 $navbarlinks = $pageservice->generateNavLinks();
-$usefulllinks = $pageservice->generateUsefullLinks(5);
+$usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
 $itemservice = new itemservice();

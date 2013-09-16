@@ -42,6 +42,25 @@ class RUNDAO{
 			// }
 		// }
 	}
+	
+	public function getRunById($id){
+		$result = array();
+		$sql = "SELECT 
+				events.id AS eventID,
+				events.name AS eventName,
+				events.time AS eventTime,
+				events.description AS eventDesc
+				FROM events
+				ORDER BY events.time DESC;";
+
+		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+		$resultset = $dbh->query($sql);
+		foreach ($resultset as $row){
+			$event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
+			$result[$row["eventID"]] = $event;
+		}
+		return $result;
+	}
 }
 
 ?>

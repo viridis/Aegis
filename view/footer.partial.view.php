@@ -22,7 +22,7 @@
 				</div>
 				
 				<div class="footer-featured">
-					<h6>Usefull Links</h6>
+					<h6>Useful Links</h6>
 					<ul>
 					<?php
 						for($i=0; $i<count($usefulllinks); $i++){

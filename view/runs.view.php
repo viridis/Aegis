@@ -30,7 +30,17 @@
 		<?php include('navbar.partial.view.php') ?>
 		
 		<div class="content" style="text-align: center;">
-		
+			
+			<?php 
+			if($editing == 1){
+				?>
+				<div>
+				
+				</div>
+				<?php
+			}
+			?>
+			
 			<div class="popupWrapper" id="popupWrapper">
 				<div class="popup" id="popAddRun">
 				<h1 id="closePopUp" style="position: relative; float: right; margin-top: -40px; color: #FFF; background: #000;">[x]CLOSE</h1>
