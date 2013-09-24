@@ -24,36 +24,94 @@
 				popupWrapper.style.display = state;
 			}
 			
-			function checkDrag(event)
+			function DragOver(event)
 			{
 				event.preventDefault();
+				if(event.target.nodeName == "LI"){
+					event.target.parentNode.style.background ="#8C2B2B";
+				}
+				else if(event.target.nodeName == "UL"){
+					event.target.style.background ="#8C2B2B";
+				}
+			}
+			
+			function DragLeave(event)
+			{
+				event.preventDefault();
+				if(event.target.nodeName == "LI"){
+					event.target.parentNode.style.background ="";
+				}
+				else if(event.target.nodeName == "UL"){
+					event.target.style.background ="";
+				}
 			}
 			
 			function doDrop(event)
 			{
 				var id = event.dataTransfer.getData("Text");
 				var stripped = id.split("-");
-				if(stripped[0] == "item"){
-					console.log(event.target.nodeName);
-					var li = document.createElement('li');
-					var item = document.createTextNode(document.getElementById(id).innerHTML);
-					li.appendChild(item);
-					if(event.target.nodeName == "LI"){
-						event.target.parentNode.appendChild(li);
-					}
-					else if(event.target.nodeName == "UL"){
-						event.target.appendChild(li);
-					}
+				if(event.target.nodeName == "LI"){
+					var UnorderedList = event.target.parentNode;
 				}
-				else if(stripped[0] == "user"){
-					console.log("user");
-					//event.target.appendChild(document.getElementById(id));
+				else if(event.target.nodeName == "UL"){
+					var UnorderedList = event.target;
+				}
+				if(stripped[0] == UnorderedList.id){ //check if dragging in the right section
+					var li = document.createElement('li');
+					var text = document.getElementById(id).innerHTML.replace(/\s+/g, '');
+					var item = document.createTextNode(text);
+					li.appendChild(item);
+					UnorderedList.appendChild(li);
+					UnorderedList.style.background ="";
+					makeRequest("runs.php?testing=test&lala=1234");
+				}
+				else if (stripped[0] != UnorderedList.id) {
+					UnorderedList.style.background ="";
 				}
 				event.preventDefault();
 			}
 			
 			function drag(event){
 				event.dataTransfer.setData("Text",event.target.id);
+			}
+
+			function makeRequest(url) {
+				var httpRequest;
+				if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+					httpRequest = new XMLHttpRequest();
+				}
+				else if (window.ActiveXObject) { // IE
+					try {
+						httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+					} 
+					catch (e) {
+						try {
+						httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+						} 
+						catch (e) {}
+					}
+				}
+
+				if (!httpRequest) {
+					alert('Giving up :( Cannot create an XMLHTTP instance');
+					return false;
+				}
+				httpRequest.onreadystatechange = function(){
+					serverResponse(httpRequest);
+				};
+				httpRequest.open('POST', url);
+				httpRequest.send();
+			}
+			
+			function serverResponse(httpRequest) {
+				if (httpRequest.readyState === 4) {
+					if (httpRequest.status === 200) {
+						alert(httpRequest.responseText);
+					} 
+					else {
+						alert('There was a problem with the request.');
+					}
+				}
 			}
 		</script>
 	</head>
@@ -82,9 +140,9 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td>
+								<td style="width: 15%; min-width: 220px;">
 									<span style="font-size: 12px; font-weight: bold;">Participants</span>
-									<ul style="padding-left: 20px;">
+									<ul id="users" class="dropable_lists" ondragover="DragOver(event)" ondragleave="DragLeave(event)" ondrop="doDrop(event)">
 										<?php
 										foreach($run->getParticipants() as $participant){
 											?>
@@ -99,7 +157,7 @@
 								<td>
 									<?php 
 									foreach($userList as $user){
-										print("<span id='user-". $user->getId() ."' draggable=true ondragstart='drag(event)'>");
+										print("<span id='users-". $user->getId() ."' draggable=true ondragstart='drag(event)'>");
 										print($user->getName());
 										print("</span>");
 										print("<br >");
@@ -113,9 +171,9 @@
 								</td>
 							</tr>
 							<tr>
-								<td/>
+								<td style="width: 15%; min-width: 220px;">
 									<span style="font-size: 12px; font-weight: bold;">drops</span>
-									<ul style="padding-left: 20px;min-height: 20px;" ondragover="return checkDrag(event)" ondrop="doDrop(event)">
+									<ul id="items" class="dropable_lists" ondragover="DragOver(event)" ondragleave="DragLeave(event)" ondrop="doDrop(event)">
 										<?php
 										foreach($run->getDrops() as $drop){
 											?>
@@ -130,7 +188,7 @@
 								<td>
 									<?php 
 									foreach($itemList as $item){
-										print("<span id='item-". $item->getId() ."' draggable=true ondragstart='drag(event)'>");
+										print("<span id='items-". $item->getId() ."' draggable=true ondragstart='drag(event)'>");
 										print($item->getName());
 										print("</span>");
 										print("<br >");

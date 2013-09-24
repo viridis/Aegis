@@ -24,6 +24,9 @@ if(isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["runName"]) &&
 	}
 	
 }
+if(isset($_POST["testing"])){
+	return $_POST;
+}
 $editing = 0;
 if(isset($_GET["editrun"]) && is_numeric($_GET["editrun"])){
 	$run = $runservice->getRunById($_GET["editrun"]);

@@ -240,6 +240,12 @@ h6{
 	margin-top: 250px;
 	z-index:-1;
 }
+.dropable_lists{
+	padding-left: 20px;
+	min-height: 20px;
+	max-width: 200px;
+	width: 100%;
+}
 .color1{
 	margin: 5px;
 	height: 100px;
