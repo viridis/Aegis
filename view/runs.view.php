@@ -24,58 +24,114 @@
 				popupWrapper.style.display = state;
 			}
 			
+			<?php if($editing == 1){ ?>
 			function DragOver(event)
 			{
+				var id = event.dataTransfer.getData("Text");
+				var stripped = id.split("_");
 				event.preventDefault();
 				if(event.target.nodeName == "LI"){
-					event.target.parentNode.style.background ="#8C2B2B";
+					event.target.parentNode.parentNode.style.background ="#6AA121";
 				}
 				else if(event.target.nodeName == "UL"){
-					event.target.style.background ="#8C2B2B";
+					event.target.parentNode.style.background ="#6AA121";
 				}
+                else if(event.target.nodeName == "IMG"){
+                    event.target.parentNode.style.background ="#8C2B2B";
+                }
+                else{
+                    event.target.style.background ="#8C2B2B";
+                }
 			}
 			
 			function DragLeave(event)
 			{
 				event.preventDefault();
-				if(event.target.nodeName == "LI"){
+				if(event.target.nodeName == "UL"){
 					event.target.parentNode.style.background ="";
 				}
-				else if(event.target.nodeName == "UL"){
+				else if(event.target.nodeName == "LI"){
+					event.target.parentNode.parentNode.style.background ="";
+				}
+				else if(event.target.nodeName == "IMG"){
+					event.target.parentNode.style.background ="";
+				}
+				else{
 					event.target.style.background ="";
 				}
 			}
 			
 			function doDrop(event)
 			{
-				var id = event.dataTransfer.getData("Text");
-				var stripped = id.split("-");
+				var draggedElementID = event.dataTransfer.getData("Text");
+				var stripped = draggedElementID.split("_");
 				if(event.target.nodeName == "LI"){
-					var UnorderedList = event.target.parentNode;
+					var unorderedList = event.target.parentNode;
 				}
 				else if(event.target.nodeName == "UL"){
-					var UnorderedList = event.target;
+					var unorderedList = event.target;
 				}
-				if(stripped[0] == UnorderedList.id){ //check if dragging in the right section
-					var li = document.createElement('li');
-					var text = document.getElementById(id).innerHTML.replace(/\s+/g, '');
-					var item = document.createTextNode(text);
-					li.appendChild(item);
-					UnorderedList.appendChild(li);
-					UnorderedList.style.background ="";
-					makeRequest("runs.php?testing=test&lala=1234");
+                else if(event.target.nodeName == "IMG"){
+                    var unorderedList = event.target;
+                }
+                else{
+                    var unorderedList = event.target.firstElementChild;
+                }
+
+				if(stripped[0] == unorderedList.id){ //check if dragging in the right section
+					var allowedToDrop = false;
+					if(stripped[0] == "users"){
+						var found = userIdInElementChildren("db_users_", stripped[1], unorderedList);
+                        allowedToDrop = !found;
+					}
+					else{
+                        allowedToDrop = true;
+					}
+					if(allowedToDrop){
+						var li = document.createElement('li');
+						li.id = "db_"+ stripped[0] +"_id_temp";
+						var text = document.getElementById(draggedElementID).innerHTML;
+						var item = document.createTextNode(text);
+						li.appendChild(item);
+						unorderedList.appendChild(li);
+						unorderedList.parentNode.style.background ="";
+						makeRequest("runs.php?editrun=<?php print($run->getID()); ?>&add="+ stripped[0] +"&id="+ stripped[1]);
+					}
+					else{
+						unorderedList.parentNode.style.background ="";
+					}
 				}
-				else if (stripped[0] != UnorderedList.id) {
-					UnorderedList.style.background ="";
+                else if(stripped[0] == 'db' && unorderedList.id == 'bin'){
+                    //delete on success.
+                    unorderedList.parentNode.style.background ="";
+                    makeRequest("runs.php?editrun=<?php print($run->getID()); ?>&delete="+ stripped[1] +"&id="+ stripped[2]);
+                }
+				else if (stripped[0] != unorderedList.id) {
+					unorderedList.parentNode.style.background ="";
 				}
 				event.preventDefault();
 			}
 			
-			function drag(event){
+			function userIdInElementChildren(pre, id, domElement)
+			{
+				for(i=0; i<domElement.childNodes.length; i+=1) {
+					if(domElement.childNodes[i].id == pre + id){
+						return true;
+					}
+				}
+				return false;
+				
+			}
+			
+			function drag(event)
+			{
+				event.dataTransfer.effectAllowed='move';
 				event.dataTransfer.setData("Text",event.target.id);
+				return true;
 			}
 
-			function makeRequest(url) {
+			function makeRequest(url)
+			{
 				var httpRequest;
 				if (window.XMLHttpRequest) { // Mozilla, Safari, ...
 					httpRequest = new XMLHttpRequest();
@@ -99,20 +155,32 @@
 				httpRequest.onreadystatechange = function(){
 					serverResponse(httpRequest);
 				};
-				httpRequest.open('POST', url);
-				httpRequest.send();
+				httpRequest.open('POST', url, true);
+				httpRequest.send ();
 			}
 			
-			function serverResponse(httpRequest) {
+			function serverResponse(httpRequest)
+			{
 				if (httpRequest.readyState === 4) {
 					if (httpRequest.status === 200) {
-						alert(httpRequest.responseText);
-					} 
+						var result = JSON.parse(httpRequest.responseText);
+                        if(result['action'] == 'added'){
+                            element = document.getElementById("db_"+ result["database"] +"_id_temp");
+                            element.id = "db_"+ result["database"] +"_"+ result["id"];
+                            element.draggable = true;
+                            element.addEventListener("dragstart", function(event){return drag(event)});
+                        }
+                        else if(result['action'] == 'deleted'){
+                            element = document.getElementById("db_"+ result["database"] +"_"+ result["id"]);
+                            element.parentNode.removeChild(element);
+                        }
+					}
 					else {
 						alert('There was a problem with the request.');
 					}
 				}
 			}
+			<?php } ?>
 		</script>
 	</head>
 	
@@ -126,10 +194,10 @@
 				?>
 				<br />
 				<div style="text-align: left;" class="featured-node-copy">
-					<table style="width: 100%;">
+					<table style="width: 100%;" border=0>
 						<thead>
 							<tr>
-								<td colspan="2" style="font-size: 14px; font-weight: bold;">
+								<td colspan="3" style="font-size: 14px; font-weight: bold;">
 								<?php 
 								print($run->getName());
 								print(" -- ");
@@ -140,13 +208,18 @@
 						</thead>
 						<tbody>
 							<tr>
+								<td style="width: 77px; text-align: center;" ondragover="return DragOver(event)" ondragleave="return DragLeave(event)" ondrop="return doDrop(event)" rowspan="3">
+									<img id="bin" src="../assets/bin.png" style="height: 50px;" />
+								</td>
 								<td style="width: 15%; min-width: 220px;">
 									<span style="font-size: 12px; font-weight: bold;">Participants</span>
-									<ul id="users" class="dropable_lists" ondragover="DragOver(event)" ondragleave="DragLeave(event)" ondrop="doDrop(event)">
+									<ul id="users" class="dropable_lists" ondragover="return DragOver(event)" ondragleave="return DragLeave(event)" ondrop="return doDrop(event)">
 										<?php
 										foreach($run->getParticipants() as $participant){
 											?>
-											<li><?php print($participant->getName());?></li>
+											<li id="db_users_<?php print($participant->getUserID());?>" draggable='true' ondragstart='return drag(event)'>
+												<?php print($participant->getName());?>
+											</li>
 										<?php
 										}
 										?>
@@ -155,14 +228,15 @@
 									<br />
 								</td>
 								<td>
+									<ul>
 									<?php 
 									foreach($userList as $user){
-										print("<span id='users-". $user->getId() ."' draggable=true ondragstart='drag(event)'>");
+										print("<li id='users_". $user->getId() ."' draggable='true' ondragstart='return drag(event)'>");
 										print($user->getName());
-										print("</span>");
-										print("<br >");
+										print("</li>");
 									} 
 									?>
+									</ul>
 								</td>
 							</tr>
 							<tr>
@@ -173,11 +247,13 @@
 							<tr>
 								<td style="width: 15%; min-width: 220px;">
 									<span style="font-size: 12px; font-weight: bold;">drops</span>
-									<ul id="items" class="dropable_lists" ondragover="DragOver(event)" ondragleave="DragLeave(event)" ondrop="doDrop(event)">
+									<ul id="items" class="dropable_lists" ondragover="return DragOver(event)" ondragleave="return DragLeave(event)" ondrop="return doDrop(event)">
 										<?php
 										foreach($run->getDrops() as $drop){
 											?>
-											<li><?php print($drop->getName()); ?></li>
+											<li id="db_items_<?php print($drop->getDropId());?>" draggable='true' ondragstart='return drag(event)'>
+												<?php print($drop->getName());?>
+											</li>
 										<?php
 										}
 										?>
@@ -186,14 +262,15 @@
 									<br />
 								</td>
 								<td>
+									<ul>
 									<?php 
 									foreach($itemList as $item){
-										print("<span id='items-". $item->getId() ."' draggable=true ondragstart='drag(event)'>");
+										print("<li id='items_". $item->getId() ."' draggable='true' ondragstart='return drag(event)' >");
 										print($item->getName());
-										print("</span>");
-										print("<br >");
+										print("</li>");
 									} 
 									?>
+									</ul>
 								</td>
 							</tr>
 						</tbody>

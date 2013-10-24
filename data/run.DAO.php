@@ -26,7 +26,7 @@ class RUNDAO{
 	
 	public function addRun($name, $time){
 		$result = array();
-		$sql = "INSERT INTO `aegis`.`events` (`name`, `time`) VALUES ('". $name ."', '". $time ."');";
+		$sql = "INSERT INTO events (`name`, `time`) VALUES ('". $name ."', '". $time ."');";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
 		$resultSet = $dbh->exec($sql); //1 if success, 0 if fail
 		if(!$resultSet){
@@ -119,6 +119,39 @@ class RUNDAO{
 		}
 		return $result;
 	}
+	
+	public function addParticipantToRun($runID, $userID){
+		$sql = "INSERT INTO participants (`runID`, `userID`) VALUES ('". $runID ."', '". $userID ."');";
+		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+		$resultSet = $dbh->exec($sql); //1 if success, 0 if fail
+		return $resultSet;
+	}
+	
+	public function addItemToRun($runID, $itemID){
+		$sql = "INSERT INTO drops (`runID`, `itemID`) VALUES ('". $runID ."', '". $itemID ."');";
+		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+		$resultSet = $dbh->exec($sql); //1 if success, 0 if fail
+		$lastID = $dbh->lastInsertId();
+		return $lastID;
+	}
+
+    public function removeParticipantFromRun($runID, $userID){
+        $sql = "DELETE FROM `aegis`.`participants` WHERE `participants`.`runID` = '". $runID ."' AND `participants`.`userID` = '". $userID ."';";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        if($dbh->exec($sql)){  //1 if success, 0 if fail
+            return $userID;
+        }
+        return false;
+    }
+
+    public function removeItemFromRun($runID, $dropID){
+        $sql = "DELETE FROM `aegis`.`drops` WHERE `drops`.`id` = ". $dropID .";";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        if($dbh->exec($sql)){  //1 if success, 0 if fail
+            return $dropID;
+        }
+        return false;
+    }
 }
 
 ?>

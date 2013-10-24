@@ -24,8 +24,36 @@ if(isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["runName"]) &&
 	}
 	
 }
-if(isset($_POST["testing"])){
-	return $_POST;
+if(isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["add"]) && $_GET["add"] == 'users'){
+    $run = $runservice->addParticipantToRun($_GET["editrun"], $_GET["id"]);
+    $result["action"] = 'added';
+    $result["database"] = 'users';
+    $result["id"] = $_GET["id"];
+    print(json_encode($result));
+    exit();
+}
+if(isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["add"]) && $_GET["add"] == 'items'){
+    $run = $runservice->addItemToRun($_GET["editrun"], $_GET["id"]);
+    $result["action"] = 'added';
+    $result["database"] = 'items';
+    $result["id"] = $run;
+    print(json_encode($result));
+    exit();
+}if(isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["delete"]) && $_GET["delete"] == 'users'){
+    $run = $runservice->removeParticipantFromRun($_GET["editrun"], $_GET["id"]);
+    $result["action"] = 'deleted';
+    $result["database"] = 'users';
+    $result["id"] = $run;
+    print(json_encode($result));
+    exit();
+}
+if(isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["delete"]) && $_GET["delete"] == 'items'){
+    $run = $runservice->removeItemFromRun($_GET["editrun"], $_GET["id"]);
+    $result["action"] = 'deleted';
+    $result["database"] = 'items';
+    $result["id"] = $run;
+    print(json_encode($result));
+    exit();
 }
 $editing = 0;
 if(isset($_GET["editrun"]) && is_numeric($_GET["editrun"])){

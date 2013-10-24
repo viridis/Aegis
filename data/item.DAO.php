@@ -39,7 +39,7 @@ class ITEMDAO{
 	
 	public function addItem($itemname){
 		$result = array();
-		$sql = "INSERT INTO `aegis`.`items` (`name`) VALUES ('". $itemname ."');";
+		$sql = "INSERT INTO items (`name`) VALUES ('". $itemname ."');";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
 		$resultSet = $dbh->query($sql);
 		if(!$resultSet){

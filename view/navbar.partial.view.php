@@ -8,7 +8,7 @@
 						<div class="color5"></div>
 					</div>
 					<div class="logo">
-						Aegis
+						<a href="home.php">Aegis</a>
 					</div>
 					<?php	
 						for($i=0; $i<count($navbarlinks); $i++){

@@ -19,5 +19,29 @@ class runservice{
 		$run = $rundao->getRunById($id);
 		return $run;
 	}
+
+    public function addParticipantToRun($runID, $userID){
+        $rundao = new RUNDAO();
+        $run = $rundao->addParticipantToRun($runID, $userID);
+        return $run;
+    }
+
+    public function addItemToRun($runID, $itemID){
+        $rundao = new RUNDAO();
+        $run = $rundao->addItemToRun($runID, $itemID);
+        return $run;
+    }
+
+    public function removeParticipantFromRun($runID, $userID){
+        $rundao = new RUNDAO();
+        $run = $rundao->removeParticipantFromRun($runID, $userID);
+        return $run;
+    }
+
+    public function removeItemFromRun($runID, $itemID){
+        $rundao = new RUNDAO();
+        $run = $rundao->removeItemFromRun($runID, $itemID);
+        return $run;
+    }
 }
 ?>

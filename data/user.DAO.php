@@ -39,7 +39,7 @@ class USERDAO{
 	
 	public function addUser($username){
 		$result = array();
-		$sql = "INSERT INTO `aegis`.`users` (`name`) VALUES ('". $username ."');";
+		$sql = "INSERT INTO users (`name`) VALUES ('". $username ."');";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
 		$resultSet = $dbh->query($sql);
 		if(!$resultSet){
