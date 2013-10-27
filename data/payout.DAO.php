@@ -31,7 +31,7 @@ class PAYOUTDAO{
 			if($event->getTotalValue() > 0){
 				$eventTotalWorth = $event->getTotalValue();
 				$totalParticipants = $event->getTotalParticipants()+1; //+1 = guild bank share.
-				$sql .= "UPDATE  `aegis`.`participants` SET  `paidOut` =  '". floor($eventTotalWorth / $totalParticipants) ."' WHERE  `participants`.`runID` = ". $event->getID() ." AND `participants`.`userID` = ". $id ."; ";
+				$sql .= "UPDATE participants SET  `paidOut` =  '". floor($eventTotalWorth / $totalParticipants) ."' WHERE  `participants`.`runID` = ". $event->getID() ." AND `participants`.`userID` = ". $id ."; ";
 			}
 		}
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);

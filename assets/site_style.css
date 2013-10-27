@@ -100,10 +100,27 @@ li{
     background: rgba(215, 180, 135, .3);
 }
 
-input{
-	border-radius: 6px;
+.inputText{
+	border-radius: 5px;
+    border: 1px solid #aaaaaa;
+    height: 23px;
 	font-size: 16;
-	padding: 8px 1px;
+	padding: 0px 0px 0px 8px;
+    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(20%, #ffffff), color-stop(50%, #f6f6f6), color-stop(52%, #eeeeee), color-stop(100%, #f4f4f4));
+    background: -webkit-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
+    background: -moz-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
+    background: -o-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
+    background: linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
+    background-color: #fff;
+    box-shadow: 0 0 3px white inset, 0 1px 1px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+    line-height: 24px;
+}
+
+input{
+    border-radius: 6px;
+    font-size: 16;
+    padding: 8px 1px;
 }
 
 .popupWrapper{
@@ -117,6 +134,8 @@ input{
 	top:0px;
 	z-index: 5;
 	display: none;
+    background: rgb(0, 0, 0); /* Fall-back for browsers that don't support rgba */
+    background: rgba(0, 0, 0, .3);
 }
 
 .popup{
@@ -134,8 +153,30 @@ input{
     background: rgba(215, 180, 135, .7);
 }
 
+.buttonContainer{
+    float: right;
+    display: block;
+}
+
+.mySubmitButton{
+    float: right;
+    display: block;
+    text-decoration: none;
+    font-size: 16;
+    color: #DBCDC0;
+    padding: 8px 20px;
+    border-radius: 6px;
+    background: #8C2B2B; /* Old browsers */
+    background: -moz-linear-gradient(top, #8C2B2B 34%, #3B1212 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(34%,#8C2B2B), color-stop(100%,#3B1212)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #8C2B2B 34%,#3B1212 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #8C2B2B 34%,#3B1212 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #8C2B2B 34%,#3B1212 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #8C2B2B 34%,#3B1212 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#8C2B2B', endColorstr='#3B1212',GradientType=0 ); /* IE6-9 */
+}
+
 .myButton{
-	float: right;
 	display: block;
 	text-decoration: none;
 	font-size: 16;
@@ -173,6 +214,15 @@ input{
 	background: -ms-linear-gradient(top, #4A0317 0%,#000000 100%); /* IE10+ */
 	background: linear-gradient(to bottom, #4A0317 0%,#000000 100%); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#4A0317', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
+}
+
+.closeButton{
+    position: relative;
+    padding: 5px;
+    float: right;
+    margin-top: -40px;
+    color: #FFF;
+    background: #000;
 }
 
 .footer-content{

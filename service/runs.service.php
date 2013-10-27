@@ -43,5 +43,11 @@ class runservice{
         $run = $rundao->removeItemFromRun($runID, $itemID);
         return $run;
     }
+
+    public function sellDrop($amount, $itemId, $value){
+        $rundao = new RUNDAO();
+        $item = $rundao->sellDrop($amount, $itemId, $value);
+        return $item;
+    }
 }
 ?>

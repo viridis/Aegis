@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>LandingsPage</title>
@@ -18,22 +19,26 @@
 		<div class="content">
 			<div class="featured">
 				<div class="featured-node" style="width: 200px;">
-					<p>
 					Short description of SQI and Seals and stuff. Summing up Prontera, Manuk, Niff and Yuno Seal, just to fill up the space.<br>
 					<br>
-					<a href="" class="myButton">Read More ...</a>
-					</p>
+                    <div class="buttonContainer">
+					    <a href="" class="myButton">Read More ...</a>
+                    </div>
 				</div>
 				<div class="featured-node" style="width: 200px;">
 					Generic information about Game Master Challenges for when this gets added.<br>
 					<br>
 					<br>
-					<a href="" class="myButton">Read More ...</a>
+                    <div class="buttonContainer">
+                        <a href="" class="myButton">Read More ...</a>
+                    </div>
 				</div>
 				<div class="featured-node" style="width: 200px;">
 					Absolutely no clue what to put here, besides GMC and Seals I dont know what the site will provide.<br>
 					<br>
-					<a href="" class="myButton">Read More ...</a>
+                    <div class="buttonContainer">
+                        <a href="" class="myButton">Read More ...</a>
+                    </div>
 				</div>
 			</div>
 		</div>

@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>LandingsPage</title>
@@ -6,23 +7,27 @@
 		<script>
 			window.onload = function(){
 				initializePage();
-				var butAddRun = document.getElementById("addRunButton");
-				butAddRun.onclick = function(event) {
-					popupAddItem("block");
+				document.getElementById("addRunButton").onclick = function(event) {
+                    popup('popAddRun','block');
 				}
-				var butAddRun = document.getElementById("closePopUp");
-				butAddRun.onclick = function(event) {
-					popupAddItem("none");
+				document.getElementById("closePopUp").onclick = function(event) {
+                    popup('popAddRun', 'none');
 				}
 			}
 			window.onresize = initializePage;
-			
-			function popupAddItem(state){
-				var popup = document.getElementById("popAddRun");
-				var popupWrapper = document.getElementById("popupWrapper");
-				popup.style.display = state;
-				popupWrapper.style.display = state;
-			}
+
+            function popup(id, state){
+                document.getElementById(id).style.display = state;
+                document.getElementById("popupWrapper").style.display = state;
+            }
+
+            //close popup boxes using ESC key.
+            document.onkeydown = function(evt) {
+                evt = evt || window.event;
+                if (evt.keyCode == 27) {
+                    popup('popAddRun', 'none');
+                }
+            }
 			
 			<?php if($editing == 1){ ?>
 			function DragOver(event)
@@ -172,6 +177,7 @@
                         }
                         else if(result['action'] == 'deleted'){
                             element = document.getElementById("db_"+ result["database"] +"_"+ result["id"]);
+                            console.log(result["id"]);
                             element.parentNode.removeChild(element);
                         }
 					}
@@ -245,7 +251,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td style="width: 15%; min-width: 220px;">
+								<td style="width: 15%; min-width: 220px; min-height: 100px;">
 									<span style="font-size: 12px; font-weight: bold;">drops</span>
 									<ul id="items" class="dropable_lists" ondragover="return DragOver(event)" ondragleave="return DragLeave(event)" ondrop="return doDrop(event)">
 										<?php
@@ -284,15 +290,17 @@
 			
 			<div class="popupWrapper" id="popupWrapper">
 				<div class="popup" id="popAddRun">
-				<h1 id="closePopUp" style="position: relative; float: right; margin-top: -40px; color: #FFF; background: #000;">[x]CLOSE</h1>
+                    <h1 id="closePopUp" class="closeButton">[x]CLOSE</h1>
 					<form action="runs.php?addRun=1" method="post">
-						<input name= "runName" type="text">
-						<input name="runDate" type="date">
-						<input type="submit" class="myButton" value="Add Run">
+						<input name= "runName" class="inputText" type="text" placeholder="Run Name">
+						<input name="runDate" class="inputText" type="date" placeholder="mm/dd/yyyy">
+						<input type="submit" class="mySubmitButton" value="Add Run">
 					</form>
 				</div>
 			</div>
-			<input id="addRunButton" type="submit" class="myButton" value="Add Run">
+            <div class="buttonContainer">
+			    <input id="addRunButton" type="submit" class="myButton" value="Add Run">
+            </div>
 		
 			<div class="featured-node" style="margin-top: 20px;">
 			<table>

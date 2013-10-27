@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>LandingsPage</title>
@@ -6,24 +7,28 @@
 		<script>
 			window.onload = function(){
 				initializePage();
-				var butAddUser = document.getElementById("addUserButton");
-				butAddUser.onclick = function(event) {
-					popupAddUser("block");
-				}
-				var butAddUser = document.getElementById("closePopUp");
-				butAddUser.onclick = function(event) {
-					popupAddUser("none");
-				}
+                document.getElementById("addUserButton").onclick = function(event) {
+                    popup('popAddUser','block');
+                }
+                document.getElementById("closePopUp").onclick = function(event) {
+                    popup('popAddUser','none');
+                }
+
 			}
 			window.onresize = initializePage;
-			
-			function popupAddUser(state){
-				var popup = document.getElementById("popAddUser");
-				var popupWrapper = document.getElementById("popupWrapper");
-				popup.style.display = state;
-				popupWrapper.style.display = state;
-			}
-			
+
+            function popup(id, state){
+                document.getElementById(id).style.display = state;
+                document.getElementById("popupWrapper").style.display = state;
+            }
+
+            //close popup boxes using ESC key.
+            document.onkeydown = function(event) {
+                event = event || window.event;
+                if (event.keyCode == 27) {
+                    popup('popAddUser','none');
+                }
+            }
 		</script>
 	</head>
 	
@@ -33,15 +38,16 @@
 		<div class="content" style="text-align: center;">
 			<div class="popupWrapper" id="popupWrapper">
 				<div class="popup" id="popAddUser">
-				<h1 id="closePopUp" style="position: relative; float: right; margin-top: -40px; color: #FFF; background: #000;">[x]CLOSE</h1>
+                    <h1 id="closePopUp" class="closeButton">[x]CLOSE</h1>
 					<form action="users.php" method="post">
-						<input name= "addUser" type="text">
-						<input type="submit" class="myButton" value="Add User">
+						<input name= "addUser" class="inputText" type="text" placeholder="Username">
+						<input type="submit" class="mySubmitButton" value="Add User">
 					</form>
 				</div>
 			</div>
-			
-			<input id="addUserButton" type="submit" class="myButton" value="Add User">
+            <div class="buttonContainer">
+			    <input id="addUserButton" type="submit" class="myButton" value="Add User">
+            </div>
 			<div class="featured-node" style="margin-top: 20px;">
 			<table>
 				<tr>

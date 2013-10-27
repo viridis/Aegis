@@ -123,20 +123,24 @@ class RUNDAO{
 	public function addParticipantToRun($runID, $userID){
 		$sql = "INSERT INTO participants (`runID`, `userID`) VALUES ('". $runID ."', '". $userID ."');";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-		$resultSet = $dbh->exec($sql); //1 if success, 0 if fail
-		return $resultSet;
+        if($dbh->exec($sql)){  //1 if success, 0 if fail
+            return true;
+        }
+        return false;
 	}
 	
 	public function addItemToRun($runID, $itemID){
 		$sql = "INSERT INTO drops (`runID`, `itemID`) VALUES ('". $runID ."', '". $itemID ."');";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-		$resultSet = $dbh->exec($sql); //1 if success, 0 if fail
-		$lastID = $dbh->lastInsertId();
-		return $lastID;
+        if($dbh->exec($sql)){  //1 if success, 0 if fail
+            $lastID = $dbh->lastInsertId();
+            return $lastID;
+        }
+        return false;
 	}
 
     public function removeParticipantFromRun($runID, $userID){
-        $sql = "DELETE FROM `aegis`.`participants` WHERE `participants`.`runID` = '". $runID ."' AND `participants`.`userID` = '". $userID ."';";
+        $sql = "DELETE FROM participants WHERE `participants`.`runID` = '". $runID ."' AND `participants`.`userID` = '". $userID ."';";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         if($dbh->exec($sql)){  //1 if success, 0 if fail
             return $userID;
@@ -145,12 +149,31 @@ class RUNDAO{
     }
 
     public function removeItemFromRun($runID, $dropID){
-        $sql = "DELETE FROM `aegis`.`drops` WHERE `drops`.`id` = ". $dropID .";";
+        $sql = "DELETE FROM drops WHERE `drops`.`id` = ". $dropID .";";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         if($dbh->exec($sql)){  //1 if success, 0 if fail
             return $dropID;
         }
         return false;
+    }
+
+    public function sellDrop($amount, $itemId, $value){
+        $sql = 'SELECT * FROM drops WHERE itemID = '. $itemId .' AND value = 0 ORDER BY id ASC LIMIT '. $amount .';';
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $resultSet = $dbh->query($sql)->fetchAll();
+        if(count($resultSet) < $amount){    //trying to sell more items than exist.
+            throw new Exception('Trying to sell '. $amount .' item(s) while  there are only '. count($resultSet) .'.');
+        }else{
+            $list = array();
+            foreach($resultSet AS $row){
+                array_push($list, $row['id']);
+            }
+            $sql = 'UPDATE drops SET value= '. $value .' WHERE id IN ('. implode(',', $list) .')';
+            if($dbh->exec($sql)){  //1 if success, 0 if fail
+                return true;
+            }
+            return false;
+        }
     }
 }
 
