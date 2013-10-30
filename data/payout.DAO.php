@@ -1,5 +1,6 @@
 <?php
 require_once("../data/dbconfig.DAO.php");
+require_once("../data/log.DAO.php");
 require_once("../class/events.class.php");
 
 class PAYOUTDAO{
@@ -26,17 +27,20 @@ class PAYOUTDAO{
 	}
 	
 	public function payOutUser($id, $eventList){
-		$sql = "";
-		foreach($eventList as $event){
-			if($event->getTotalValue() > 0){
-				$eventTotalWorth = $event->getTotalValue();
-				$totalParticipants = $event->getTotalParticipants()+1; //+1 = guild bank share.
-				$sql .= "UPDATE participants SET  `paidOut` =  '". floor($eventTotalWorth / $totalParticipants) ."' WHERE  `participants`.`runID` = ". $event->getID() ." AND `participants`.`userID` = ". $id ."; ";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $logdao = new LOGDAO();
+        foreach($eventList as $event){
+            if($event->getTotalValue() > 0){
+                $eventTotalWorth = $event->getTotalValue();
+                $totalParticipants = $event->getTotalParticipants()+1; //+1 = guild bank share.
+                $sql = "UPDATE participants SET  `paidOut` =  '". floor($eventTotalWorth / $totalParticipants) ."' WHERE  `participants`.`runID` = ". $event->getID() ." AND `participants`.`userID` = ". $id ."; ";
+                if($dbh->exec($sql)){  //1 if success, 0 if fail
+                    $logdao->logEntry('UPDATE', $sql, 'SUCCESS');
+                }
+                $logdao->logEntry('UPDATE', $sql, 'FAILED');
 			}
 		}
-		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-		$result = $dbh->exec($sql);
-		return $result;
+		return false;
 	}
 }
 

@@ -9,32 +9,14 @@ function initializePage(){
 	fixContentSize(iHeight);
 }
 
-// function loadJsCssFile(filename, filetype){
-	// var oHead = document.getElementsByTagName("head")[0];
-		
-	// if (filetype=="js"){ //if filename is a external JavaScript file
-		// var fileref=document.createElement('script');
-		// fileref.setAttribute("type","text/javascript");
-		// fileref.setAttribute("src", filename);
-	// }
-	// else if (filetype=="css"){ //if filename is an external CSS file
-		// var bExists = false;
-		// for(var i = 0; i < oHead.childNodes.length; i++){
-			// if(oHead.childNodes[i].tagName === "LINK"){
-				// if(oHead.childNodes[i].getAttribute("href") === filename){
-					// bExists = true;
-				// }
-			// }
-		// }
-		// if(!bExists){
-			// var fileref=document.createElement("link");
-			// fileref.setAttribute("rel", "stylesheet");
-			// fileref.setAttribute("type", "text/css");
-			// fileref.setAttribute("href", filename);
-			// document.getElementsByTagName("head")[0].appendChild(fileref);
-		// }
-	// }
-// }
+function popup(id, state){
+    document.getElementById(id).style.display = state;
+    document.getElementById("popupWrapper").style.display = state;
+}
+
+function setFocus(id){
+    document.getElementById(id).focus();
+}
 
 function fixContentSize(iWindowHeight){
 	var eContent = document.querySelector(".content");

@@ -9,18 +9,17 @@
 				initializePage();
                 document.getElementById("addUserButton").onclick = function(event) {
                     popup('popAddUser','block');
+                    setFocus('addUser');
                 }
                 document.getElementById("closePopUp").onclick = function(event) {
+                    popup('popAddUser','none');
+                }
+                document.getElementById("popupWrapper").onclick = function(event) {
                     popup('popAddUser','none');
                 }
 
 			}
 			window.onresize = initializePage;
-
-            function popup(id, state){
-                document.getElementById(id).style.display = state;
-                document.getElementById("popupWrapper").style.display = state;
-            }
 
             //close popup boxes using ESC key.
             document.onkeydown = function(event) {
@@ -36,15 +35,14 @@
 		<?php include('navbar.partial.view.php') ?>
 		
 		<div class="content" style="text-align: center;">
-			<div class="popupWrapper" id="popupWrapper">
-				<div class="popup" id="popAddUser">
-                    <h1 id="closePopUp" class="closeButton">[x]CLOSE</h1>
-					<form action="users.php" method="post">
-						<input name= "addUser" class="inputText" type="text" placeholder="Username">
-						<input type="submit" class="mySubmitButton" value="Add User">
-					</form>
-				</div>
-			</div>
+			<div class="popupWrapper" id="popupWrapper"></div>
+            <div class="popup" id="popAddUser">
+                <h1 id="closePopUp" class="closeButton">[x]CLOSE</h1>
+                <form action="users.php" method="post">
+                    <input name="addUser" id="addUser" class="inputText" type="text" placeholder="Username">
+                    <input type="submit" class="mySubmitButton" value="Add User">
+                </form>
+            </div>
             <div class="buttonContainer">
 			    <input id="addUserButton" type="submit" class="myButton" value="Add User">
             </div>

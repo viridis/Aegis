@@ -1,5 +1,6 @@
 <?php
 require_once("../data/dbconfig.DAO.php");
+require_once("../data/log.DAO.php");
 require_once("../class/events.class.php");
 require_once("../class/drop.class.php");
 require_once("../class/participant.class.php");
@@ -28,21 +29,13 @@ class RUNDAO{
 		$result = array();
 		$sql = "INSERT INTO events (`name`, `time`) VALUES ('". $name ."', '". $time ."');";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-		$resultSet = $dbh->exec($sql); //1 if success, 0 if fail
-		if(!$resultSet){
-			//echo "Item ". $itemname ." already exists.";
-		}
-		// else{
-			// try{
-				// $dao = new ITEMDAO();
-				// $item = $dao->getItemById($dbh->lastInsertId());
-				// //echo "Item ". $itemname ." succesfully added.";
-				// return $item;
-			// }
-			// catch(Exception $e){
-				// echo 'Caught exception: ',  $e->getMessage(), "\n";
-			// }
-		// }
+        $logdao = new LOGDAO();
+        if($dbh->exec($sql)){  //1 if success, 0 if fail
+            $logdao->logEntry('INSERT', $sql, 'SUCCESS');
+            return true;
+        }
+        $logdao->logEntry('INSERT', $sql, 'FAILED');
+        return false;
 	}
 	
 	public function getRunById($id){
@@ -123,37 +116,49 @@ class RUNDAO{
 	public function addParticipantToRun($runID, $userID){
 		$sql = "INSERT INTO participants (`runID`, `userID`) VALUES ('". $runID ."', '". $userID ."');";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $logdao = new LOGDAO();
         if($dbh->exec($sql)){  //1 if success, 0 if fail
+            $logdao->logEntry('INSERT', $sql, 'SUCCESS');
             return true;
         }
+        $logdao->logEntry('INSERT', $sql, 'FAILED');
         return false;
 	}
 	
 	public function addItemToRun($runID, $itemID){
 		$sql = "INSERT INTO drops (`runID`, `itemID`) VALUES ('". $runID ."', '". $itemID ."');";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $logdao = new LOGDAO();
         if($dbh->exec($sql)){  //1 if success, 0 if fail
             $lastID = $dbh->lastInsertId();
+            $logdao->logEntry('INSERT', $sql, 'SUCCESS');
             return $lastID;
         }
+        $logdao->logEntry('INSERT', $sql, 'FAILED');
         return false;
 	}
 
     public function removeParticipantFromRun($runID, $userID){
         $sql = "DELETE FROM participants WHERE `participants`.`runID` = '". $runID ."' AND `participants`.`userID` = '". $userID ."';";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $logdao = new LOGDAO();
         if($dbh->exec($sql)){  //1 if success, 0 if fail
+            $logdao->logEntry('DELETE', $sql, 'SUCCESS');
             return $userID;
         }
+        $logdao->logEntry('DELETE', $sql, 'FAILED');
         return false;
     }
 
     public function removeItemFromRun($runID, $dropID){
         $sql = "DELETE FROM drops WHERE `drops`.`id` = ". $dropID .";";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $logdao = new LOGDAO();
         if($dbh->exec($sql)){  //1 if success, 0 if fail
+            $logdao->logEntry('DELETE', $sql, 'SUCCESS');
             return $dropID;
         }
+        $logdao->logEntry('DELETE', $sql, 'FAILED');
         return false;
     }
 
@@ -169,9 +174,12 @@ class RUNDAO{
                 array_push($list, $row['id']);
             }
             $sql = 'UPDATE drops SET value= '. $value .' WHERE id IN ('. implode(',', $list) .')';
+            $logdao = new LOGDAO();
             if($dbh->exec($sql)){  //1 if success, 0 if fail
+                $logdao->logEntry('UPDATE', $sql, 'SUCCESS');
                 return true;
             }
+            $logdao->logEntry('UPDATE', $sql, 'FAILED');
             return false;
         }
     }

@@ -1,5 +1,6 @@
 <?php
 require_once("../data/dbconfig.DAO.php");
+require_once("../data/log.DAO.php");
 require_once("../class/item.class.php");
 
 class ITEMDAO{
@@ -40,21 +41,21 @@ class ITEMDAO{
 	public function addItem($itemname){
 		$sql = "INSERT INTO items (`name`) VALUES ('". $itemname ."');";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-		$resultSet = $dbh->query($sql);
-		if(!$resultSet){
-			//echo "Item ". $itemname ." already exists.";
-		}
-		else{
-			try{
-				$dao = new ITEMDAO();
-				$item = $dao->getItemById($dbh->lastInsertId());
-				//echo "Item ". $itemname ." succesfully added.";
-				return $item;
-			}
-			catch(Exception $e){
-				echo 'Caught exception: ',  $e->getMessage(), "\n";
-			}
-		}
+        $logdao = new LOGDAO();
+        if($dbh->exec($sql)){  //1 if success, 0 if fail
+            $logdao->logEntry('INSERT', $sql, 'SUCCESS');
+            try{
+                $dao = new ITEMDAO();
+                $item = $dao->getItemById($dbh->lastInsertId());
+                //echo "Item ". $itemname ." succesfully added.";
+                return $item;
+            }
+            catch(Exception $e){
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+        }
+        $logdao->logEntry('INSERT', $sql, 'FAILED');
+        return false;
 	}
 }
 ?>

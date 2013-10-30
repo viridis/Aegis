@@ -132,7 +132,7 @@ input{
 	position: fixed;
 	left:0px;
 	top:0px;
-	z-index: 5;
+	z-index: 4;
 	display: none;
     background: rgb(0, 0, 0); /* Fall-back for browsers that don't support rgba */
     background: rgba(0, 0, 0, .3);
@@ -141,6 +141,7 @@ input{
 .popup{
 	position: absolute;
 	display: none;
+    z-index: 5;
 	top: 50%;
 	margin-top: -25%;
 	left: 25%;
@@ -150,7 +151,7 @@ input{
 	border-radius: 5px;
 	border: 1px solid #4A0317;
 	background: rgb(215, 180, 135); /* Fall-back for browsers that don't support rgba */
-    background: rgba(215, 180, 135, .7);
+    background: rgba(215, 180, 135, 1.0);
 }
 
 .buttonContainer{
@@ -225,6 +226,26 @@ input{
     background: #000;
 }
 
+.floatListItem{
+    float: left;
+    width: 120px;
+    display: inline-block;
+}
+
+.dropSpace{
+    width: 15%;
+    min-width: 220px;
+    background: rgb(106, 161, 33); /* Fall-back for browsers that don't support rgba */
+    background: rgba(106, 161, 33, .2);
+}
+
+.dropSpaceBin{
+    width: 77px;
+    text-align: center;
+    background: rgb(140, 43, 43); /* Fall-back for browsers that don't support rgba */
+    background: rgba(140, 43, 43, .2);
+}
+
 .footer-content{
 	width: 1000px;
 	height: 200px;
@@ -295,7 +316,7 @@ h6{
 }
 .dropable_lists{
 	padding-left: 20px;
-	min-height: 150px;
+	min-height: 50px;
 	max-width: 200px;
 	width: 100%;
 }

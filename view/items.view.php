@@ -8,30 +8,28 @@
 		<?php include('navbar.partial.view.php') ?>
 		
 		<div class="content" style="text-align: center;">
-			<div class="popupWrapper" id="popupWrapper">
-
-				<div class="popup" id="popAddItem">
-				    <h1 id="closeAddItem" class="closeButton">[x]CLOSE</h1>
-					<form action="items.php" method="post">
-						<input name= "addItem" type="text" class="inputText" placeholder="Item Name">
-						<input type="submit" class="mySubmitButton" value="Add Item">
-					</form>
-				</div>
-                <div class="popup" id="popSellItem">
-                    <h1 id="closeSellItem" class="closeButton">[x]CLOSE</h1>
-                    <form action="items.php" method="post" style="text-align: left;">
-                        <input name="itemAmount" type="text" class="inputText" id="itemAmount" placeholder="#" value="1" style="width: 20px;">
-                        <select data-placeholder="Pick an item..." class="chosen-select" name="itemName">
-                            <option value=""></option>
-                            <?php foreach($itemlist as $item){ ?>
-                                    <option value="<?php print($item->getId());?>"><?php print($item->getName());?></option>
-                            <?php } ?>
-                        </select>
-                        <input name="itemValue" type="text" class="inputText" id="itemValue" placeholder="Item Value">
-                        <input type="submit" class="mySubmitButton" value="Add Item">
-                    </form>
-                </div>
-			</div>
+			<div class="popupWrapper" id="popupWrapper"></div>
+            <div class="popup" id="popAddItem">
+                <h1 id="closeAddItem" class="closeButton">[x]CLOSE</h1>
+                <form action="items.php" method="post">
+                    <input name="addItem" id="addItem" type="text" class="inputText" placeholder="Item Name" >
+                    <input type="submit" class="mySubmitButton" value="Add Item">
+                </form>
+            </div>
+            <div class="popup" id="popSellItem">
+                <h1 id="closeSellItem" class="closeButton">[x]CLOSE</h1>
+                <form action="items.php" method="post" style="text-align: left;">
+                    <input name="itemAmount" type="text" class="inputText" id="itemAmount" placeholder="#" value="1" style="width: 20px;">
+                    <select data-placeholder="Pick an item..." class="chosen-select" id="itemName" name="itemName">
+                        <option value=""></option>
+                        <?php foreach($itemlist as $item){ ?>
+                                <option value="<?php print($item->getId());?>"><?php print($item->getName());?></option>
+                        <?php } ?>
+                    </select>
+                    <input name="itemValue" type="text" class="inputText" id="itemValue" placeholder="Item Value">
+                    <input type="submit" class="mySubmitButton" value="Sell Item">
+                </form>
+            </div>
             <?php if(isset($errorMessage)){ ?>
             <div>
                 <h1><?php print($errorMessage); ?></h1>
@@ -75,23 +73,24 @@
                 initializePage();
                 document.getElementById("addItemButton").onclick = function(event) {
                     popup('popAddItem','block');
+                    setFocus('addItem');
                 }
                 document.getElementById("sellItemButton").onclick = function(event) {
                     popup('popSellItem','block');
+                    $("#itemName_chosen").children('.chosen-drop').children('.chosen-search').children('input[type="text"]').focus();
                 }
                 document.getElementById("closeAddItem").onclick = function(event) {
-                    popup('popSellItem','none');
+                    popup('popAddItem','none');
                 }
                 document.getElementById("closeSellItem").onclick = function(event) {
                     popup('popSellItem','none');
                 }
+                document.getElementById("popupWrapper").onclick = function(event) {
+                    popup('popAddItem','none');
+                    popup('popSellItem','none');
+                }
             }
             window.onresize = initializePage;
-
-            function popup(id, state){
-                document.getElementById(id).style.display = state;
-                document.getElementById("popupWrapper").style.display = state;
-            }
 
             //close popup boxes using ESC key.
             document.onkeydown = function(event) {

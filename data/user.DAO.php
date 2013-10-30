@@ -1,5 +1,6 @@
 <?php
 require_once("../data/dbconfig.DAO.php");
+require_once("../data/log.DAO.php");
 require_once("../class/user.class.php");
 
 class USERDAO{
@@ -41,21 +42,23 @@ class USERDAO{
 		$result = array();
 		$sql = "INSERT INTO users (`name`) VALUES ('". $username ."');";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-		$resultSet = $dbh->query($sql);
-		if(!$resultSet){
-			echo "User ". $username ." already exists.";
-		}
-		else{
-			try{
-				$dao = new USERDAO();
-				$user = $dao->getUserById($dbh->lastInsertId());
-				//echo "User ". $username ." succesfully added.";
-				return $user;
-			}
-			catch(Exception $e){
-				echo 'Caught exception: ',  $e->getMessage(), "\n";
-			}
-		}
+        $logdao = new LOGDAO();
+        if($dbh->exec($sql)){  //1 if success, 0 if fail
+            $logdao->logEntry('INSERT', $sql, 'SUCCESS');
+            try{
+                $dao = new USERDAO();
+                $user = $dao->getUserById($dbh->lastInsertId());
+                //echo "User ". $username ." succesfully added.";
+                return $user;
+            }
+            catch(Exception $e){
+                echo 'Caught exception: ',  $e->getMessage(), "\n";
+            }
+            return true;
+        }
+        $logdao->logEntry('INSERT', $sql, 'FAILED');
+        echo "User ". $username ." already exists.";
+        return false;
 	}
 }
 ?>

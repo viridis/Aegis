@@ -9,17 +9,16 @@
 				initializePage();
 				document.getElementById("addRunButton").onclick = function(event) {
                     popup('popAddRun','block');
+                    setFocus('runName');
 				}
 				document.getElementById("closePopUp").onclick = function(event) {
                     popup('popAddRun', 'none');
 				}
+                document.getElementById("popupWrapper").onclick = function(event) {
+                    popup('popAddRun','none');
+                }
 			}
 			window.onresize = initializePage;
-
-            function popup(id, state){
-                document.getElementById(id).style.display = state;
-                document.getElementById("popupWrapper").style.display = state;
-            }
 
             //close popup boxes using ESC key.
             document.onkeydown = function(evt) {
@@ -214,10 +213,10 @@
 						</thead>
 						<tbody>
 							<tr>
-								<td style="width: 77px; text-align: center;" ondragover="return DragOver(event)" ondragleave="return DragLeave(event)" ondrop="return doDrop(event)" rowspan="3">
+								<td class="dropSpaceBin" ondragover="return DragOver(event)" ondragleave="return DragLeave(event)" ondrop="return doDrop(event)" rowspan="3">
 									<img id="bin" src="../assets/bin.png" style="height: 50px;" />
 								</td>
-								<td style="width: 15%; min-width: 220px;">
+								<td class="dropSpace">
 									<span style="font-size: 12px; font-weight: bold;">Participants</span>
 									<ul id="users" class="dropable_lists" ondragover="return DragOver(event)" ondragleave="return DragLeave(event)" ondrop="return doDrop(event)">
 										<?php
@@ -235,13 +234,15 @@
 								</td>
 								<td>
 									<ul>
-									<?php 
-									foreach($userList as $user){
-										print("<li id='users_". $user->getId() ."' draggable='true' ondragstart='return drag(event)'>");
-										print($user->getName());
-										print("</li>");
-									} 
-									?>
+                                    <?php for ($i = 0; $i < count($userList); $i++) { ?>
+                                        <li id='users_<?php print($userList[$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
+                                            <?php print($userList[$i]->getName()); ?>
+                                        </li>
+                                        <?php if(($i+1)%3 == 0){ ?>
+                                            <br />
+                                        <?php } ?>
+                                    <?php } ?>
+
 									</ul>
 								</td>
 							</tr>
@@ -251,7 +252,7 @@
 								</td>
 							</tr>
 							<tr>
-								<td style="width: 15%; min-width: 220px; min-height: 100px;">
+								<td class="dropSpace">
 									<span style="font-size: 12px; font-weight: bold;">drops</span>
 									<ul id="items" class="dropable_lists" ondragover="return DragOver(event)" ondragleave="return DragLeave(event)" ondrop="return doDrop(event)">
 										<?php
@@ -269,13 +270,14 @@
 								</td>
 								<td>
 									<ul>
-									<?php 
-									foreach($itemList as $item){
-										print("<li id='items_". $item->getId() ."' draggable='true' ondragstart='return drag(event)' >");
-										print($item->getName());
-										print("</li>");
-									} 
-									?>
+                                    <?php for ($i = 0; $i < count($itemList); $i++) { ?>
+                                        <li id='items_<?php print($itemList[$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
+                                            <?php print($itemList[$i]->getName()); ?>
+                                        </li>
+                                        <?php if(($i+1)%3 == 0){ ?>
+                                            <br />
+                                        <?php } ?>
+                                    <?php } ?>
 									</ul>
 								</td>
 							</tr>
@@ -288,16 +290,15 @@
 			}
 			?>
 			
-			<div class="popupWrapper" id="popupWrapper">
-				<div class="popup" id="popAddRun">
-                    <h1 id="closePopUp" class="closeButton">[x]CLOSE</h1>
-					<form action="runs.php?addRun=1" method="post">
-						<input name= "runName" class="inputText" type="text" placeholder="Run Name">
-						<input name="runDate" class="inputText" type="date" placeholder="mm/dd/yyyy">
-						<input type="submit" class="mySubmitButton" value="Add Run">
-					</form>
-				</div>
-			</div>
+			<div class="popupWrapper" id="popupWrapper"></div>
+            <div class="popup" id="popAddRun">
+                <h1 id="closePopUp" class="closeButton">[x]CLOSE</h1>
+                <form action="runs.php?addRun=1" method="post">
+                    <input name= "runName" id= "runName" class="inputText" type="text" placeholder="Run Name">
+                    <input name="runDate" class="inputText" type="date" placeholder="mm/dd/yyyy">
+                    <input type="submit" class="mySubmitButton" value="Add Run">
+                </form>
+            </div>
             <div class="buttonContainer">
 			    <input id="addRunButton" type="submit" class="myButton" value="Add Run">
             </div>
