@@ -72,7 +72,7 @@ li{
 	width: 1000px;
 	margin: 0 auto;
 	background-color: #FFFEF5;
-	position: relative; 
+	position: relative;
 }
 .featured{
 	height: 120px;
@@ -100,12 +100,16 @@ li{
     background: rgba(215, 180, 135, .3);
 }
 
+.number{
+   text-align: right;
+}
+
 .inputText{
 	border-radius: 5px;
     border: 1px solid #aaaaaa;
     height: 23px;
 	font-size: 16;
-	padding: 0px 0px 0px 8px;
+	padding: 0px 8px 0px 8px;
     background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(20%, #ffffff), color-stop(50%, #f6f6f6), color-stop(52%, #eeeeee), color-stop(100%, #f4f4f4));
     background: -webkit-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
     background: -moz-linear-gradient(top, #ffffff 20%, #f6f6f6 50%, #eeeeee 52%, #f4f4f4 100%);
@@ -121,6 +125,32 @@ input{
     border-radius: 6px;
     font-size: 16;
     padding: 8px 1px;
+}
+
+.error{
+    display: inline-block;
+    border-radius: 6px;
+    padding: 5px;
+    border: 1px solid #D8000C;
+    color: #D8000C;
+    background-color: #FFBABA;
+    padding:15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-image: url('../assets/error.png');
+}
+
+.confirmation{
+    display: inline-block;
+    border-radius: 6px;
+    padding: 5px;
+    border: 1px solid #4F8A10;
+    color: #4F8A10;
+    background-color: #DFF2BF;
+    padding:15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    background-image:url('../assets/success.png');
 }
 
 .popupWrapper{
@@ -228,7 +258,7 @@ input{
 
 .floatListItem{
     float: left;
-    width: 120px;
+    width: 200px;
     display: inline-block;
 }
 

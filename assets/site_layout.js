@@ -26,3 +26,8 @@ function fixContentSize(iWindowHeight){
 	}
 }
 
+function commaSeparateNumber(val){
+    val = val.replace(/,/g , '');
+    return val.toString().replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
+}
+
