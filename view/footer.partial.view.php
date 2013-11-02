@@ -1,9 +1,11 @@
 		<div class="footer">
 			<div class="footer-content">
 				<div class="footer-main">&copy; Ain't Nobody Got Time For That</div>
-				<div class="footer-breakout">
+				<div class="footer-breakout footer-featured">
 					<ul>
-						<li><img src="../assets/icon_youtube.png" />Youtube</li>
+						<li><img src="../assets/icon_github.png" />
+                            <a href="https://github.com/viridis/Aegis">GitHub Issue Tracker</a>
+                        </li>
 						<li><img src="../assets/icon_facebook.png" />Facebook</li>
 						<li><img src="../assets/icon_twitter.png" />Twitter</li>
 						<li><img src="../assets/icon_twitchtv.png" />Twitch TV</li>

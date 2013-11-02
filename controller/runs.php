@@ -60,8 +60,22 @@ if(isset($_GET["editrun"]) && is_numeric($_GET["editrun"])){
 	$run = $runservice->getRunById($_GET["editrun"]);
 	$itemservice = new itemservice();
 	$itemList = $itemservice->listAllItems();
+    $itemListCount = ceil(count($itemList) / 3);
+    $itemList = array(
+                    array_slice($itemList, 0, $itemListCount),
+                    array_slice($itemList, $itemListCount, $itemListCount),
+                    array_slice($itemList, $itemListCount*2, $itemListCount),
+
+    );
 	$userservice = new userservice();
 	$userList = $userservice->listAllUsers();
+    $userListCount = ceil(count($userList) / 3);
+    $userList = array(
+        array_slice($userList, 0, $userListCount),
+        array_slice($userList, $userListCount, $userListCount),
+        array_slice($userList, $userListCount*2, $userListCount),
+
+    );
 	$editing = 1;
 }
 

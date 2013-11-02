@@ -2,6 +2,7 @@
 <html>
 	<head>
 		<title>LandingsPage</title>
+        <?php include('headers.partial.view.php') ?>
 	</head>
 	
 	<body>
@@ -19,22 +20,24 @@
             <div class="popup" id="popSellItem">
                 <h1 id="closeSellItem" class="closeButton">[x]CLOSE</h1>
                 <form action="items.php" method="post" style="text-align: left;">
-                    <input name="itemAmount" type="text" class="inputText" id="itemAmount" placeholder="#" value="1" style="width: 20px;">
+                    <input name="itemAmount" type="text" class="inputText" id="itemAmount" placeholder="#" value="1" style="width: 20px;" autocomplete="off">
                     <select data-placeholder="Pick an item..." class="chosen-select" id="itemName" name="itemName">
                         <option value=""></option>
                         <?php foreach($itemlist as $item){ ?>
                                 <option value="<?php print($item->getId());?>"><?php print($item->getName());?></option>
                         <?php } ?>
                     </select>
-                    <input name="itemValue" type="text" class="inputText" id="itemValue" placeholder="Item Value">
+                    <input name="itemValue" type="text" class="inputText number" id="itemValue" placeholder="Item Value" autocomplete="off">
                     <input type="submit" class="mySubmitButton" value="Sell Item">
                 </form>
             </div>
-            <?php if(isset($errorMessage)){ ?>
-            <div>
-                <h1><?php print($errorMessage); ?></h1>
+            <?php if(isset($notification)): ?>
+            <br />
+            <div class="<?php print($notification['type']); ?>">
+                <h1><?php print($notification['message']); ?></h1>
             </div>
-            <?php } ?>
+            <br />
+            <?php endif; ?>
             <div class="buttonContainer">
                 <input id="addItemButton" type="submit" class="myButton" value="Add Item">
                 <input id="sellItemButton" type="submit" class="myButton" value="Sell Item">
@@ -63,9 +66,7 @@
 
 		
 		<?php include('footer.partial.view.php') ?>
-        <link rel="stylesheet" type="text/css" href="../assets/site_style.css">
         <link rel="stylesheet" type="text/css" href="../assets/chosen.css">
-        <script type="text/javascript" src="../assets/site_layout.js"></script>
         <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
         <script type="text/javascript" src="../assets/chosen.jquery.js"></script>
         <script type="text/javascript">
@@ -88,6 +89,10 @@
                 document.getElementById("popupWrapper").onclick = function(event) {
                     popup('popAddItem','none');
                     popup('popSellItem','none');
+                }
+                document.getElementById("itemValue").onkeyup = function(event) {
+
+                    event.target.value = commaSeparateNumber(event.target.value);
                 }
             }
             window.onresize = initializePage;

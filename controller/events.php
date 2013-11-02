@@ -5,7 +5,7 @@ require_once("../service/events.service.php");
 
 
 $pageservice = new PAGESERVICE();
-$currentPageID = "Manage Runs";
+$currentPageID = "Events";
 $navbarlinks = $pageservice->generateNavLinks();
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);

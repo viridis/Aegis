@@ -2,8 +2,7 @@
 <html>
 	<head>
 		<title>LandingsPage</title>
-		<link rel="stylesheet" type="text/css" href="../assets/site_style.css">
-		<script type="text/javascript" src="../assets/site_layout.js"></script>
+        <?php include('headers.partial.view.php') ?>
 		<script>
 			window.onload = function(){
 				initializePage();
@@ -194,9 +193,7 @@
 		
 		<div class="content" style="text-align: center;">
 			
-			<?php 
-			if($editing == 1){
-				?>
+			<?php if($editing == 1):?>
 				<br />
 				<div style="text-align: left;" class="featured-node-copy">
 					<table style="width: 100%;" border=0>
@@ -233,16 +230,26 @@
 									<br />
 								</td>
 								<td>
-									<ul>
-                                    <?php for ($i = 0; $i < count($userList); $i++) { ?>
-                                        <li id='users_<?php print($userList[$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
-                                            <?php print($userList[$i]->getName()); ?>
-                                        </li>
-                                        <?php if(($i+1)%3 == 0){ ?>
-                                            <br />
-                                        <?php } ?>
-                                    <?php } ?>
 
+									<ul>
+                                    <?php for ($i = 0; $i < count($userList[0]); $i++) { ?>
+                                        <?php if(isset($userList[0][$i])): ?>
+                                            <li id='users_<?php print($userList[0][$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
+                                                <?php print($userList[0][$i]->getName()); ?>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if(isset($userList[1][$i])): ?>
+                                            <li id='users_<?php print($userList[1][$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
+                                                <?php print($userList[1][$i]->getName()); ?>
+                                            </li>
+                                        <?php endif; ?>
+                                        <?php if(isset($userList[2][$i])): ?>
+                                            <li id='users_<?php print($userList[2][$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
+                                                <?php print($userList[2][$i]->getName()); ?>
+                                            </li>
+                                        <?php endif; ?>
+                                        <br />
+                                    <?php } ?>
 									</ul>
 								</td>
 							</tr>
@@ -270,13 +277,23 @@
 								</td>
 								<td>
 									<ul>
-                                    <?php for ($i = 0; $i < count($itemList); $i++) { ?>
-                                        <li id='items_<?php print($itemList[$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
-                                            <?php print($itemList[$i]->getName()); ?>
+                                    <?php for ($i = 0; $i < count($itemList[0]); $i++) { ?>
+                                        <?php if(isset($itemList[0][$i])): ?>
+                                        <li id='users_<?php print($itemList[0][$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
+                                            <?php print($itemList[0][$i]->getName()); ?>
                                         </li>
-                                        <?php if(($i+1)%3 == 0){ ?>
-                                            <br />
-                                        <?php } ?>
+                                        <?php endif; ?>
+                                        <?php if(isset($itemList[1][$i])): ?>
+                                        <li id='users_<?php print($itemList[1][$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
+                                            <?php print($itemList[1][$i]->getName()); ?>
+                                        </li>
+                                        <?php endif; ?>
+                                        <?php if(isset($itemList[2][$i])): ?>
+                                        <li id='users_<?php print($itemList[2][$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
+                                            <?php print($itemList[2][$i]->getName()); ?>
+                                        </li>
+                                        <?php endif; ?>
+                                        <br />
                                     <?php } ?>
 									</ul>
 								</td>
@@ -286,9 +303,7 @@
 				</div>
 				<br />
 				<br />
-				<?php
-			}
-			?>
+            <?php endif; ?>
 			
 			<div class="popupWrapper" id="popupWrapper"></div>
             <div class="popup" id="popAddRun">

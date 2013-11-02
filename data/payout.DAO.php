@@ -33,11 +33,23 @@ class PAYOUTDAO{
             if($event->getTotalValue() > 0){
                 $eventTotalWorth = $event->getTotalValue();
                 $totalParticipants = $event->getTotalParticipants()+1; //+1 = guild bank share.
-                $sql = "UPDATE participants SET  `paidOut` =  '". floor($eventTotalWorth / $totalParticipants) ."' WHERE  `participants`.`runID` = ". $event->getID() ." AND `participants`.`userID` = ". $id ."; ";
-                if($dbh->exec($sql)){  //1 if success, 0 if fail
-                    $logdao->logEntry('UPDATE', $sql, 'SUCCESS');
+                $paidOut = floor($eventTotalWorth / $totalParticipants);
+                $runID = $event->getID();
+                $sql = "UPDATE participants SET  `paidOut` = :paidout WHERE `participants`.`runID` = :runID AND `participants`.`userID` = :id;";
+                $stmt = $dbh->prepare($sql);
+                $stmt->bindParam(':paidout', $paidOut);
+                $stmt->bindParam(':runID', $runID);
+                $stmt->bindParam(':id', $id);
+                $binds = array(
+                    ":paidout" => $paidOut,
+                    ":runID" => $runID,
+                    ":id" => $id,
+                );
+                if($stmt->execute()){  //1 if success, 0 if fail
+                    $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
+                    return true;
                 }
-                $logdao->logEntry('UPDATE', $sql, 'FAILED');
+                $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
 			}
 		}
 		return false;

@@ -18,46 +18,39 @@ class USERDAO{
 	
 	public function getUserById($id){
 		$result = array();
-		$sql = "SELECT * FROM users WHERE id = ". $id .";";
+		$sql = "SELECT * FROM users WHERE id = :id;";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-		$resultSet = $dbh->query($sql);
-		if(!$resultSet){
-			$error = "Query Crashed.";
-			throw new Exception($error);
-		}
-		elseif($resultSet->rowCount() == 0){
-			$error = "User Not Found.";
-			throw new Exception($error);
-		}
-		else{
-			foreach ($resultSet as $row){
-				$user = USER::create($row["id"], $row["name"], $row["mailname"], $row["password"]);
-				array_push($result, $user);
-			}
-			return $result;
-		}
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $resultSet = $stmt->fetchAll();
+		if($resultSet){
+            foreach ($resultSet as $row){
+                $user = USER::create($row["id"], $row["name"], $row["mailname"], $row["password"]);
+                return $user;
+            }
+		}else{
+            throw new Exception('No user found. ('. $username .')');
+        }
 	}
 	
 	public function addUser($username){
-		$result = array();
-		$sql = "INSERT INTO users (`name`) VALUES ('". $username ."');";
+		$sql = "INSERT INTO users (`name`) VALUES (:username);";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':username', $username);
+        $binds = array(
+            ":username" => $username,
+        );
         $logdao = new LOGDAO();
-        if($dbh->exec($sql)){  //1 if success, 0 if fail
-            $logdao->logEntry('INSERT', $sql, 'SUCCESS');
-            try{
-                $dao = new USERDAO();
-                $user = $dao->getUserById($dbh->lastInsertId());
-                //echo "User ". $username ." succesfully added.";
-                return $user;
-            }
-            catch(Exception $e){
-                echo 'Caught exception: ',  $e->getMessage(), "\n";
-            }
-            return true;
+        if($stmt->execute()){  //1 if success, 0 if fail
+            $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
+            $dao = new USERDAO();
+            $user = $dao->getUserById($dbh->lastInsertId());
+            return $user;
         }
-        $logdao->logEntry('INSERT', $sql, 'FAILED');
-        echo "User ". $username ." already exists.";
+        $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
+        throw new Exception('Failed to add user. ('. $username .')');
         return false;
 	}
 }

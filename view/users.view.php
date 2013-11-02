@@ -2,8 +2,7 @@
 <html>
 	<head>
 		<title>LandingsPage</title>
-		<link rel="stylesheet" type="text/css" href="../assets/site_style.css">
-		<script type="text/javascript" src="../assets/site_layout.js"></script>
+        <?php include('headers.partial.view.php') ?>
 		<script>
 			window.onload = function(){
 				initializePage();
@@ -43,6 +42,13 @@
                     <input type="submit" class="mySubmitButton" value="Add User">
                 </form>
             </div>
+            <?php if(isset($notification)): ?>
+                <br />
+                <div class="<?php print($notification['type']); ?>">
+                    <h1><?php print($notification['message']); ?></h1>
+                </div>
+                <br />
+            <?php endif; ?>
             <div class="buttonContainer">
 			    <input id="addUserButton" type="submit" class="myButton" value="Add User">
             </div>

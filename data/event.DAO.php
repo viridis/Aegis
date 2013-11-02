@@ -87,11 +87,13 @@ class EVENTDAO{
 				WHERE
 				events.id = participants.runID AND 
 				participants.userID = users.id AND
-				users.id = ". $participantID ."
+				users.id = :participantID
 				ORDER BY events.time DESC, users.name ASC;";
-		
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-		$resultSet1 = $dbh->query($sqlparticipants);
+        $stmt = $dbh->prepare($sqlparticipants);
+        $stmt->bindParam(':participantID', $participantID);
+        $stmt->execute();
+		$resultSet = $stmt->fetchAll();
 		$sqlItemsByParticipantID = "SELECT  
 				events.id AS eventID,
 				events.name AS eventName,
@@ -111,7 +113,7 @@ class EVENTDAO{
 				WHERE 
 				table2.runID = events.id AND
 				events.id = drops.runID AND 
-				drops.itemID = items.id AND (";
+				drops.itemID = items.id AND ";
 		$sqlUsersByParticipantID = "SELECT
 				events.id AS eventID,
 				events.name AS eventName,
@@ -131,14 +133,14 @@ class EVENTDAO{
 				WHERE
 				table2.runID = events.id AND
 				events.id = participants.runID AND 
-				participants.userID = users.id AND (";
-		foreach($resultSet1 as $row){
-			$sqlItemsByParticipantID .= "events.id = ". $row["eventID"] ." OR ";
-			$sqlUsersByParticipantID .= "events.id = ". $row["eventID"] ." OR ";
-		}
-		$sqlItemsByParticipantID .= "0) ORDER BY events.time DESC, items.name ASC;"; //"OR 0" as a hackaround to get rid of the trailing OR.
-		$sqlUsersByParticipantID .= "0) ORDER BY events.time DESC, users.name ASC;";
-		
+				participants.userID = users.id AND ";
+        $list = array();
+        foreach($resultSet AS $row){
+            array_push($list, $row["eventID"]);
+        }
+        $list = implode(',', $list);
+        $sqlItemsByParticipantID .= "events.id IN (". $list .") ORDER BY events.time DESC, items.name ASC;";
+        $sqlUsersByParticipantID .= "events.id IN (". $list .") ORDER BY events.time DESC, users.name ASC;";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
 		$resultSet1 = $dbh->query($sqlItemsByParticipantID);
 		$resultSet2 = $dbh->query($sqlUsersByParticipantID);

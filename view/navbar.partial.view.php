@@ -1,4 +1,4 @@
-<div class="navbar">
+            <div class="navbar">
 				<div class="nav-content">
 					<div class="breakout">
 						<div class="color1"></div>
@@ -11,14 +11,14 @@
 						<a href="home.php">Aegis</a>
 					</div>
 					<?php	
-						for($i=0; $i<count($navbarlinks); $i++){
-							if( strtoupper($currentPageID) == strtoupper($navbarlinks[$i]->getName())){
-								print("<a href='". $navbarlinks[$i]->getLocation() ."' class='navcurrent'>". $navbarlinks[$i]->getName() ."</a>");
+						foreach($navbarlinks as $link){
+							if( strtoupper($currentPageID) == strtoupper($link->getName())){
+								print("<a href='". $link->getLocation() ."' class='navcurrent'>". $link->getName() ."</a>");
 							}
 							else{
-								print("<a href='". $navbarlinks[$i]->getLocation() ."'>". $navbarlinks[$i]->getName() ."</a>");
+								print("<a href='". $link->getLocation() ."'>". $link->getName() ."</a>");
 							}
 						}
 					?>
-					</div>
-				</div>
+                </div>
+            </div>

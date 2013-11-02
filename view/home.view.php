@@ -2,8 +2,7 @@
 <html>
 	<head>
 		<title>LandingsPage</title>
-		<link rel="stylesheet" type="text/css" href="../assets/site_style.css">
-		<script type="text/javascript" src="../assets/site_layout.js"></script>
+        <?php include('headers.partial.view.php') ?>
 		<script>
 			window.onload = function(){
 				initializePage();
@@ -17,6 +16,13 @@
 		<?php include('navbar.partial.view.php') ?>
 		
 		<div class="content">
+            <div style="display: table; height: 100%; width: 100%; overflow: hidden;">
+                <div style="display: table-cell; vertical-align: middle; text-align: center;">
+                    <div style="font-size: 150px;">
+                        ^__^
+                    </div>
+                </div>
+            </div>
 			<div class="featured">
 				<div class="featured-node" style="width: 200px;">
 					Short description of SQI and Seals and stuff. Summing up Prontera, Manuk, Niff and Yuno Seal, just to fill up the space.<br>

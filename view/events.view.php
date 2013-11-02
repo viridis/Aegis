@@ -1,8 +1,7 @@
 <!DOCTYPE html>
 <head>
 		<title>LandingsPage</title>
-		<link rel="stylesheet" type="text/css" href="../assets/site_style.css">
-		<script type="text/javascript" src="../assets/site_layout.js"></script>
+        <?php include('headers.partial.view.php') ?>
 		<script>
 			window.onload = function(){
 				initializePage();
@@ -66,7 +65,7 @@
 			}
 			?>
 			
-			
+			<div style="clear:both;"></div>
 		</div>
 		
 		
