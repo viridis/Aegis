@@ -29,7 +29,7 @@ class ITEMDAO{
                 return $item;
             }
         }else{
-            throw new Exception('No item found. ('. $username .')');
+            throw new Exception('No item found.');
         }
     }
 
@@ -50,6 +50,28 @@ class ITEMDAO{
         }
         $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
         throw new Exception('Failed to add item. ('. $itemname .')');
+        return false;
+    }
+
+    public function updateItem($id, $name){
+        $sql = 'UPDATE items SET name = :name WHERE id = :id;';
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':id', $id);
+        $binds = array(
+            ":name" => $name,
+            ":id" => $id,
+        );
+        $logdao = new LOGDAO();
+        if($stmt->execute()){  //1 if success, 0 if fail
+            $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
+            $dao = new ITEMDAO();
+            $item = $dao->getItemById($id);
+            return $item;
+        }
+        $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
+        throw new Exception('Failed to update item. ('. $name .')');
         return false;
     }
 }

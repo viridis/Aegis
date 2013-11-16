@@ -31,6 +31,14 @@
                     <input type="submit" class="mySubmitButton" value="Sell Item">
                 </form>
             </div>
+            <div class="popup" id="popEditItem">
+                <h1 id="closeEditItem" class="closeButton">[x]CLOSE</h1>
+                <form id="submitEditItem" action="items.php" method="post">
+                    <input name="editItemID" id="editItemID" type="hidden" class="inputText" placeholder="Item ID" >
+                    <input name="editItemName" id="editItemName" type="text" class="inputText" placeholder="Item Name" >
+                    <input type="submit" class="mySubmitButton" value="Edit Item">
+                </form>
+            </div>
             <?php if(isset($notification)): ?>
             <br />
             <div class="<?php print($notification['type']); ?>">
@@ -47,6 +55,7 @@
 				<tr>
 					<td style="width: 20px; padding: 2px 5px;"></td>
 					<td style="padding: 2px 5px;">Registered Items</td>
+                    <td></td>
 				</tr>
 				<?php
 					$i = 0;
@@ -56,6 +65,9 @@
 						<tr>
 							<td style="width: 20px; padding: 2px 5px;"><?php print($i);?></td>
 							<td style="padding: 2px 5px;"><?php print($item->getName());?></td>
+                            <td>
+                                <img src="../assets/edit_icon.png" style="width: 10px; height: 10px;" onclick="editItem(<?php print($item->getId()); ?>);">
+                            </td>
 						</tr>
 						<?php
 					}
@@ -89,6 +101,7 @@
                 document.getElementById("popupWrapper").onclick = function(event) {
                     popup('popAddItem','none');
                     popup('popSellItem','none');
+                    popup('popEditItem','none');
                 }
                 document.getElementById("itemValue").onkeyup = function(event) {
 
@@ -117,6 +130,58 @@
                 $(selector).chosen(config[selector]);
             }
 
+            function editItem(id){
+                makeRequest("items.php?editItem="+ id);
+            }
+
+            function serverResponse(httpRequest)
+            {
+                if (httpRequest.readyState === 4) {
+                    if (httpRequest.status === 200) {
+                        result = JSON.parse(httpRequest.responseText);
+                        if(result['action'] == "requestItem"){
+                            document.getElementById("closeEditItem").onclick = function(event) {
+                                popup('popEditItem','none');
+                            }
+                            document.getElementById("editItemID").value = result['item']['id'];
+                            document.getElementById("editItemName").value = result['item']['name'];
+                            popup('popEditItem','block');
+                        }
+                    }
+                    else {
+                        alert('There was a problem with the request.');
+                    }
+                }
+            }
+
+            function makeRequest(url)
+            {
+                var httpRequest;
+                if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+                    httpRequest = new XMLHttpRequest();
+                }
+                else if (window.ActiveXObject) { // IE
+                    try {
+                        httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+                    }
+                    catch (e) {
+                        try {
+                            httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                        }
+                        catch (e) {}
+                    }
+                }
+
+                if (!httpRequest) {
+                    alert('Giving up :( Cannot create an XMLHTTP instance');
+                    return false;
+                }
+                httpRequest.onreadystatechange = function(){
+                    serverResponse(httpRequest);
+                };
+                httpRequest.open('POST', url, true);
+                httpRequest.send();
+            }
         </script>
 	</body>
 </html>

@@ -34,6 +34,10 @@ class PAYOUTDAO{
                 $eventTotalWorth = $event->getTotalValue();
                 $totalParticipants = $event->getTotalParticipants()+1; //+1 = guild bank share.
                 $paidOut = floor($eventTotalWorth / $totalParticipants);
+                $alreadyPaidOut = $event->getParticipants()[$id]->getPaidOut();
+                if($paidOut <= $alreadyPaidOut){
+                    continue;       //no need to update runs that are up to date already.
+                }
                 $runID = $event->getID();
                 $sql = "UPDATE participants SET  `paidOut` = :paidout WHERE `participants`.`runID` = :runID AND `participants`.`userID` = :id;";
                 $stmt = $dbh->prepare($sql);
@@ -47,12 +51,11 @@ class PAYOUTDAO{
                 );
                 if($stmt->execute()){  //1 if success, 0 if fail
                     $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
-                    return true;
+                }else{
+                    $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
                 }
-                $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
 			}
 		}
-		return false;
 	}
 }
 

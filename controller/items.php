@@ -28,6 +28,35 @@ if(isset($_POST["addItem"])){
     }
 }
 
+if(isset($_GET['editItem']) && is_numeric($_GET['editItem'])){
+    try{
+        $item = $itemservice->getItemById($_GET['editItem']);
+        $result['action'] = 'requestItem';
+        $result['item']['id'] = $item->getId();
+        $result['item']['name'] = $item->getName();
+        print(json_encode($result));
+        exit();
+    }catch (Exception $e){
+        print($e);
+        exit();
+    }
+}
+
+if(isset($_POST['editItemID']) && isset($_POST['editItemName']) && is_numeric($_POST['editItemID'])){
+    try{
+        $item = $itemservice->updateItem($_POST['editItemID'], $_POST['editItemName']);
+        $notification = array(
+            'type' => 'confirmation',
+            'message' => 'Successfully changed item. ('. $item->getName() .')',
+        );
+    }catch (Exception $e){
+        $notification = array(
+            'type' => 'error',
+            'message' =>  $e->getMessage(),
+        );
+    }
+}
+
 $itemlist = $itemservice->listAllItems();
 if(!empty($_POST["itemAmount"])  && !empty($_POST["itemName"]) && !empty($_POST["itemValue"])){
     $resultItem;

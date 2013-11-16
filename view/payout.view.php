@@ -21,6 +21,7 @@
 				<tr>
 					<td style="width: 20px; padding: 2px 5px;"></td>
 					<td style="padding: 2px 5px; font-weight: bold;">Name</td>
+                    <td style="padding: 2px 5px; font-weight: bold;">Mailname</td>
 					<td style="padding: 2px 5px; font-weight: bold">To Be Paid Out</td>
 					<td></td>
 				</tr>
@@ -33,9 +34,8 @@
 							<tr>
 								<td style="width: 20px; padding: 2px 5px;"><?php print($i);?></td>
 								<td style="padding: 2px 5px;"><?php print($payOut[0]->getName());?></td>
-								<td style="padding: 2px 5px;text-align: right;font-size: 14px; font-weight: bold; color: #8C2B2B;">
-								<?php print(number_format($payOut[1]));?>
-								</td>
+                                <td style="padding: 2px 5px;"><?php print($payOut[0]->getMailName());?></td>
+								<td style="padding: 2px 5px;text-align: right;font-size: 14px; font-weight: bold; color: #8C2B2B;"><?php print(number_format($payOut[1]));?></td>
 								<td style="width: 50px; padding: 2px 5px;">
 									<a href="./payout.php?payout=<?php print($payOut[0]->getUserID()); ?>" style="text-decoration: none;">
 										Pay Out

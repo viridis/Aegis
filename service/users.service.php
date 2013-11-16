@@ -19,5 +19,11 @@ class userservice{
 		$user = $userdao->addUser($name);
 		return $user;
 	}
+
+    public function updateUser($id, $name, $mailName){
+        $userdao = new USERDAO();
+        $user = $userdao->updateUser($id, $name, $mailName);
+        return $user;
+    }
 }
 ?>

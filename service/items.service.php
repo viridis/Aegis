@@ -19,5 +19,11 @@ class itemservice{
 		$item = $itemdao->addItem($name);
 		return $item;
 	}
+
+    public function updateItem($id, $name){
+        $itemdao = new ITEMDAO();
+        $item = $itemdao->updateItem($id, $name);
+        return $item;
+    }
 }
 ?>

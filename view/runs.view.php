@@ -279,17 +279,17 @@
 									<ul>
                                     <?php for ($i = 0; $i < count($itemList[0]); $i++) { ?>
                                         <?php if(isset($itemList[0][$i])): ?>
-                                        <li id='users_<?php print($itemList[0][$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
+                                        <li id='items_<?php print($itemList[0][$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
                                             <?php print($itemList[0][$i]->getName()); ?>
                                         </li>
                                         <?php endif; ?>
                                         <?php if(isset($itemList[1][$i])): ?>
-                                        <li id='users_<?php print($itemList[1][$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
+                                        <li id='items_<?php print($itemList[1][$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
                                             <?php print($itemList[1][$i]->getName()); ?>
                                         </li>
                                         <?php endif; ?>
                                         <?php if(isset($itemList[2][$i])): ?>
-                                        <li id='users_<?php print($itemList[2][$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
+                                        <li id='items_<?php print($itemList[2][$i]->getId()); ?>' draggable='true' ondragstart='return drag(event)' class="floatListItem">
                                             <?php print($itemList[2][$i]->getName()); ?>
                                         </li>
                                         <?php endif; ?>

@@ -53,5 +53,29 @@ class USERDAO{
         throw new Exception('Failed to add user. ('. $username .')');
         return false;
 	}
+
+    public function updateUser($id, $name, $mailname){
+        $sql = 'UPDATE users SET name = :name, mailname = :mailname WHERE id = :id;';
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':name', $name);
+        $stmt->bindParam(':mailname', $mailname);
+        $stmt->bindParam(':id', $id);
+        $binds = array(
+            ":name" => $name,
+            ":id" => $id,
+            ":mailname" => $mailname,
+        );
+        $logdao = new LOGDAO();
+        if($stmt->execute()){  //1 if success, 0 if fail
+            $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
+            $dao = new USERDAO();
+            $user = $dao->getUserById($id);
+            return $user;
+        }
+        $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
+        throw new Exception('Failed to update item. ('. $name .')');
+        return false;
+    }
 }
 ?>

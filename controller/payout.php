@@ -15,8 +15,8 @@ $eventservice = new eventservice();
 $payoutservice = new payoutservice();
 
 if (isset ($_GET["payout"]) &&  is_numeric($_GET["payout"])) {
-	$eventsByID = $eventservice->getEventsByParticipantID($_GET["payout"]);
-	$payoutservice->payOutUserID($_GET["payout"], $eventsByID);
+	$eventsByUserID = $eventservice->getEventsByParticipantID($_GET["payout"]);
+	$payoutservice->payOutUserID($_GET["payout"], $eventsByUserID);
 	header("location: ./payout.php");
 }
 

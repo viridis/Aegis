@@ -33,10 +33,10 @@ if(isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["add"]
     exit();
 }
 if(isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["add"]) && $_GET["add"] == 'items'){
-    $run = $runservice->addItemToRun($_GET["editrun"], $_GET["id"]);
+    $runID = $runservice->addItemToRun($_GET["editrun"], $_GET["id"]);
     $result["action"] = 'added';
     $result["database"] = 'items';
-    $result["id"] = $run;
+    $result["id"] = $runID;
     print(json_encode($result));
     exit();
 }if(isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["delete"]) && $_GET["delete"] == 'users'){
