@@ -1,33 +1,32 @@
+function initializePage() {
+    var iHeight = parseInt(window.innerHeight);
 
-function initializePage(){
-	var iHeight = parseInt(window.innerHeight);
-	
-	// if(iHeight >= 990){
-		// var a = "assets/site_style_H990.css"
-		// loadJsCssFile(a, "css");
-	// }
-	fixContentSize(iHeight);
+    // if(iHeight >= 990){
+    // var a = "assets/site_style_H990.css"
+    // loadJsCssFile(a, "css");
+    // }
+    fixContentSize(iHeight);
 }
 
-function popup(id, state){
+function popup(id, state) {
     document.getElementById(id).style.display = state;
     document.getElementById("popupWrapper").style.display = state;
 }
 
-function setFocus(id){
+function setFocus(id) {
     document.getElementById(id).focus();
 }
 
-function fixContentSize(iWindowHeight){
-	var eContent = document.querySelector(".content");
-	var iContentHeight = parseInt(window.getComputedStyle(eContent).height);
-	if(iContentHeight < iWindowHeight-270){ //Header(70)+Footer(200) = 270px;
-		eContent.style.height = iWindowHeight-270 +'px';
-	}
+function fixContentSize(iWindowHeight) {
+    var eContent = document.querySelector(".content");
+    var iContentHeight = parseInt(window.getComputedStyle(eContent).height);
+    if (iContentHeight < iWindowHeight - 270) { //Header(70)+Footer(200) = 270px;
+        eContent.style.height = iWindowHeight - 270 + 'px';
+    }
 }
 
-function commaSeparateNumber(val){
-    val = val.replace(/,/g , '');
+function commaSeparateNumber(val) {
+    val = val.replace(/,/g, '');
     return val.toString().replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
 }
 

@@ -5,8 +5,10 @@ require_once("../class/events.class.php");
 require_once("../class/drop.class.php");
 require_once("../class/participant.class.php");
 
-class RUNDAO{
-    public function getAllEvents(){
+class RUNDAO
+{
+    public function getAllEvents()
+    {
         $result = array();
         $sql = "SELECT
 				events.id AS eventID,
@@ -18,14 +20,15 @@ class RUNDAO{
 
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultset = $dbh->query($sql);
-        foreach ($resultset as $row){
+        foreach ($resultset as $row) {
             $event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
             $result[$row["eventID"]] = $event;
         }
         return $result;
     }
 
-    public function addRun($name, $time){
+    public function addRun($name, $time)
+    {
         $sql = "INSERT INTO events (`name`, `time`) VALUES (:name, :time);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -36,7 +39,7 @@ class RUNDAO{
             ":time" => $time,
         );
         $logdao = new LOGDAO();
-        if($stmt->execute()){  //1 if success, 0 if fail
+        if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
             return true;
         }
@@ -44,8 +47,8 @@ class RUNDAO{
         return false;
     }
 
-    public function getRunById($id){
-        $result;
+    public function getRunById($id)
+    {
         $sqldrops = "select
 					events.id AS eventID,
 					events.name AS eventName,
@@ -68,7 +71,7 @@ class RUNDAO{
 								) as table2
 						ON drops.runID = table2.runID
 					WHERE
-					events.id = ". $id ."
+					events.id = " . $id . "
 					ORDER BY events.time DESC, items.name ASC;";
 
         $sqlparticipants = "select
@@ -92,7 +95,7 @@ class RUNDAO{
 										GROUP BY participants.runID) table2
 								ON participants.runID = table2.runID
 							WHERE
-							events.id = ". $id ."
+							events.id = " . $id . "
 							ORDER BY events.time DESC, users.name ASC;";
 
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
@@ -104,18 +107,18 @@ class RUNDAO{
         $stmt2->bindParam(':id', $id);
         $stmt2->execute();
         $resultSet2 = $stmt2->fetchAll();
-        foreach ($resultSet1 as $row){
+        foreach ($resultSet1 as $row) {
             $event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
-            if(isset($row["dropID"])){
+            if (isset($row["dropID"])) {
                 $drop = DROP::create($row["dropID"], $row["itemName"], $row["itemTalonID"], $row["dropValue"]);
                 $event->setTotalValue($row["totalValue"]);
                 $event->appendDrop($drop);
             }
             $result = $event;
         }
-        foreach($resultSet2 as $row){
+        foreach ($resultSet2 as $row) {
             $event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
-            if(isset($row["participantID"])){
+            if (isset($row["participantID"])) {
                 $participant = PARTICIPANT::create($row["participantID"], $row["userID"], $row["userName"], $row["userMailname"], $row["participantsPaidOut"]);
                 $event->setTotalParticipants($row["totalParticipants"]);
                 $event->appendParticipant($participant);
@@ -125,7 +128,8 @@ class RUNDAO{
         return $result;
     }
 
-    public function addParticipantToRun($runID, $userID){
+    public function addParticipantToRun($runID, $userID)
+    {
         $sql = "INSERT INTO participants (`runID`, `userID`) VALUES (:runID, :userID);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -136,7 +140,7 @@ class RUNDAO{
             ":userID" => $userID,
         );
         $logdao = new LOGDAO();
-        if($stmt->execute()){  //1 if success, 0 if fail
+        if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
             return true;
         }
@@ -144,7 +148,8 @@ class RUNDAO{
         return false;
     }
 
-    public function addItemToRun($runID, $itemID){
+    public function addItemToRun($runID, $itemID)
+    {
         $sql = "INSERT INTO drops (`runID`, `itemID`) VALUES (:runID, :itemID);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -155,7 +160,7 @@ class RUNDAO{
             ":itemID" => $itemID,
         );
         $logdao = new LOGDAO();
-        if($stmt->execute()){  //1 if success, 0 if fail
+        if ($stmt->execute()) { //1 if success, 0 if fail
             $lastID = $dbh->lastInsertId();
             $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
             return $lastID;
@@ -164,7 +169,8 @@ class RUNDAO{
         return false;
     }
 
-    public function removeParticipantFromRun($runID, $userID){
+    public function removeParticipantFromRun($runID, $userID)
+    {
         $sql = "DELETE FROM participants WHERE `participants`.`runID` = :runID AND `participants`.`userID` = :userID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -175,7 +181,7 @@ class RUNDAO{
             ":userID" => $userID,
         );
         $logdao = new LOGDAO();
-        if($stmt->execute()){  //1 if success, 0 if fail
+        if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('DELETE', $stmt, $binds, 'SUCCESS');
             return $userID;
         }
@@ -183,7 +189,8 @@ class RUNDAO{
         return false;
     }
 
-    public function removeItemFromRun($runID, $dropID){
+    public function removeItemFromRun($runID, $dropID)
+    {
         $sql = "DELETE FROM drops WHERE `drops`.`id` = :dropID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -192,7 +199,7 @@ class RUNDAO{
             ":dropID" => $dropID,
         );
         $logdao = new LOGDAO();
-        if($stmt->execute()){  //1 if success, 0 if fail
+        if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('DELETE', $stmt, $binds, 'SUCCESS');
             return $dropID;
         }
@@ -200,7 +207,8 @@ class RUNDAO{
         return false;
     }
 
-    public function sellDrop($amount, $itemId, $value){
+    public function sellDrop($amount, $itemId, $value)
+    {
         $amount = intval(trim($amount));
         $sql = 'SELECT drops.id as dropsID
                 FROM drops, events
@@ -211,26 +219,26 @@ class RUNDAO{
         $stmt->bindParam(':amount', $amount, PDO::PARAM_INT);
         $stmt->execute();
         $resultSet = $stmt->fetchAll();
-        if(count($resultSet) < $amount){    //trying to sell more items than exist.
-            throw new Exception('Trying to sell '. $amount .' item(s) while  there are only '. count($resultSet) .'.');
-        }else{
+        if (count($resultSet) < $amount) { //trying to sell more items than exist.
+            throw new Exception('Trying to sell ' . $amount . ' item(s) while  there are only ' . count($resultSet) . '.');
+        } else {
             $list = array();
-            foreach($resultSet AS $row){
+            foreach ($resultSet AS $row) {
                 array_push($list, intval(trim($row['dropsID'])));
             }
             $inQuery = implode(',', array_fill(0, count($list), '?'));
-            $sql = 'UPDATE drops SET value= ? WHERE id IN ('. $inQuery .');';
+            $sql = 'UPDATE drops SET value= ? WHERE id IN (' . $inQuery . ');';
             $stmt = $dbh->prepare($sql);
             $stmt->bindParam(1, $value);
-            foreach ($list as $k => $id){
-                $stmt->bindValue(($k+2), $id);
+            foreach ($list as $k => $id) {
+                $stmt->bindValue(($k + 2), $id);
             }
             $binds = array(
                 ":value" => $value,
                 ":list" => $list,
             );
             $logdao = new LOGDAO();
-            if($stmt->execute()){  //1 if success, 0 if fail
+            if ($stmt->execute()) { //1 if success, 0 if fail
                 $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
                 return true;
             }

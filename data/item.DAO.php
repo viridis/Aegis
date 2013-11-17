@@ -3,37 +3,41 @@ require_once("../data/dbconfig.DAO.php");
 require_once("../data/log.DAO.php");
 require_once("../class/item.class.php");
 
-class ITEMDAO{
-	public function getAllItems(){
-		$result = array();
-		$sql = "SELECT * FROM items ORDER BY name ASC;";
-		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-		$resultSet = $dbh->query($sql);
-		foreach ($resultSet as $row){
-			$item = ITEM::create($row["id"], $row["name"], $row["talonID"]);
-			array_push($result, $item);
-		}
-		return $result;
-	}
+class ITEMDAO
+{
+    public function getAllItems()
+    {
+        $result = array();
+        $sql = "SELECT * FROM items ORDER BY name ASC;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $resultSet = $dbh->query($sql);
+        foreach ($resultSet as $row) {
+            $item = ITEM::create($row["id"], $row["name"], $row["talonID"]);
+            array_push($result, $item);
+        }
+        return $result;
+    }
 
-    public function getItemById($id){
+    public function getItemById($id)
+    {
         $sql = "SELECT * FROM items WHERE id = :id;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $resultSet = $stmt->fetchAll();
-        if($resultSet){
-            foreach ($resultSet as $row){
+        if ($resultSet) {
+            foreach ($resultSet as $row) {
                 $item = ITEM::create($row["id"], $row["name"], $row["talonID"]);
                 return $item;
             }
-        }else{
+        } else {
             throw new Exception('No item found.');
         }
     }
 
-    public function addItem($itemname){
+    public function addItem($itemname)
+    {
         $sql = "INSERT INTO items (`name`) VALUES (:itemname);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -42,18 +46,19 @@ class ITEMDAO{
             ":itemname" => $itemname,
         );
         $logdao = new LOGDAO();
-        if($stmt->execute()){  //1 if success, 0 if fail
+        if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
             $dao = new ITEMDAO();
             $item = $dao->getItemById($dbh->lastInsertId());
             return $item;
         }
         $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-        throw new Exception('Failed to add item. ('. $itemname .')');
+        throw new Exception('Failed to add item. (' . $itemname . ')');
         return false;
     }
 
-    public function updateItem($id, $name){
+    public function updateItem($id, $name)
+    {
         $sql = 'UPDATE items SET name = :name WHERE id = :id;';
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -64,15 +69,16 @@ class ITEMDAO{
             ":id" => $id,
         );
         $logdao = new LOGDAO();
-        if($stmt->execute()){  //1 if success, 0 if fail
+        if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
             $dao = new ITEMDAO();
             $item = $dao->getItemById($id);
             return $item;
         }
         $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
-        throw new Exception('Failed to update item. ('. $name .')');
+        throw new Exception('Failed to update item. (' . $name . ')');
         return false;
     }
 }
+
 ?>

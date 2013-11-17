@@ -4,10 +4,12 @@ require_once("../class/events.class.php");
 require_once("../class/drop.class.php");
 require_once("../class/participant.class.php");
 
-class EVENTDAO{
-	public function getAllEvents(){
-		$result = array();
-		$sqldrops = "SELECT  
+class EVENTDAO
+{
+    public function getAllEvents()
+    {
+        $result = array();
+        $sqldrops = "SELECT
 					events.id AS eventID,
 					events.name AS eventName,
 					events.time AS eventTime,
@@ -28,8 +30,8 @@ class EVENTDAO{
 					drops.itemID = items.id AND
 					table2.runID = events.id
 					ORDER BY events.time DESC, items.name ASC;";
-				
-		$sqlparticipants = "SELECT
+
+        $sqlparticipants = "SELECT
 							events.id AS eventID,
 							events.name AS eventName,
 							events.time AS eventTime,
@@ -51,29 +53,30 @@ class EVENTDAO{
 							table2.runID = events.id
 							ORDER BY events.time DESC, users.name ASC;";
 
-		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-		$resultSet1 = $dbh->query($sqldrops);
-		$resultSet2 = $dbh->query($sqlparticipants);
-		foreach ($resultSet1 as $row){
-			$event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
-			$drop = DROP::create($row["dropID"], $row["itemName"], $row["itemTalonID"], $row["dropValue"]);
-			$event->setTotalValue($row["totalValue"]);
-			$event->appendDrop($drop);
-			$result[$row["eventID"]] = $event;
-		}
-		foreach($resultSet2 as $row){
-			$event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
-			$participant = PARTICIPANT::create($row["participantID"], $row["userID"], $row["userName"], $row["userMailname"], $row["participantsPaidOut"]);
-			$event->setTotalParticipants($row["totalParticipants"]);
-			$event->appendParticipant($participant);
-			$result[$row["eventID"]] = $event;
-		}
-		return $result;
-	}
-	
-	public function getAllEventsByParticipantID($participantID){
-		$result = array();
-		$sqlparticipants = "SELECT
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $resultSet1 = $dbh->query($sqldrops);
+        $resultSet2 = $dbh->query($sqlparticipants);
+        foreach ($resultSet1 as $row) {
+            $event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
+            $drop = DROP::create($row["dropID"], $row["itemName"], $row["itemTalonID"], $row["dropValue"]);
+            $event->setTotalValue($row["totalValue"]);
+            $event->appendDrop($drop);
+            $result[$row["eventID"]] = $event;
+        }
+        foreach ($resultSet2 as $row) {
+            $event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
+            $participant = PARTICIPANT::create($row["participantID"], $row["userID"], $row["userName"], $row["userMailname"], $row["participantsPaidOut"]);
+            $event->setTotalParticipants($row["totalParticipants"]);
+            $event->appendParticipant($participant);
+            $result[$row["eventID"]] = $event;
+        }
+        return $result;
+    }
+
+    public function getAllEventsByParticipantID($participantID)
+    {
+        $result = array();
+        $sqlparticipants = "SELECT
 				events.id AS eventID,
 				events.name AS eventName,
 				events.time AS eventTime,
@@ -89,12 +92,12 @@ class EVENTDAO{
 				participants.userID = users.id AND
 				users.id = :participantID
 				ORDER BY events.time DESC, users.name ASC;";
-		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlparticipants);
         $stmt->bindParam(':participantID', $participantID);
         $stmt->execute();
-		$resultSet = $stmt->fetchAll();
-		$sqlItemsByParticipantID = "SELECT  
+        $resultSet = $stmt->fetchAll();
+        $sqlItemsByParticipantID = "SELECT
 				events.id AS eventID,
 				events.name AS eventName,
 				events.time AS eventTime,
@@ -114,7 +117,7 @@ class EVENTDAO{
 				table2.runID = events.id AND
 				events.id = drops.runID AND 
 				drops.itemID = items.id AND ";
-		$sqlUsersByParticipantID = "SELECT
+        $sqlUsersByParticipantID = "SELECT
 				events.id AS eventID,
 				events.name AS eventName,
 				events.time AS eventTime,
@@ -135,34 +138,37 @@ class EVENTDAO{
 				events.id = participants.runID AND 
 				participants.userID = users.id AND ";
         $list = array();
-        foreach($resultSet AS $row){
+        foreach ($resultSet AS $row) {
             array_push($list, $row["eventID"]);
         }
         $list = implode(',', $list);
-        $sqlItemsByParticipantID .= "events.id IN (". $list .") ORDER BY events.time DESC, items.name ASC;";
-        $sqlUsersByParticipantID .= "events.id IN (". $list .") ORDER BY events.time DESC, users.name ASC;";
-		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-		$resultSet1 = $dbh->query($sqlItemsByParticipantID);
-		$resultSet2 = $dbh->query($sqlUsersByParticipantID);
-		foreach ($resultSet1 as $row){
-			$event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
-			$drop = DROP::create($row["dropID"], $row["itemName"], $row["itemTalonID"], $row["dropValue"]);
-			$event->setTotalValue($row["totalValue"]);
-			$event->appendDrop($drop);
-			$result[$row["eventID"]] = $event;
-			
-		}
-		foreach($resultSet2 as $row){			
-			$event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
-			$participant = PARTICIPANT::create($row["participantID"], $row["userID"], $row["userName"], $row["userMailname"], $row["participantsPaidOut"]);
-			$event->setTotalParticipants($row["totalParticipants"]);
-			$event->appendParticipant($participant);
-			$result[$row["eventID"]] = $event;
-		}
-		return $result;	
-	}
+        $sqlItemsByParticipantID .= "events.id IN (" . $list . ") ORDER BY events.time DESC, items.name ASC;";
+        $sqlUsersByParticipantID .= "events.id IN (" . $list . ") ORDER BY events.time DESC, users.name ASC;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $resultSet1 = $dbh->query($sqlItemsByParticipantID);
+        $resultSet2 = $dbh->query($sqlUsersByParticipantID);
+        foreach ($resultSet1 as $row) {
+            $event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
+            $drop = DROP::create($row["dropID"], $row["itemName"], $row["itemTalonID"], $row["dropValue"]);
+            $event->setTotalValue($row["totalValue"]);
+            $event->appendDrop($drop);
+            $result[$row["eventID"]] = $event;
 
-	
+        }
+        foreach ($resultSet2 as $row) {
+            $event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
+            $participant = PARTICIPANT::create($row["participantID"], $row["userID"], $row["userName"], $row["userMailname"], $row["participantsPaidOut"]);
+            $event->setTotalParticipants($row["totalParticipants"]);
+            $event->appendParticipant($participant);
+            $result[$row["eventID"]] = $event;
+        }
+        if ($result) {
+            return $result;
+        }
+        throw new Exception('Could not get eventlist by UserID.');
+    }
+
+
 }
 
 ?>
