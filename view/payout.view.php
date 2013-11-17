@@ -42,7 +42,7 @@
                         <td style="width: 20px; padding: 2px 5px;"><?php print($i); ?></td>
                         <td style="padding: 2px 5px;"><?php print($payOut[0]->getName()); ?></td>
                         <td style="padding: 2px 5px;"><?php print($payOut[0]->getMailName()); ?></td>
-                        <td style="padding: 2px 5px;text-align: right;font-size: 14px; font-weight: bold; color: #8C2B2B;"><?php print(number_format($payOut[1])); ?></td>
+                        <td style="padding: 2px 5px;text-align: right;font-size: 14px; font-weight: bold;"><?php print(number_format($payOut[1])); ?></td>
                         <?php if ($_SESSION["userID"]): ?>
                             <td style="vertical-align: top;">
                                 <form action="payout.php?action=payout" method="post">

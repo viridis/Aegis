@@ -1,5 +1,5 @@
 /*
-New
+red
 Color1: 4A0317
 Color2: 8C2B2B
 Color3: DBCDC0
@@ -8,10 +8,10 @@ Color4: FFFEF5
 */
 
 /*
-New
+purple
 Color1: 320032
 Color2: 640064
-Color3: 960096
+Color3: DBCDC0
 Color5: c800c8
 Color4: fa00fa
 */
@@ -233,6 +233,18 @@ input {
     background: -ms-linear-gradient(top, #640064 34%, #3B1212 100%); /* IE10+ */
     background: linear-gradient(to bottom, #640064 34%, #3B1212 100%); /* W3C */
     filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#640064', endColorstr='#3B1212', GradientType=0); /* IE6-9 */
+}
+
+.mySubmitButton:hover {
+    background: #3B1212; /* Old browsers */
+    color: #DBCDC0;
+    background: -moz-linear-gradient(top, #3B1212 34%, #640064 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(34%, #3B1212), color-stop(100%, #640064)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(top, #3B1212 34%, #640064 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(top, #3B1212 34%, #640064 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(top, #3B1212 34%, #640064 100%); /* IE10+ */
+    background: linear-gradient(to bottom, #3B1212 34%, #640064 100%); /* W3C */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#CF4040', endColorstr='#640064', GradientType=0); /* IE6-9 */
 }
 
 .myButton {
