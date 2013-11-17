@@ -4,7 +4,7 @@
 				<div class="footer-breakout footer-featured">
 					<ul>
 						<li><img src="../assets/icon_github.png" />
-                            <a href="https://github.com/viridis/Aegis">GitHub Issue Tracker</a>
+                            <a href="https://github.com/viridis/Aegis/issues">GitHub Issue Tracker</a>
                         </li>
 						<li><img src="../assets/icon_facebook.png" />Facebook</li>
 						<li><img src="../assets/icon_twitter.png" />Twitter</li>
