@@ -3,33 +3,34 @@ require_once("../data/dbconfig.DAO.php");
 require_once("../data/log.DAO.php");
 require_once("../class/user.class.php");
 
-class USERDAO
-{
-    public function getAllUsers()
-    {
-        $result = array();
-        $sql = "SELECT * FROM users ORDER BY name ASC;";
-        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $resultSet = $dbh->query($sql);
-        foreach ($resultSet as $row) {
-            $user = USER::create($row["id"], $row["name"], $row["mailname"], $row["password"]);
-            array_push($result, $user);
-        }
-        return $result;
-    }
-
-    public function getUserById($id)
-    {
-        $result = array();
-        $sql = "SELECT * FROM users WHERE id = :id;";
-        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+class USERDAO{
+	public function getAllUsers(){
+		$result = array();
+		$sql = "SELECT * FROM users ORDER BY name ASC;";
+		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+		$resultSet = $dbh->query($sql);
+		foreach ($resultSet as $row){
+			$user = USER::create($row['id'], $row['name'], $row['mailname'], $row['permissions']);
+			array_push($result, $user);
+		}
+		return $result;
+	}
+	
+	public function getUserById($id){
+		$result = array();
+		$sql = "SELECT * FROM users WHERE id = :id;";
+		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
         $resultSet = $stmt->fetchAll();
         if ($resultSet) {
             foreach ($resultSet as $row) {
-                $user = USER::create($row["id"], $row["name"], $row["mailname"], $row["password"]);
+                $user = USER::create($row["id"], $row["name"], $row["mailname"], $row["permissions"]);
+                $user->setEmail($row["email"]);
+                $user->setPassword($row["password"]);
+                $user->setForumName($row["forumname"]);
+                $user->clearUser();
                 return $user;
             }
         } else {
@@ -93,9 +94,57 @@ class USERDAO
         $stmt->execute();
         $resultSet = $stmt->fetchAll();
         foreach ($resultSet as $row) {
-            $user = USER::create($row["id"], $row["name"], $row["mailname"], $row["password"]);
+            $user = USER::create($row["id"], $row["name"], $row["mailname"], $row["permissions"]);
             return $user;
         }
+        return false;
+	}
+
+    public function editUser($id, $mailName, $forumName, $email){
+        $sql = 'UPDATE users SET mailname = :mailname, forumname = :forumname, email = :email WHERE id = :id;';
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':mailname', $mailName);
+        $stmt->bindParam(':forumname', $forumName);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':id', $id);
+        $binds = array(
+            ":mailname" => $mailName,
+            ":forumname" => $forumName,
+            ":email" => $email,
+            ":id" => $id,
+        );
+        $logdao = new LOGDAO();
+        if ($stmt->execute()) { //1 if success, 0 if fail
+            $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
+            $dao = new USERDAO();
+            $user = $dao->getUserById($id);
+            return $user;
+        }
+        $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
+        throw new Exception('Failed to update user. (' . $mailName . ')');
+        return false;
+    }
+
+    public function editPasswordOfUser($id, $password){
+        $sql = 'UPDATE users SET password = :password WHERE id = :id;';
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':id', $id);
+        $binds = array(
+            ":password" => $password,
+            ":id" => $id,
+        );
+        $logdao = new LOGDAO();
+        if ($stmt->execute()) { //1 if success, 0 if fail
+            $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
+            $dao = new USERDAO();
+            $user = $dao->getUserById($id);
+            return $user;
+        }
+        $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
+        throw new Exception('Failed to update password.');
         return false;
     }
 }

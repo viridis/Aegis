@@ -5,10 +5,14 @@ require_once("../service/users.service.php");
 if (!$_SESSION["userID"]) {
     header("location: ./home.php");
 }
-
 $pageservice = new PAGESERVICE();
 $currentPageID = "Manage Users";
-$navbarlinks = $pageservice->generateNavLinks();
+if (isset($_SESSION["userID"])) {
+    $sessionUser = $pageservice->whoIsSessionUser($_SESSION["userID"]);
+    $navbarlinks = $pageservice->generateNavLinksForUser($_SESSION["userID"]);
+} else {
+    $navbarlinks = $pageservice->generateNavLinksForUser();
+}
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 

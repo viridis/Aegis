@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../data/links.DAO.php");
+require_once("../data/user.DAO.php");
 
 class PAGESERVICE
 {
@@ -18,11 +19,17 @@ class PAGESERVICE
         return $links;
     }
 
-    public function generateNavLinks($user = false)
+    public function generateNavLinksForUser($userId = 0)
     {
         $navbarlinksdao = new NAVBARLINKSDAO();
-        $links = $navbarlinksdao->getLinks($user);
+        $links = $navbarlinksdao->getLinksForUser($userId);
         return $links;
+    }
+
+    public function whoIsSessionUser($userId){
+        $userdao = new USERDAO();
+        $user = $userdao->getUserById($userId);
+        return $user;
     }
 }
 

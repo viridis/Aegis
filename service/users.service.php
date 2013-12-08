@@ -37,6 +37,19 @@ class userservice
         $user = $userdao->getUserByNameAndPassword($name, $password);
         return $user;
     }
+
+    public function editUser($id, $mailName, $forumName, $email)
+    {
+        $userdao = new USERDAO();
+        $user = $userdao->editUser($id, $mailName, $forumName, $email);
+        return $user;
+    }
+
+    public function editPasswordOfUser($id, $password){
+        $userdao = new USERDAO();
+        $user = $userdao->editPasswordOfUser($id, $password);
+        return $user;
+    }
 }
 
 ?>

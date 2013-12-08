@@ -30,3 +30,13 @@ function commaSeparateNumber(val) {
     return val.toString().replace(/\B(?=(?:\d{3})+(?!\d))/g, ",");
 }
 
+function dropDownSettings(){
+    dropdown = document.getElementById('settingsMenu');
+    console.log(dropdown.style.display);
+    if(dropdown.style.display != 'inline'){
+        dropdown.style.display = 'inline';
+    } else {
+        dropdown.style.display = 'none';
+    }
+}
+

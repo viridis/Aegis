@@ -65,7 +65,7 @@
                     <td style="width: 20px; padding: 2px 5px;"><?php print($i); ?></td>
                     <td style="padding: 2px 5px;"><?php print($item->getName()); ?></td>
                     <td>
-                        <img src="../assets/edit_icon.png" style="width: 10px; height: 10px;"
+                        <img src="../assets/edit_icon.png" class="editIcon"
                              onclick="editItem(<?php print($item->getId()); ?>);">
                     </td>
                 </tr>
@@ -133,9 +133,6 @@
             if (httpRequest.status === 200) {
                 result = JSON.parse(httpRequest.responseText);
                 if (result['action'] == "requestItem") {
-                    document.getElementById("closeEditItem").onclick = function (event) {
-                        popup('popEditItem', 'none');
-                    }
                     document.getElementById("editItemID").value = result['item']['id'];
                     document.getElementById("editItemName").value = result['item']['name'];
                     popup('popEditItem', 'block');

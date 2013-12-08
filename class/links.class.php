@@ -5,19 +5,18 @@ class LINKS
     private $id;
     private $name;
     private $location;
-    private $weight;
+    private $visibility;
 
-    function __construct($id, $name, $location, $weight)
+    function __construct($id, $name, $location)
     {
         $this->id = $id;
         $this->name = $name;
         $this->location = $location;
-        $this->weight = $weight;
     }
 
-    public static function create($id, $name, $location, $weight)
+    public static function create($id, $name, $location)
     {
-        self::$idList[$id] = new LINKS($id, $name, $location, $weight);
+        self::$idList[$id] = new LINKS($id, $name, $location);
         return self::$idList[$id];
     }
 
@@ -33,7 +32,7 @@ class LINKS
 
     public function getWeight()
     {
-        return $this->weight;
+        return $this->visibility;
     }
 }
 

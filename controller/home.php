@@ -5,10 +5,11 @@ require_once("../service/page.service.php");
 
 $pageservice = new PAGESERVICE();
 $currentPageID = "home";
-if ($_SESSION["userID"]) {
-    $navbarlinks = $pageservice->generateNavLinks();
+if (isset($_SESSION["userID"])) {
+    $sessionUser = $pageservice->whoIsSessionUser($_SESSION["userID"]);
+    $navbarlinks = $pageservice->generateNavLinksForUser($_SESSION["userID"]);
 } else {
-    $navbarlinks = $pageservice->generateNavLinks('user');
+    $navbarlinks = $pageservice->generateNavLinksForUser();
 }
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);

@@ -36,23 +36,31 @@ class FEATUREDLINKSDAO
 
 class NAVBARLINKSDAO
 {
-    public function getLinks($user = false)
+    public function getLinksForUser($userId)
     {
         $result = array();
-        $sql = "SELECT * FROM navbarlinks ";
-        if ($user) {
-            $sql .= "WHERE visibility = :user ";
-        }
-        $sql .= "ORDER BY id DESC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sql);
-        if ($user) {
-            $stmt->bindParam(':user', $user);
+        if($userId == 0){
+            $sql = "SELECT *
+                    FROM navbarlinks
+                    WHERE visibility = 0
+                    ORDER BY id DESC;
+                ";
+            $stmt = $dbh->prepare($sql);
+        } else {
+            $sql = "SELECT l.id, l.name, l.location
+                    FROM navbarlinks l
+                    JOIN users u on u.permissions >= visibility
+                    WHERE u.id = :userid
+                    ORDER BY l.id DESC;
+                ";
+            $stmt = $dbh->prepare($sql);
+            $stmt->bindParam(':userid', $userId);
         }
         $stmt->execute();
         $resultSet = $stmt->fetchAll();
         foreach ($resultSet as $row) {
-            $link = LINKS::create($row["id"], $row["name"], $row["location"], $row["weight"]);
+            $link = LINKS::create($row["id"], $row["name"], $row["location"]);
             array_push($result, $link);
         }
         return $result;

@@ -43,7 +43,7 @@
                         <td style="padding: 2px 5px;"><?php print($payOut[0]->getName()); ?></td>
                         <td style="padding: 2px 5px;"><?php print($payOut[0]->getMailName()); ?></td>
                         <td style="padding: 2px 5px;text-align: right;font-size: 14px; font-weight: bold;"><?php print(number_format($payOut[1])); ?></td>
-                        <?php if ($_SESSION["userID"]): ?>
+                        <?php if (isset($allowedToPayOut) && $allowedToPayOut): ?>
                             <td style="vertical-align: top;">
                                 <form action="payout.php?action=payout" method="post">
                                     <input name="userId" id="userId" type="hidden"

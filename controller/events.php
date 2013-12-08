@@ -6,9 +6,9 @@ require_once("../service/events.service.php");
 $pageservice = new PAGESERVICE();
 $currentPageID = "Events";
 if ($_SESSION["userID"]) {
-    $navbarlinks = $pageservice->generateNavLinks();
+    $navbarlinks = $pageservice->generateNavLinksForUser($_SESSION["userID"]);
 } else {
-    $navbarlinks = $pageservice->generateNavLinks('user');
+    $navbarlinks = $pageservice->generateNavLinksForUser();
 }
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);

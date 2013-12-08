@@ -35,9 +35,6 @@
                 if (httpRequest.status === 200) {
                     result = JSON.parse(httpRequest.responseText);
                     if (result['action'] == "requestUser") {
-                        document.getElementById("closeEditUser").onclick = function (event) {
-                            popup('popEditUser', 'none');
-                        }
                         document.getElementById("editUserID").value = result['user']['id'];
                         document.getElementById("editUserName").value = result['user']['name'];
                         document.getElementById("editUserMailName").value = result['user']['mailName'];
@@ -85,6 +82,7 @@
 <?php include('navbar.partial.view.php') ?>
 
 <div class="content">
+    <?php if($sessionUser->getPermission() >= 10): ?>
     <div class="popupWrapper" id="popupWrapper"></div>
     <div class="popup" id="popAddUser">
         <form action="users.php" method="post">
@@ -101,6 +99,7 @@
             <input type="submit" class="mySubmitButton" value="Edit User">
         </form>
     </div>
+    <?php endif; ?>
     <?php if (isset($notification)): ?>
         <br/>
         <div class="<?php print($notification['type']); ?>">
@@ -108,9 +107,11 @@
         </div>
         <br/>
     <?php endif; ?>
+    <?php if($sessionUser->getPermission() >= 10): ?>
     <div class="buttonContainer">
         <input id="addUserButton" type="submit" class="myButton" value="Add User">
     </div>
+    <?php endif; ?>
     <div class="featured-node" style="margin-top: 20px;">
         <table>
             <tr>
@@ -129,8 +130,10 @@
                     <td style="padding: 2px 5px;"><?php print($user->getName()); ?></td>
                     <td style="padding: 2px 5px;"><?php print($user->getMailName()); ?></td>
                     <td>
-                        <img src="../assets/edit_icon.png" style="width: 10px; height: 10px;"
+                        <?php if($sessionUser->getPermission() >= 10): ?>
+                        <img src="../assets/edit_icon.png" class="editIcon"
                              onclick="editUser(<?php print($user->getId()); ?>);">
+                        <?php endif; ?>
                     </td>
                 </tr>
             <?php

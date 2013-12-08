@@ -9,7 +9,12 @@ if (!$_SESSION["userID"]) {
 
 $pageservice = new PAGESERVICE();
 $currentPageID = "Manage Items";
-$navbarlinks = $pageservice->generateNavLinks();
+if (isset($_SESSION["userID"])) {
+    $sessionUser = $pageservice->whoIsSessionUser($_SESSION["userID"]);
+    $navbarlinks = $pageservice->generateNavLinksForUser($_SESSION["userID"]);
+} else {
+    $navbarlinks = $pageservice->generateNavLinksForUser();
+}
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 

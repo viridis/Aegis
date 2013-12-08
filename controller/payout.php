@@ -7,10 +7,14 @@ require_once("../service/users.service.php");
 
 $pageservice = new PAGESERVICE();
 $currentPageID = "Pay Out";
-if ($_SESSION["userID"]) {
-    $navbarlinks = $pageservice->generateNavLinks();
+if (isset($_SESSION["userID"])) {
+    $sessionUser = $pageservice->whoIsSessionUser($_SESSION["userID"]);
+    $navbarlinks = $pageservice->generateNavLinksForUser($_SESSION["userID"]);
+    if($sessionUser->getPermission() >= 10){
+        $allowedToPayOut = true;
+    }
 } else {
-    $navbarlinks = $pageservice->generateNavLinks('user');
+    $navbarlinks = $pageservice->generateNavLinksForUser();
 }
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
@@ -18,7 +22,7 @@ $featuredlinks = $pageservice->generateFeaturedLinks(5);
 $eventservice = new eventservice();
 $payoutservice = new payoutservice();
 
-if (isset ($_GET["action"]) && $_GET["action"] == 'payout' && $_SESSION["userID"] && is_numeric($_POST["userId"])) {
+if (isset ($_GET["action"]) && $_GET["action"] == 'payout' && $allowedToPayOut) {
     $userservice = new userservice();
     $user = $userservice->getUserByID($_POST["userId"]);
     try {
