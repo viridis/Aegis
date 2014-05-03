@@ -34,7 +34,7 @@ class USERDAO{
                 return $user;
             }
         } else {
-            throw new Exception('No user found. (' . $username . ')');
+            throw new Exception('No user found. (' . $id . ')');
         }
     }
 

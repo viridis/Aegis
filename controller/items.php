@@ -69,6 +69,7 @@ if (!empty($_POST["itemAmount"]) && !empty($_POST["itemName"]) && !empty($_POST[
     foreach ($itemlist as $item) {
         if ($_POST["itemName"] == $item->getId()) {
             $resultItem = $item;
+            break;
         }
     }
     if (is_numeric($itemValue = str_replace(',', '', $_POST["itemValue"]))) {
@@ -81,7 +82,7 @@ if (!empty($_POST["itemAmount"]) && !empty($_POST["itemName"]) && !empty($_POST[
         } catch (Exception $e) {
             $notification = array(
                 'type' => 'error',
-                'message' => 'Error Message: ' . $e->getMessage() . ' (' . $item->getName() . ')',
+                'message' => 'Error Message: ' . $e->getMessage() . ' (' . $resultItem->getName() . ')',
             );
         }
     } else {

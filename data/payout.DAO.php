@@ -53,7 +53,6 @@ class PAYOUTDAO
                 );
                 if ($stmt->execute()) { //1 if success, 0 if fail
                     $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
-                    return true;
                 } else {
                     $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
                     throw new Exception('Could not pay out somehow.');
