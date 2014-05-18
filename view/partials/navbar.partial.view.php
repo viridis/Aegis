@@ -22,7 +22,7 @@
                     }
                     ?>
                     <?php if (!$_SESSION["userID"]): ?>
-                        <form class="navbar-form navbar-left" action="login.php?action=login" method="post" role="Sign In">
+                        <form class="navbar-form navbar-left" action="home.php?action=login" method="post" role="Sign In">
                         <div class="form-group">
                             <input name="name" id="name" type="text" class="form-control" placeholder="Username">
                             <input name="password" id="password" type="password" class="form-control" placeholder="Password">
@@ -36,7 +36,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="settings.php"><span class="glyphicon glyphicon-cog"></span> Settings</a></li>
-                            <li><a href="login.php?action=logout"><span class="glyphicon glyphicon-off"></span> Sign Out</a></li>
+                            <li><a href="home.php?action=logout"><span class="glyphicon glyphicon-off"></span> Sign Out</a></li>
                         </ul>
                     </li>
                     <?php endif; ?>
