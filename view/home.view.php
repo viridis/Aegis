@@ -2,65 +2,27 @@
 <html>
 <head>
     <title>LandingsPage</title>
-    <?php include('headers.partial.view.php') ?>
-    <script>
-        window.onload = function () {
-            initializePage();
-        }
-
-        window.onresize = initializePage;
-    </script>
+    <?php include('partials/headers.partial.view.php'); ?>
 </head>
+<body role="document">
+    <?php include('partials/navbar.partial.view.php'); ?>
+    <div class="container" role="main">
 
-<body>
-<?php include('navbar.partial.view.php') ?>
-
-<div class="content">
-    <?php if (isset($notification)): ?>
-        <br/>
-        <div class="<?php print($notification['type']); ?>">
-            <h1><?php print($notification['message']); ?></h1>
-        </div>
-        <br/>
-    <?php endif; ?>
-    <div style="display: table; height: 100%; width: 100%; overflow: hidden;">
-        <div style="display: table-cell; vertical-align: middle; text-align: center;">
-            <div style="font-size: 150px;">
-                ^__^
+        <?php if (isset($notification)): ?>
+            <div class="alert alert-<?php print($notification['type']); ?> alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <p><strong><?php print($notification['title']); ?></strong> - <?php print($notification['message']); ?></p>
             </div>
+        <?php endif; ?>
+
+        <div class="jumbotron">
+            <h1>Aegis</h1>
+            <p>Aegis Inventory System - Where you literally play the game and Drew pays you to do so.
+                This header is usually nice when there is quite a bit of text. So let's make some text.</p>
+            <p><a href="#" class="btn btn-primary btn-lg" role="button">Check it out &raquo;</a></p>
         </div>
+
     </div>
-    <div class="featured">
-        <div class="featured-node" style="width: 200px;">
-            Short description of SQI and Seals and stuff. Summing up Prontera, Manuk, Niff and Yuno Seal, just to fill
-            up the space.<br>
-            <br>
-
-            <div class="buttonContainer">
-                <a href="" class="myButton">Read More ...</a>
-            </div>
-        </div>
-        <div class="featured-node" style="width: 200px;">
-            Generic information about Game Master Challenges for when this gets added.<br>
-            <br>
-            <br>
-
-            <div class="buttonContainer">
-                <a href="" class="myButton">Read More ...</a>
-            </div>
-        </div>
-        <div class="featured-node" style="width: 200px;">
-            Absolutely no clue what to put here, besides GMC and Seals I dont know what the site will provide.<br>
-            <br>
-
-            <div class="buttonContainer">
-                <a href="" class="myButton">Read More ...</a>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<?php include('footer.partial.view.php') ?>
+    <?php include('partials/footer.partial.view.php'); ?>
 </body>
 </html>

@@ -2,176 +2,204 @@
 <html>
 <head>
     <title>LandingsPage</title>
-    <?php include('headers.partial.view.php') ?>
+    <?php include('partials/headers.partial.view.php') ?>
 </head>
+<body role="document">
+    <?php include('partials/navbar.partial.view.php') ?>
+    <div style="height: 20px;"></div>
+    <div class="container" role="main">
 
-<body>
-<?php include('navbar.partial.view.php') ?>
-
-<div class="content">
-    <div class="popupWrapper" id="popupWrapper"></div>
-    <div class="popup" id="popAddItem">
-        <form action="items.php" method="post">
-            <input name="addItem" id="addItem" type="text" class="inputText" placeholder="Item Name">
-            <input type="submit" class="mySubmitButton" value="Add Item">
-        </form>
-    </div>
-    <div class="popup" id="popSellItem">
-        <form action="items.php" method="post" style="text-align: left;">
-            <input name="itemAmount" type="text" class="inputText" id="itemAmount" placeholder="#" value="1"
-                   style="width: 20px;" autocomplete="off">
-            <select data-placeholder="Pick an item..." class="chosen-select" id="itemName" name="itemName">
-                <option value=""></option>
-                <?php foreach ($itemlist as $item) { ?>
-                    <option value="<?php print($item->getId()); ?>"><?php print($item->getName()); ?></option>
-                <?php } ?>
-            </select>
-            <input name="itemValue" type="text" class="inputText number" id="itemValue" placeholder="Item Value"
-                   autocomplete="off">
-            <input type="submit" class="mySubmitButton" value="Sell Item">
-        </form>
-    </div>
-    <div class="popup" id="popEditItem">
-        <form id="submitEditItem" action="items.php" method="post">
-            <input name="editItemID" id="editItemID" type="hidden" class="inputText" placeholder="Item ID">
-            <input name="editItemName" id="editItemName" type="text" class="inputText" placeholder="Item Name">
-            <input type="submit" class="mySubmitButton" value="Edit Item">
-        </form>
-    </div>
-    <?php if (isset($notification)): ?>
-        <br/>
-        <div class="<?php print($notification['type']); ?>">
-            <h1><?php print($notification['message']); ?></h1>
+        <div class="modal fade" id="addItem">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Add an item</h4>
+                    </div>
+                    <form action="items.php" method="post">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="text" class="form-control" id="addItem" name="addItem" placeholder="Item Name">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-primary" value="Add Item">
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-        <br/>
-    <?php endif; ?>
-    <div class="buttonContainer">
-        <input id="addItemButton" type="submit" class="myButton" value="Add Item">
-        <input id="sellItemButton" type="submit" class="myButton" value="Sell Item">
+
+        <div class="modal fade" id="sellItem">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Sell an item</h4>
+                    </div>
+                    <form action="items.php" method="post" class="form-horizontal">
+                        <div class="modal-body">
+                            <div class="form-group row">
+                                <div class="col-md-2">
+                                    <input name="itemAmount" type="text" class="form-control" id="itemAmount" placeholder="#" value="1" autocomplete="off">
+                                </div>
+                                <div class="col-md-5">
+                                    <select data-placeholder="Pick an item..." class="chosen-select" id="itemName" name="itemName">
+                                        <option value=""></option>
+                                        <?php foreach ($itemlist as $item) { ?>
+                                            <option value="<?php print($item->getId()); ?>"><?php print($item->getName()); ?></option>
+                                        <?php } ?>
+                                    </select>
+                                </div>
+                                <div class="col-md-5">
+                                    <input name="itemValue" type="text" class="form-control" id="itemValue" placeholder="Item Value" autocomplete="off">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-primary" value="Sell Item">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="editItem">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h4 class="modal-title">Edit an item</h4>
+                    </div>
+                    <form id="submitEditItem" action="items.php" method="post">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="hidden" class="form-control" id="editItemID" name="editItemID" placeholder="Item ID">
+                                <input type="text" class="form-control" id="editItemName" name="editItemName" placeholder="Item Name">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input type="submit" class="btn btn-primary" value="Edit Item">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <?php if (isset($notification)): ?>
+            <div class="alert alert-<?php print($notification['type']); ?> alert-dismissable">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <p><strong><?php print($notification['title']); ?></strong> - <?php print($notification['message']); ?></p>
+            </div>
+        <?php endif; ?>
+        <div style="height: 20px;"></div>
+
+        <div class="pull-right btn-group-vertical">
+            <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addItem">
+                Add Item
+            </button>
+            <button id="sellItemButton" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#sellItem">
+                Sell Item
+            </button>
+        </div>
+
+        <div class="container">
+            <div class="row center">
+                <div class="col-sm-4 col-md-offset-4">
+                    <table class="table table-condensed table-hover table-striped table-bordered">
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Registered Items</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <?php
+                        $i = 0;
+                        foreach ($itemlist as $item) {
+                            $i++;
+                            ?>
+                            <tr>
+                                <td><?php print($i); ?></td>
+                                <td><?php print($item->getName()); ?></td>
+                                <td>
+                                    <span class="glyphicon glyphicon-pencil hand" onclick="editItem(<?php print($item->getId()); ?>);" data-toggle="modal" data-target="#editItem"></span>
+                                </td>
+                            </tr>
+                        <?php
+                        }
+                        ?>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
-    <div class="featured-node" style="margin-top: 20px;">
-        <table>
-            <tr>
-                <td style="width: 20px; padding: 2px 5px;"></td>
-                <td style="padding: 2px 5px;">Registered Items</td>
-                <td></td>
-            </tr>
-            <?php
-            $i = 0;
-            foreach ($itemlist as $item) {
-                $i++;
-                ?>
-                <tr>
-                    <td style="width: 20px; padding: 2px 5px;"><?php print($i); ?></td>
-                    <td style="padding: 2px 5px;"><?php print($item->getName()); ?></td>
-                    <td>
-                        <img src="../assets/edit_icon.png" class="editIcon"
-                             onclick="editItem(<?php print($item->getId()); ?>);">
-                    </td>
-                </tr>
-            <?php
-            }
-            ?>
-        </table>
-    </div>
-</div>
 
 
-<?php include('footer.partial.view.php') ?>
-<link rel="stylesheet" type="text/css" href="../assets/chosen.css">
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-<script type="text/javascript" src="../assets/chosen.jquery.js"></script>
-<script type="text/javascript">
-    window.onload = function () {
-        initializePage();
-        document.getElementById("addItemButton").onclick = function (event) {
-            popup('popAddItem', 'block');
-            setFocus('addItem');
+    <?php include('partials/footer.partial.view.php') ?>
+    <link rel="stylesheet" type="text/css" href="../assets/css/chosen.css">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+    <script type="text/javascript" src="../assets/js/chosen.jquery.js"></script>
+    <script type="text/javascript">
+
+        var config = {
+            '.chosen-select': {width: "100%"},
+            '.chosen-select-deselect': {allow_single_deselect: true},
+            '.chosen-select-no-single': {disable_search_threshold: 10},
+            '.chosen-select-no-results': {no_results_text: 'Oops, nothing found!'},
+            '.chosen-select-width': {width: "95%"}
         }
-        document.getElementById("sellItemButton").onclick = function (event) {
-            popup('popSellItem', 'block');
-            $("#itemName_chosen").children('.chosen-drop').children('.chosen-search').children('input[type="text"]').focus();
+        for (var selector in config) {
+            $(selector).chosen(config[selector]);
         }
-        document.getElementById("popupWrapper").onclick = function (event) {
-            popup('popAddItem', 'none');
-            popup('popSellItem', 'none');
-            popup('popEditItem', 'none');
+
+        function editItem(id) {
+            makeRequest("items.php?editItem=" + id);
         }
-        document.getElementById("itemValue").onkeyup = function (event) {
 
-            event.target.value = commaSeparateNumber(event.target.value);
-        }
-    }
-    window.onresize = initializePage;
-
-    //close popup boxes using ESC key.
-    document.onkeydown = function (event) {
-        event = event || window.event;
-        if (event.keyCode == 27) {
-            popup('popSellItem', 'none');
-            popup('popSellItem', 'none');
-        }
-    }
-
-    var config = {
-        '.chosen-select': {width: "200px"},
-        '.chosen-select-deselect': {allow_single_deselect: true},
-        '.chosen-select-no-single': {disable_search_threshold: 10},
-        '.chosen-select-no-results': {no_results_text: 'Oops, nothing found!'},
-        '.chosen-select-width': {width: "95%"}
-    }
-    for (var selector in config) {
-        $(selector).chosen(config[selector]);
-    }
-
-    function editItem(id) {
-        makeRequest("items.php?editItem=" + id);
-    }
-
-    function serverResponse(httpRequest) {
-        if (httpRequest.readyState === 4) {
-            if (httpRequest.status === 200) {
-                result = JSON.parse(httpRequest.responseText);
-                if (result['action'] == "requestItem") {
-                    document.getElementById("editItemID").value = result['item']['id'];
-                    document.getElementById("editItemName").value = result['item']['name'];
-                    popup('popEditItem', 'block');
+        function serverResponse(httpRequest) {
+            if (httpRequest.readyState === 4) {
+                if (httpRequest.status === 200) {
+                    result = JSON.parse(httpRequest.responseText);
+                    if (result['action'] == "requestItem") {
+                        document.getElementById("editItemID").value = result['item']['id'];
+                        document.getElementById("editItemName").value = result['item']['name'];
+                    }
+                }
+                else {
+                    alert('There was a problem with the request.');
                 }
             }
-            else {
-                alert('There was a problem with the request.');
-            }
         }
-    }
 
-    function makeRequest(url) {
-        var httpRequest;
-        if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-            httpRequest = new XMLHttpRequest();
-        }
-        else if (window.ActiveXObject) { // IE
-            try {
-                httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+        function makeRequest(url) {
+            var httpRequest;
+            if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+                httpRequest = new XMLHttpRequest();
             }
-            catch (e) {
+            else if (window.ActiveXObject) { // IE
                 try {
-                    httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                    httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
                 }
                 catch (e) {
+                    try {
+                        httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+                    }
+                    catch (e) {
+                    }
                 }
             }
-        }
 
-        if (!httpRequest) {
-            alert('Giving up :( Cannot create an XMLHTTP instance');
-            return false;
+            if (!httpRequest) {
+                alert('Giving up :( Cannot create an XMLHTTP instance');
+                return false;
+            }
+            httpRequest.onreadystatechange = function () {
+                serverResponse(httpRequest);
+            };
+            httpRequest.open('POST', url, true);
+            httpRequest.send();
         }
-        httpRequest.onreadystatechange = function () {
-            serverResponse(httpRequest);
-        };
-        httpRequest.open('POST', url, true);
-        httpRequest.send();
-    }
-</script>
+    </script>
 </body>
 </html>

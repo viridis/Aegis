@@ -2,67 +2,68 @@
 <html>
 <head>
     <title>LandingsPage</title>
-    <?php include('headers.partial.view.php') ?>
-    <script>
-        window.onload = function () {
-            initializePage();
-        }
-
-        window.onresize = initializePage;
-    </script>
+    <?php include('partials/headers.partial.view.php'); ?>
 </head>
+<body role="document">
+<?php include('partials/navbar.partial.view.php'); ?>
 
-<body>
-<?php include('navbar.partial.view.php') ?>
+<div class="container" role="main">
 
-<div class="content">
     <?php if (isset($notification)): ?>
-        <br/>
-        <div class="<?php print($notification['type']); ?>">
-            <h1><?php print($notification['message']); ?></h1>
+        <div class="alert alert-<?php print($notification['type']); ?> alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <p><strong><?php print($notification['title']); ?></strong> - <?php print($notification['message']); ?></p>
         </div>
-        <br/>
     <?php endif; ?>
-    <div class="featured-node" style="margin-top: 20px;">
-        <table>
-            <tr>
-                <td style="width: 20px; padding: 2px 5px;"></td>
-                <td style="padding: 2px 5px; font-weight: bold;">Name</td>
-                <td style="padding: 2px 5px; font-weight: bold;">Mailname</td>
-                <td style="padding: 2px 5px; font-weight: bold">To Be Paid Out</td>
-                <td></td>
-            </tr>
-            <?php
-            $i = 0;
-            foreach ($payoutList as $payOut) {
-                if ($payOut[1] != 0) {
-                    $i++;
-                    ?>
+    <div style="height: 20px;"></div>
+
+    <div class="container">
+        <div class="row center">
+            <div class="col-sm-6 col-md-offset-3">
+                <table class="table table-condensed table-hover table-striped table-bordered">
+                    <thead>
                     <tr>
-                        <td style="width: 20px; padding: 2px 5px;"><?php print($i); ?></td>
-                        <td style="padding: 2px 5px;"><?php print($payOut[0]->getName()); ?></td>
-                        <td style="padding: 2px 5px;"><?php print($payOut[0]->getMailName()); ?></td>
-                        <td style="padding: 2px 5px;text-align: right;font-size: 14px; font-weight: bold;"><?php print(number_format($payOut[1])); ?></td>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Mailname</th>
+                        <th>Mailname</th>
                         <?php if (isset($allowedToPayOut) && $allowedToPayOut): ?>
-                            <td style="vertical-align: top;">
-                                <form action="payout.php?action=payout" method="post">
-                                    <input name="userId" id="userId" type="hidden"
-                                           value="<?php print($payOut[0]->getUserID()); ?>">
-                                    <input type="submit" class="mySubmitButton" value="Pay Out">
-                                </form>
-                            </td>
+                        <th></th>
                         <?php endif; ?>
                     </tr>
-                <?php
-                }
-            }
-            ?>
-        </table>
+                    </thead>
+                    <?php
+                    $i = 0;
+                    foreach ($payoutList as $payOut) {
+                        if ($payOut[1] != 0) {
+                            $i++;
+                            ?>
+                            <tr>
+                                <td><?php print($i); ?></td>
+                                <td><?php print($payOut[0]->getName()); ?></td>
+                                <td><?php print($payOut[0]->getMailName()); ?></td>
+                                <td><?php print(number_format($payOut[1])); ?></td>
+                                <?php if (isset($allowedToPayOut) && $allowedToPayOut): ?>
+                                    <td>
+                                        <form action="payout.php?action=payout" method="post">
+                                            <input name="userId" id="userId" type="hidden"
+                                                   value="<?php print($payOut[0]->getUserID()); ?>">
+                                            <button type="submit" class="btn btn-xs btn-success">Pay Out</button>
+                                        </form>
+                                    </td>
+                                <?php endif; ?>
+                            </tr>
+                        <?php
+                        }
+                    }
+                    ?>
+                </table>
+            </div>
+        </div>
     </div>
 
 </div>
 
-
-<?php include('footer.partial.view.php') ?>
+<?php include('partials/footer.partial.view.php'); ?>
 </body>
 </html>

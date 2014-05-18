@@ -16,13 +16,15 @@ $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
 if (isset($_GET['action']) && $_GET['action'] == 'loggedOut') {
     $notification = array(
-        'type' => 'confirmation',
-        'message' => 'You have successfully logged out.',
+        'type' => 'info',
+        'title' => 'You will be missed!',
+        'message' => 'You have logged out successfully.',
     );
 } elseif (isset($_GET['action']) && $_GET['action'] == 'loggedIn') {
     $notification = array(
-        'type' => 'confirmation',
-        'message' => 'You have successfully logged in.',
+        'type' => 'success',
+        'title' => 'Nice!',
+        'message' => 'You have logged in successfully.',
     );
 }
 include("../view/home.view.php");

@@ -24,9 +24,18 @@ $runservice = new runservice();
 
 if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["runName"]) && isset($_POST["runDate"])) {
     if ($_POST["runName"] == "" || $_POST["runDate"] == "") {
-        //print('Fill in Name and Time');
+        $notification = array(
+            'type' => 'danger',
+            'title' => 'Error',
+            'message' => 'Name and Date should be filled in.',
+        );
     } else {
         $runservice->addRun($_POST["runName"], $_POST["runDate"]);
+        $notification = array(
+            'type' => 'success',
+            'title' => 'Success',
+            'message' => 'Added run: '. $_POST["runName"] .'.',
+        );
     }
 
 }
@@ -89,4 +98,3 @@ if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"])) {
 $eventlist = $runservice->listAllEvents();
 
 include("../view/runs.view.php");
-?>

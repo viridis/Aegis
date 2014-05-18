@@ -15,8 +15,9 @@ if (isset($_GET['action']) && $_GET['action'] === 'login') {
         header('location: ./home.php?action=loggedIn');
     }
     $notification = array(
-        'type' => 'error',
-        'message' => 'The name or password you entered is not correct.',
+        'type' => 'danger',
+        'title' => 'Error',
+        'message' => 'The name or password you entered is incorrect.',
     );
 }
 

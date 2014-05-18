@@ -44,7 +44,7 @@ class NAVBARLINKSDAO
             $sql = "SELECT *
                     FROM navbarlinks
                     WHERE visibility = 0
-                    ORDER BY id DESC;
+                    ORDER BY id ASC;
                 ";
             $stmt = $dbh->prepare($sql);
         } else {
@@ -52,7 +52,7 @@ class NAVBARLINKSDAO
                     FROM navbarlinks l
                     JOIN users u on u.permissions >= visibility
                     WHERE u.id = :userid
-                    ORDER BY l.id DESC;
+                    ORDER BY l.id ASC;
                 ";
             $stmt = $dbh->prepare($sql);
             $stmt->bindParam(':userid', $userId);

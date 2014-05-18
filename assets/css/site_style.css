@@ -1,0 +1,61 @@
+
+/* Sticky footer styles
+      -------------------------------------------------- */
+
+html,body {
+    height: 100%;
+    /* The html and body elements cannot have any padding or margin. */
+}
+
+/* Wrapper for page content to push down footer */
+#wrap {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    /* Negative indent footer by it's height */
+    margin: 0 auto -50px;
+}
+
+/* Set the fixed height of the footer here */
+#push,#footer {
+    height: 50px;
+}
+#footer {
+    background-color: #f5f5f5;
+}
+
+/* Lastly, apply responsive CSS fixes as necessary */
+@media (max-width: 767px) {
+    #footer {
+        margin-left: -20px;
+        margin-right: -20px;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+.jumbotron {
+    -webkit-border-radius: 0 !important;
+    -moz-border-radius: 0 !important;
+    border-radius: 0 !important;
+}
+
+.hand{
+    cursor: pointer;
+}
+
+.userList, .itemList{
+    min-height: 200px;
+    list-style: none;
+    padding-left: 10px;
+    background: rgb(106, 161, 33); /* Fall-back for browsers that don't support rgba */
+    background: rgba(106, 161, 33, .2);
+}
+
+.trashIcon{
+    padding: 15px;
+    margin: 5px;
+    font-size: 20px;
+    background: rgb(140, 43, 43); /* Fall-back for browsers that don't support rgba */
+    background: rgba(140, 43, 43, .2);
+}

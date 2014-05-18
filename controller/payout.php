@@ -31,14 +31,16 @@ if (isset ($_GET["action"]) && $_GET["action"] == 'payout' && $allowedToPayOut) 
         header("location: ./payout.php?paidOut=" . $user->getName());
     } catch (Exception $e) {
         $notification = array(
-            'type' => 'error',
+            'type' => 'danger',
+            'title' => 'Error',
             'message' => 'Could not pay out ' . $user->getName() . '<br />' . $e->getMessage(),
         );
     }
 }
 if (isset($_GET["paidOut"])) {
     $notification = array(
-        'type' => 'confirmation',
+        'type' => 'success',
+        'title' => 'Confirmation',
         'message' => 'Paid out ' . $_GET['paidOut'] . ' successfully.',
     );
 }

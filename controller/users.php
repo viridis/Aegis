@@ -21,7 +21,8 @@ if (isset($_POST["addUser"])) {
     try {
         $user = $userservice->addUser($_POST["addUser"]);
         $notification = array(
-            'type' => 'confirmation',
+            'type' => 'success',
+            'title' => 'Success',
             'message' => 'Successfully added user. (' . $user->getName() . ')',
         );
     } catch (Exception $e) {
@@ -51,12 +52,14 @@ if (isset($_POST['editUserID']) && isset($_POST['editUserName']) && isset($_POST
     try {
         $user = $userservice->updateUser($_POST['editUserID'], $_POST['editUserName'], $_POST['editUserMailName']);
         $notification = array(
-            'type' => 'confirmation',
+            'type' => 'success',
+            'title' => 'Success',
             'message' => 'Successfully changed user. (' . $user->getName() . ')',
         );
     } catch (Exception $e) {
         $notification = array(
-            'type' => 'error',
+            'type' => 'danger',
+            'title' => 'Error',
             'message' => $e->getMessage(),
         );
     }

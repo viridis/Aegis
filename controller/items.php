@@ -24,7 +24,8 @@ if (isset($_POST["addItem"])) {
     try {
         $item = $itemservice->addItem($_POST["addItem"]);
         $notification = array(
-            'type' => 'confirmation',
+            'type' => 'success',
+            'title' => 'Success',
             'message' => 'Successfully added item. (' . $item->getName() . ')',
         );
     } catch (Exception $e) {
@@ -53,12 +54,14 @@ if (isset($_POST['editItemID']) && isset($_POST['editItemName']) && is_numeric($
     try {
         $item = $itemservice->updateItem($_POST['editItemID'], $_POST['editItemName']);
         $notification = array(
-            'type' => 'confirmation',
+            'type' => 'success',
+            'title' => 'Success',
             'message' => 'Successfully changed item. (' . $item->getName() . ')',
         );
     } catch (Exception $e) {
         $notification = array(
-            'type' => 'error',
+            'type' => 'danger',
+            'title' => 'Alert',
             'message' => $e->getMessage(),
         );
     }
@@ -76,24 +79,28 @@ if (!empty($_POST["itemAmount"]) && !empty($_POST["itemName"]) && !empty($_POST[
         try {
             $runservice->sellDrop($_POST["itemAmount"], $_POST["itemName"], $itemValue);
             $notification = array(
-                'type' => 'confirmation',
+                'type' => 'success',
+                'title' => 'Success',
                 'message' => 'Sold: ' . $resultItem->getName() . ' (' . $_POST["itemAmount"] . ') for ' . number_format($itemValue) . ' ea.',
             );
         } catch (Exception $e) {
             $notification = array(
-                'type' => 'error',
+                'type' => 'danger',
+                'title' => 'Alert',
                 'message' => 'Error Message: ' . $e->getMessage() . ' (' . $resultItem->getName() . ')',
             );
         }
     } else {
         $notification = array(
-            'type' => 'error',
+            'type' => 'danger',
+            'title' => 'Alert',
             'message' => 'Error Message: ' . $_POST["itemValue"] . ' is not a valid number.',
         );
     }
 } elseif (isset($_POST['itemAmount']) && (empty($_POST["itemAmount"]) || empty($_POST["itemName"]) || empty($_POST["itemValue"]))) {
     $notification = array(
-        'type' => 'error',
+        'type' => 'danger',
+        'title' => 'Alert',
         'message' => 'Error Message: One of your inputfields was filled in.',
     );
 }
