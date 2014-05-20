@@ -6,11 +6,11 @@ require_once("../class/user.class.php");
 class USERDAO{
 	public function getAllUsers(){
 		$result = array();
-		$sql = "SELECT * FROM users ORDER BY name ASC;";
+		$sql = "SELECT * FROM useraccount ORDER BY name ASC;";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
 		$resultSet = $dbh->query($sql);
 		foreach ($resultSet as $row){
-			$user = USER::create($row['id'], $row['name'], $row['mailname'], $row['permissions']);
+			$user = USER::create($row['userID'], $row['userLogin'], $row['mailChar'], $row['roleLevel']);
 			array_push($result, $user);
 		}
 		return $result;
@@ -18,7 +18,7 @@ class USERDAO{
 	
 	public function getUserById($id){
 		$result = array();
-		$sql = "SELECT * FROM users WHERE id = :id;";
+		$sql = "SELECT * FROM useraccount WHERE userID = :id;";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':id', $id);
@@ -26,10 +26,10 @@ class USERDAO{
         $resultSet = $stmt->fetchAll();
         if ($resultSet) {
             foreach ($resultSet as $row) {
-                $user = USER::create($row["id"], $row["name"], $row["mailname"], $row["permissions"]);
+                $user = USER::create($row['userID'], $row['userLogin'], $row['mailChar'], $row['roleLevel']);
                 $user->setEmail($row["email"]);
-                $user->setPassword($row["password"]);
-                $user->setForumName($row["forumname"]);
+                $user->setPassword($row["userPassword"]);
+                $user->setForumName($row["forumAccount"]);
                 $user->clearUser();
                 return $user;
             }
@@ -40,7 +40,7 @@ class USERDAO{
 
     public function addUser($username)
     {
-        $sql = "INSERT INTO users (`name`) VALUES (:username);";
+        $sql = "INSERT INTO useraccount (`userLogin`) VALUES (:username);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':username', $username);
@@ -61,7 +61,7 @@ class USERDAO{
 
     public function updateUser($id, $name, $mailname)
     {
-        $sql = 'UPDATE users SET name = :name, mailname = :mailname WHERE id = :id;';
+        $sql = 'UPDATE useraccount SET userLogin = :name, mailChar = :mailname WHERE userID = :id;';
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':name', $name);
@@ -80,13 +80,13 @@ class USERDAO{
             return $user;
         }
         $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
-        throw new Exception('Failed to update item. (' . $name . ')');
+        throw new Exception('Failed to update user. (' . $name . ')');
         return false;
     }
 
     public function getUserByNameAndPassword($name, $password)
     {
-        $sql = 'SELECT * FROM users WHERE name = :name AND password = :password LIMIT 1';
+        $sql = 'SELECT * FROM useraccount WHERE userLogin = :name AND userPassword = :password LIMIT 1';
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':name', $name);
@@ -94,14 +94,14 @@ class USERDAO{
         $stmt->execute();
         $resultSet = $stmt->fetchAll();
         foreach ($resultSet as $row) {
-            $user = USER::create($row["id"], $row["name"], $row["mailname"], $row["permissions"]);
+            $user = USER::create($row["userID"], $row["userLogin"], $row["mailChar"], $row["roleLevel"]);
             return $user;
         }
         return false;
 	}
 
     public function editUser($id, $mailName, $forumName, $email){
-        $sql = 'UPDATE users SET mailname = :mailname, forumname = :forumname, email = :email WHERE id = :id;';
+        $sql = 'UPDATE useraccount SET mailChar = :mailname, forumAccount = :forumname, email = :email WHERE userID = :id;';
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':mailname', $mailName);
@@ -127,7 +127,7 @@ class USERDAO{
     }
 
     public function editPasswordOfUser($id, $password){
-        $sql = 'UPDATE users SET password = :password WHERE id = :id;';
+        $sql = 'UPDATE useraccount SET userPassword = :password WHERE userID = :id;';
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
         $stmt->bindParam(':password', $password);

@@ -50,8 +50,8 @@ class NAVBARLINKSDAO
         } else {
             $sql = "SELECT l.id, l.name, l.location
                     FROM navbarlinks l
-                    JOIN users u on u.permissions >= visibility
-                    WHERE u.id = :userid
+                    JOIN useraccount u on u.roleLevel >= visibility
+                    WHERE u.userID = :userid
                     ORDER BY l.id ASC;
                 ";
             $stmt = $dbh->prepare($sql);
