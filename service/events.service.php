@@ -3,18 +3,13 @@ require_once("../data/event.DAO.php");
 
 class eventservice
 {
-    public function listAllEvents()
+    public static function listAllEvents()
     {
-        $eventdao = new EVENTDAO();
-        $eventlist = $eventdao->getAllEvents();
-        return $eventlist;
+        return EVENTDAO::getAllEvents();
     }
 
-    public function getEventsByParticipantID($id)
-    {
-        $eventdao = new EVENTDAO();
-        $eventlist = $eventdao->getAllEventsByParticipantID($id);
-        return $eventlist;
+    public static function getEventByID($eventID){
+        return EVENTDAO::getEventByID($eventID);
     }
 }
 

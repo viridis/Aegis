@@ -1,7 +1,7 @@
 <?php
 require_once("../service/page.service.php");
 require_once("../service/users.service.php");
-require_once("../service/character.service.php");
+require_once("../service/events.service.php");
 
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     unset($_SESSION["userID"]);
@@ -42,6 +42,6 @@ if (isset($_SESSION["userID"])) {
 }
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
-characterservice::addCharacter(1,2,'testchar',5);
-characterservice::deleteCharacter(5);
+
+echo "<script type='text/javascript'>alert('$message');</script>";
 include("../view/home.view.php");

@@ -2,116 +2,79 @@
 class EVENT
 {
     private static $idList = array();
-    private $id;
-    private $name;
-    private $time;
-    private $description;
-    private $participants = array();
-    private $drops = array();
-    private $totalValue;
-    private $totalParticipants;
+    private $eventID;
+    private $eventName;
+    private $eventType;
+    private $startDate;
+    private $completeDate;
+    private $eventState;
+    private $recurringEvent;
+    private $dayOfWeek;
+    private $hourOfDay;
 
-    function __construct($id, $name, $time, $description)
+    function __construct($eventID, $eventType, $startDate, $completeDate,
+                         $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName)
     {
-        $this->id = $id;
-        $this->name = $name;
-        $this->time = $time;
-        $this->description = $description;
+        $this->eventID = $eventID;
+        $this->eventName = $eventName;
+        $this->eventType = $eventType;
+        $this->startDate = $startDate;
+        $this->completeDate = $completeDate;
+        $this->eventState = $eventState;
+        $this->recurringEvent = $recurringEvent;
+        $this->dayOfWeek = $dayOfWeek;
+        $this->hourOfDay = $hourOfDay;
     }
 
-    public static function create($id, $name, $time, $description)
+    public static function create($eventID, $eventType, $startDate, $completeDate,
+                                  $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName)
     {
-        if (!isset(self::$idList[$id])) {
-            self::$idList[$id] = new EVENT($id, $name, $time, $description);
+        if (!isset(self::$idList[$eventID])) {
+            self::$idList[$eventID] = new EVENT($eventID, $eventType, $startDate, $completeDate,
+                $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName);
+
         }
-        return self::$idList[$id];
+        var_dump(self::$idList[$eventID]);
+        return self::$idList[$eventID];
     }
 
-    public function getID()
+    public function getEventID()
     {
-        return $this->id;
+        return $this->eventID;
     }
 
-    public function getName()
+    public function getEventName()
     {
-        return $this->name;
+        return $this->eventName;
     }
 
-    public function getTime()
-    {
-        return $this->time;
+    public function getEventType(){
+        return $this->eventType;
     }
 
-    public function getDescription()
+    public function getStartDate()
     {
-        return $this->description;
+        return $this->startDate;
     }
 
-    public function getParticipants()
-    {
-        return $this->participants;
+    public function getCompleteDate(){
+        return $this->completeDate;
     }
 
-    public function getDrops()
-    {
-        return $this->drops;
+    public function getEventState(){
+        return $this->eventState;
     }
 
-    public function getTotalValue()
-    {
-        return $this->totalValue;
+    public function isRecurringEvent(){
+        return $this->recurringEvent;
     }
 
-    public function getTotalParticipants()
-    {
-        return $this->totalParticipants;
+    public function getDayOfWeek(){
+        return $this->dayOfWeek;
     }
 
-    public function setID($id)
-    {
-        $this->id = $id;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function setTime($time)
-    {
-        $this->time = $time;
-    }
-
-    public function setDescription($description)
-    {
-        $this->description = $description;
-    }
-
-    public function appendParticipant($user)
-    {
-        //Keep unique users only.
-        if (!isset($this->participants[$user->getUserID()])) {
-            $this->participants[$user->getUserID()] = $user;
-        }
-    }
-
-    public function appendDrop($item)
-    {
-        //Keep Unique DROPIDs
-        if (!isset($this->drops[$item->getDropID()])) {
-            $this->drops[$item->getDropID()] = $item;
-        }
-    }
-
-    public function setTotalValue($totalValue)
-    {
-        $this->totalValue = $totalValue;
-    }
-
-    public function setTotalParticipants($totalParticipants)
-    {
-        $this->totalParticipants = $totalParticipants;
+    public function getHourOfDay(){
+        return $this->hourOfDay;
     }
 }
-
 ?>
