@@ -6,11 +6,14 @@ require_once("../class/user.class.php");
 class USERDAO{
 	public function getAllUsers(){
 		$result = array();
-		$sql = "SELECT * FROM useraccount ORDER BY name ASC;";
+		$sql = "SELECT * FROM useraccount ORDER BY userLogin ASC;";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-		$resultSet = $dbh->query($sql);
+        $stmt = $dbh->prepare($sql);
+        $stmt->execute();
+        $resultSet = $stmt->fetchAll();
 		foreach ($resultSet as $row){
-			$user = USER::create($row['userID'], $row['userLogin'], $row['mailChar'], $row['roleLevel']);
+			$user = USER::create($row['userID'], $row['userLogin'], $row['email'], $row['mailChar'],
+                $row['password'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
 			array_push($result, $user);
 		}
 		return $result;
@@ -26,10 +29,8 @@ class USERDAO{
         $resultSet = $stmt->fetchAll();
         if ($resultSet) {
             foreach ($resultSet as $row) {
-                $user = USER::create($row['userID'], $row['userLogin'], $row['mailChar'], $row['roleLevel']);
-                $user->setEmail($row["email"]);
-                $user->setPassword($row["userPassword"]);
-                $user->setForumName($row["forumAccount"]);
+                $user = USER::create($row['userID'], $row['userLogin'], $row['email'], $row['mailChar'],
+                    $row['password'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
                 $user->clearUser();
                 return $user;
             }
@@ -94,7 +95,8 @@ class USERDAO{
         $stmt->execute();
         $resultSet = $stmt->fetchAll();
         foreach ($resultSet as $row) {
-            $user = USER::create($row["userID"], $row["userLogin"], $row["mailChar"], $row["roleLevel"]);
+            $user = USER::create($row['userID'], $row['userLogin'], $row['email'], $row['mailChar'],
+                $row['password'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
             return $user;
         }
         return false;
@@ -145,6 +147,24 @@ class USERDAO{
         }
         $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
         throw new Exception('Failed to update password.');
+        return false;
+    }
+
+    public static function payoutUserID($userID){
+        $sql = "UPDATE useraccount SET payout = 0 WHERE userID = :userID;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':userID', $userID);
+        $binds = array(
+            ":userID" => $userID,
+        );
+        $logdao = new LOGDAO();
+        if ($stmt->execute()) { //1 if success, 0 if fail
+            $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
+            return true;
+        }
+        $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
+        throw new Exception('Failed to payout userID. (' . $userID . ')');
         return false;
     }
 }

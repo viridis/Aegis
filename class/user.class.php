@@ -1,71 +1,59 @@
 <?php
 class USER{
 	private static $idList = array();
-	private $id;
-	private $name;
+	private $userID;
+	private $userLogin;
     private $email;
-	private $mailname;
+	private $mailChar;
     private $password;
-    private $permission;
-    private $forumname;
+    private $roleLevel;
+    private $forumAccount;
+    private $payout;
 	
-	function __construct($id, $name, $mailname, $permission){
-		$this->id = $id;
-        $this->name = $name;
-		$this->mailname = $mailname;
-        $this->permission = $permission;
+	function __construct($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout){
+		$this->userID = $userID;
+        $this->userLogin = $userLogin;
+        $this->email = $email;
+		$this->mailChar = $mailChar;
+        $this->roleLevel = $roleLevel;
+        $this->forumAccount = $forumAccount;
+        $this->payout = $payout;
 	}
 	
-	public static function create($id, $name, $mailname, $permission){
-		if (!isset(self::$idList[$id])) {
-			self::$idList[$id] = new USER($id, $name, $mailname, $permission);
+	public static function create($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout){
+		if (!isset(self::$idList[$userID])) {
+			self::$idList[$userID] = new USER($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout);
 		}
-		return self::$idList[$id];
+		return self::$idList[$userID];
 	}
 
     public function clearUser(){
         self::$idList = array();
     }
 	
-	public function getId(){
-		return $this->id;
+	public function getUserID(){
+		return $this->userID;
 	}
-	public function getName(){
-		return $this->name;
+	public function getUserLogin(){
+		return $this->userLogin;
 	}
     public function getEmail(){
         return $this->email;
     }
-	public function getMailName(){
-		return $this->mailname;
+	public function getMailChar(){
+		return $this->mailChar;
 	}
-	public function getPassword(){
+	public function getUserPassword(){
 		return $this->password;
 	}
-    public function getPermission(){
-        return $this->permission;
+    public function getRoleLevel(){
+        return $this->roleLevel;
     }
-    public function getForumName(){
-        return $this->forumname;
+    public function getForumAccount(){
+        return $this->forumAccount;
     }
-
-    public function setName($name){
-        $this->name = $name;
-    }
-    public function setEmail($email){
-        $this->email = $email;
-    }
-	public function setMailName($mailname){
-		$this->mailname = $mailname;
-	}
-    public function setPassword($password){
-        $this->password = $password;
-    }
-    public function setPermission($permission){
-        $this->permission = $permission;
-    }
-    public function setForumName($setForumName){
-        $this->forumname = $setForumName;
+    public function getPayout(){
+        return $this->payout;
     }
 }
 

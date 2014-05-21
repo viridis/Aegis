@@ -42,7 +42,7 @@
                             <?php
                             foreach (slotservice::getSlotByEventID($event->getEventID()) as $slot) :
                                 if ($slot->getTakenUserID()) {
-                                    print(userservice::getUserByID($slot->getTakenUserID())->getName());
+                                    print(userservice::getUserByID($slot->getTakenUserID())->getUserLogin());
                                     print("<br >");
                                 }
                             endforeach; ?>

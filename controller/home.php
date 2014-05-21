@@ -16,7 +16,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'login' && $_POST['name'] && $
     $userservice = new userservice();
     $user = $userservice->getUserByNameAndPassword($_POST['name'], md5($_POST['password']));
     if ($user) {
-        $_SESSION["userID"] = $user->getId();
+        $_SESSION["userID"] = $user->getUserID();
         $notification = array(
             'type' => 'success',
             'title' => 'Nice!',
@@ -55,5 +55,5 @@ $featuredlinks = $pageservice->generateFeaturedLinks(5);
 //var_dump(dropservice::getDropByEventID(1));
 
 
-echo "<script type='text/javascript'>alert('$message');</script>";
+//echo "<script type='text/javascript'>alert('$message');</script>";
 include("../view/home.view.php");

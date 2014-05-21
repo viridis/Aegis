@@ -3,7 +3,7 @@ require_once("../data/user.DAO.php");
 
 class userservice
 {
-    public function listAllUsers()
+    public static function listAllUsers()
     {
         $userdao = new USERDAO();
         $userlist = $userdao->getAllUsers();
@@ -49,6 +49,10 @@ class userservice
         $userdao = new USERDAO();
         $user = $userdao->editPasswordOfUser($id, $password);
         return $user;
+    }
+
+    public static function payoutByUserID($userID){
+        return USERDAO::payoutUserID($userID);
     }
 }
 

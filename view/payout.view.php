@@ -26,7 +26,7 @@
                         <th>#</th>
                         <th>Name</th>
                         <th>Mailname</th>
-                        <th>Mailname</th>
+                        <th>Payout</th>
                         <?php if (isset($allowedToPayOut) && $allowedToPayOut): ?>
                         <th></th>
                         <?php endif; ?>
@@ -34,20 +34,20 @@
                     </thead>
                     <?php
                     $i = 0;
-                    foreach ($payoutList as $payOut) {
-                        if ($payOut[1] != 0) {
+                    foreach ($userlist as $user) {
+                        if ($user != 0) {
                             $i++;
                             ?>
                             <tr>
                                 <td><?php print($i); ?></td>
-                                <td><?php print($payOut[0]->getName()); ?></td>
-                                <td><?php print($payOut[0]->getMailName()); ?></td>
-                                <td><?php print(number_format($payOut[1])); ?></td>
+                                <td><?php print($user->getUserLogin()); ?></td>
+                                <td><?php print($user->getMailChar()); ?></td>
+                                <td><?php print(number_format($user->getPayout())); ?></td>
                                 <?php if (isset($allowedToPayOut) && $allowedToPayOut): ?>
                                     <td>
                                         <form action="payout.php?action=payout" method="post">
                                             <input name="userId" id="userId" type="hidden"
-                                                   value="<?php print($payOut[0]->getUserID()); ?>">
+                                                   value="<?php print($user->getUserID()); ?>">
                                             <button type="submit" class="btn btn-xs btn-success">Pay Out</button>
                                         </form>
                                     </td>

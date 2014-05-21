@@ -29,7 +29,7 @@ class EVENTDAO
         foreach($resultSet as $row){
             $event = EVENT::create($row["eventID"], $row["eventType"], $row["startDate"], $row["completeDate"],
                $row["eventState"], $row["recurringEvent"], $row["dayOfWeek"], $row["hourOfDay"], $row["eventName"]);
-            array_push($result, $event);
+            return $event;
         }
         return $result;
     }

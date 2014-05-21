@@ -1,13 +1,12 @@
 <?php
 require_once("../data/run.DAO.php");
+require_once("../service/events.service.php");
 
 class runservice
 {
     public function listAllEvents()
     {
-        $rundao = new RUNDAO();
-        $eventlist = $rundao->getAllEvents();
-        return $eventlist;
+        return eventservice::listAllEvents();
     }
 
     public function addRun($name, $date)
@@ -17,11 +16,9 @@ class runservice
         return $run;
     }
 
-    public function getRunById($id)
+    public function getRunById($eventID)
     {
-        $rundao = new RUNDAO();
-        $run = $rundao->getRunById($id);
-        return $run;
+        return eventservice::getEventByID($eventID);
     }
 
     public function addParticipantToRun($runID, $userID)

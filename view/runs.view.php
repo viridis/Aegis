@@ -47,9 +47,9 @@
 
             <h3>
                 <?php
-                print($run->getName());
+                print($run->getEventName());
                 print(" -- ");
-                print($run->getTime());
+                print($run->getStartDate());
                 ?>
             </h3>
             <br>
@@ -61,39 +61,40 @@
                         <ul class="userList" id="users" class="dropable_lists" ondragover="return DragOver(event)"
                             ondragleave="return DragLeave(event)" ondrop="return doDrop(event)">
                             <?php
-                            foreach ($run->getParticipants() as $participant) : ?>
-                                <li id="db_users_<?php print($participant->getUserID()); ?>" draggable='true'
+                            foreach ($slotlist as $slot) : ?>
+                                <li id="db_users_<?php print($slot->getTakenUserID()); ?>" draggable='true'
                                     ondragstart='return drag(event)'>
-                                    <?php print($participant->getName()); ?>
+                                    <?php
+                                    print(userservice::getUserByID($slot->getTakenUserID())->getUserLogin()); ?>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
                     </div>
 
                     <div class="col-sm-10">
-                        <?php for ($i = 0; $i < count($userList[0]); $i++) : ?>
+                        <?php for ($i = 0; $i < count($userList); $i++) : ?>
                             <div class="row">
                                 <div class="col-sm-4">
                                     <?php if (isset($userList[0][$i])): ?>
-                                        <span id='users_<?php print($userList[0][$i]->getId()); ?>' draggable='true'
+                                        <span id='users_<?php print($userList[0][$i]->getUserID()); ?>' draggable='true'
                                               ondragstart='return drag(event)' class="floatListItem">
-                                    <?php print($userList[0][$i]->getName()); ?>
+                                    <?php print($userList[0][$i]->getUserLogin()); ?>
                                 </span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="col-sm-4">
                                     <?php if (isset($userList[1][$i])): ?>
-                                        <span id='users_<?php print($userList[1][$i]->getId()); ?>' draggable='true'
+                                        <span id='users_<?php print($userList[1][$i]->getUserID()); ?>' draggable='true'
                                               ondragstart='return drag(event)' class="floatListItem">
-                                    <?php print($userList[1][$i]->getName()); ?>
+                                    <?php print($userList[1][$i]->getUserLogin()); ?>
                                 </span>
                                     <?php endif; ?>
                                 </div>
                                 <div class="col-sm-4">
                                     <?php if (isset($userList[2][$i])): ?>
-                                        <span id='users_<?php print($userList[2][$i]->getId()); ?>' draggable='true'
+                                        <span id='users_<?php print($userList[2][$i]->getUserID()); ?>' draggable='true'
                                               ondragstart='return drag(event)' class="floatListItem">
-                                    <?php print($userList[2][$i]->getName()); ?>
+                                    <?php print($userList[2][$i]->getUserLogin()); ?>
                                 </span>
                                     <?php endif; ?>
                                 </div>
@@ -109,10 +110,12 @@
                         <h4>Drops</h4>
                         <ul class="itemList" id="items" class="dropable_lists" ondragover="return DragOver(event)"
                             ondragleave="return DragLeave(event)" ondrop="return doDrop(event)">
-                            <?php foreach ($run->getDrops() as $drop): ?>
-                                <li id="db_items_<?php print($drop->getDropId()); ?>" draggable='true'
+                            <?php
+                            foreach (dropservice::getDropByEventID($run->getEventID()) as $drop): ?>
+                                <li id="db_items_<?php print($drop->getDropID()); ?>" draggable='true'
                                     ondragstart='return drag(event)'>
-                                    <?php print($drop->getName()); ?>
+                                    <?php
+                                    print(itemservice::getItemById($drop->getItemID())->getName()); ?>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
@@ -123,7 +126,7 @@
                             <div class="row">
                                 <div class="col-sm-4">
                                     <?php if (isset($itemList[0][$i])): ?>
-                                        <span id='items_<?php print($itemList[0][$i]->getId()); ?>' draggable='true'
+                                        <span id='items_<?php print($itemList[0][$i]->getItemID()); ?>' draggable='true'
                                             ondragstart='return drag(event)' class="floatListItem">
                                             <?php print($itemList[0][$i]->getName()); ?>
                                         </span>
@@ -131,7 +134,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <?php if (isset($itemList[1][$i])): ?>
-                                        <span id='items_<?php print($itemList[1][$i]->getId()); ?>' draggable='true'
+                                        <span id='items_<?php print($itemList[1][$i]->getItemID()); ?>' draggable='true'
                                             ondragstart='return drag(event)' class="floatListItem">
                                             <?php print($itemList[1][$i]->getName()); ?>
                                         </span>
@@ -139,7 +142,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <?php if (isset($itemList[2][$i])): ?>
-                                        <span id='items_<?php print($itemList[2][$i]->getId()); ?>' draggable='true'
+                                        <span id='items_<?php print($itemList[2][$i]->getItemID()); ?>' draggable='true'
                                             ondragstart='return drag(event)' class="floatListItem">
                                             <?php print($itemList[2][$i]->getName()); ?>
                                         </span>
@@ -178,11 +181,11 @@
                         <tr>
                             <td><?php print($i); ?></td>
                             <td>
-                                <a href="./runs.php?editrun=<?php print($event->getID()) ?>">
-                                    <?php print($event->getName()); ?>
+                                <a href="./runs.php?editrun=<?php print($event->getEventID()) ?>">
+                                    <?php print($event->getEventName()); ?>
                                 </a>
                             </td>
-                            <td><?php print($event->getTime()); ?></td>
+                            <td><?php print($event->getStartDate()); ?></td>
                         </tr>
                     <?php
                     }

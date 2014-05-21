@@ -3,6 +3,8 @@ require_once("../service/page.service.php");
 require_once("../service/runs.service.php");
 require_once("../service/items.service.php");
 require_once("../service/users.service.php");
+require_once("../service/slot.service.php");
+require_once("../service/drop.service.php");
 
 if (!$_SESSION["userID"]) {
     header("location: ./home.php");
@@ -74,8 +76,8 @@ if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["dele
 $editing = 0;
 if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"])) {
     $run = $runservice->getRunById($_GET["editrun"]);
-    $itemservice = new itemservice();
-    $itemList = $itemservice->listAllItems();
+    $slotlist = slotservice::getSlotByEventID($_GET["editrun"]);
+    $itemList = itemservice::listAllItems();
     $itemListCount = ceil(count($itemList) / 3);
     $itemList = array(
         array_slice($itemList, 0, $itemListCount),
@@ -84,7 +86,7 @@ if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"])) {
 
     );
     $userservice = new userservice();
-    $userList = $userservice->listAllUsers();
+    $userList = userservice::listAllUsers();
     $userListCount = ceil(count($userList) / 3);
     $userList = array(
         array_slice($userList, 0, $userListCount),
@@ -96,5 +98,6 @@ if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"])) {
 }
 
 $eventlist = $runservice->listAllEvents();
+
 
 include("../view/runs.view.php");
