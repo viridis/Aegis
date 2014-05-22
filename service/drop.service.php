@@ -1,7 +1,15 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Garena
- * Date: 5/21/14
- * Time: 4:05 PM
- */ 
+require_once("../data/drop.DAO.php");
+
+class dropservice
+{
+    public static function addDrop($eventID, $itemID){
+        return DROPDAO::addDrop($eventID, $itemID);
+    }
+
+    public static function getDropByEventID($eventID){
+        return DROPDAO::getDropByEventID($eventID);
+    }
+}
+
+?>

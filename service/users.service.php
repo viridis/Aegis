@@ -10,7 +10,7 @@ class userservice
         return $userlist;
     }
 
-    public function getUserByID($id)
+    public static function getUserByID($id)
     {
         $userdao = new USERDAO();
         $user = $userdao->getUserById($id);

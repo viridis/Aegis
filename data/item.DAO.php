@@ -5,30 +5,30 @@ require_once("../class/item.class.php");
 
 class ITEMDAO
 {
-    public function getAllItems()
+    public static function getAllItems()
     {
         $result = array();
         $sql = "SELECT * FROM items ORDER BY name ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultSet = $dbh->query($sql);
         foreach ($resultSet as $row) {
-            $item = ITEM::create($row["id"], $row["name"], $row["talonID"]);
+            $item = ITEM::create($row["itemID"], $row["aegisName"], $row["name"]);
             array_push($result, $item);
         }
         return $result;
     }
 
-    public function getItemById($id)
+    public static function getItemById($itemID)
     {
-        $sql = "SELECT * FROM items WHERE id = :id;";
+        $sql = "SELECT * FROM items WHERE itemID = :itemID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':itemID', $itemID);
         $stmt->execute();
         $resultSet = $stmt->fetchAll();
         if ($resultSet) {
             foreach ($resultSet as $row) {
-                $item = ITEM::create($row["id"], $row["name"], $row["talonID"]);
+                $item = ITEM::create($row["itemID"], $row["aegisName"], $row["name"]);
                 return $item;
             }
         } else {
@@ -36,47 +36,27 @@ class ITEMDAO
         }
     }
 
-    public function addItem($itemname)
+    public static function addItem($itemID, $aegisName, $name)
     {
-        $sql = "INSERT INTO items (`name`) VALUES (:itemname);";
+        $sql = "INSERT INTO items VALUES (:itemID, :aegisName, :name);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':itemname', $itemname);
+        $stmt->bindParam(':itemID', $itemID);
+        $stmt->bindParam(':aegisName', $aegisName);
+        $stmt->bindParam(':name', $name);
         $binds = array(
-            ":itemname" => $itemname,
+            ":itemID" => $itemID,
+            ":aegisName" => $aegisName,
+            ":name" => $name
         );
         $logdao = new LOGDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
             $dao = new ITEMDAO();
-            $item = $dao->getItemById($dbh->lastInsertId());
-            return $item;
+            return true;
         }
         $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-        throw new Exception('Failed to add item. (' . $itemname . ')');
-        return false;
-    }
-
-    public function updateItem($id, $name)
-    {
-        $sql = 'UPDATE items SET name = :name WHERE id = :id;';
-        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':id', $id);
-        $binds = array(
-            ":name" => $name,
-            ":id" => $id,
-        );
-        $logdao = new LOGDAO();
-        if ($stmt->execute()) { //1 if success, 0 if fail
-            $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
-            $dao = new ITEMDAO();
-            $item = $dao->getItemById($id);
-            return $item;
-        }
-        $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
-        throw new Exception('Failed to update item. (' . $name . ')');
+        throw new Exception('Failed to add item. (' . $name . ')');
         return false;
     }
 }

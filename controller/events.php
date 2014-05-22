@@ -1,6 +1,10 @@
 <?php
 require_once("../service/page.service.php");
 require_once("../service/events.service.php");
+require_once("../service/users.service.php");
+require_once("../service/slot.service.php");
+require_once("../service/drop.service.php");
+require_once("../service/items.service.php");
 
 
 $pageservice = new PAGESERVICE();

@@ -2,66 +2,54 @@
 class DROP
 {
     private static $idList = array();
+    private $eventID;
     private $dropID;
-    private $name;
-    private $talonID;
-    private $dropValue;
+    private $holdingUserID;
+    private $sold;
+    private $soldPrice;
+    private $itemID;
 
-    function __construct($dropID, $name, $talonID, $dropValue)
+    function __construct($eventID, $dropID, $holdingUserID, $sold, $soldPrice, $itemID)
     {
+        $this->eventID = $eventID;
         $this->dropID = $dropID;
-        $this->name = $name;
-        $this->talonID = $talonID;
-        $this->dropValue = $dropValue;
+        $this->holdingUserID = $holdingUserID;
+        $this->sold = $sold;
+        $this->soldPrice = $soldPrice;
+        $this->itemID = $itemID;
     }
 
-    public static function create($dropID, $name, $talonID, $dropValue)
+    public static function create($eventID, $dropID, $holdingUserID, $sold, $soldPrice, $itemID)
     {
         if (!isset(self::$idList[$dropID])) {
-            self::$idList[$dropID] = new DROP($dropID, $name, $talonID, $dropValue);
+            self::$idList[$dropID] = new DROP($eventID, $dropID, $holdingUserID, $sold, $soldPrice, $itemID);
         }
         return self::$idList[$dropID];
     }
 
-    public function getDropId()
+    public function getEventId()
     {
+        return $this->eventID;
+    }
+
+    public function getDropID(){
         return $this->dropID;
     }
 
-    public function getName()
-    {
-        return $this->name;
+    public function getHoldingUserID(){
+        return $this->holdingUserID;
     }
 
-    public function getTalonID()
-    {
-        return $this->talonID;
+    public function isSold(){
+        return $this->sold;
     }
 
-    public function getDropValue()
-    {
-        return $this->dropValue;
+    public function getSoldPrice(){
+        return $this->soldPrice;
     }
 
-
-    public function setDropId($id)
-    {
-        $this->dropID = $id;
-    }
-
-    public function setName($name)
-    {
-        $this->name = $name;
-    }
-
-    public function setTalonID($talonID)
-    {
-        $this->talonID = $talonID;
-    }
-
-    public function setDropValue($value)
-    {
-        $this->dropValue = $value;
+    public function getItemID(){
+        return $this->itemID;
     }
 }
 

@@ -2,29 +2,29 @@
 class ITEM
 {
     private static $idList = array();
-    private $id;
+    private $itemID;
+    private $aegisName;
     private $name;
-    private $talonID;
 
 
-    function __construct($id, $name, $talonID)
+    function __construct($itemID, $aegisName, $name)
     {
-        $this->id = $id;
+        $this->itemID = $itemID;
+        $this->aegisName = $aegisName;
         $this->name = $name;
-        $this->talonID = $talonID;
     }
 
-    public static function create($id, $name, $talonID)
+    public static function create($itemID, $aegisName, $name)
     {
-        if (!isset(self::$idList[$id])) {
-            self::$idList[$id] = new ITEM($id, $name, $talonID);
+        if (!isset(self::$idList[$itemID])) {
+            self::$idList[$itemID] = new ITEM($itemID, $aegisName, $name);
         }
-        return self::$idList[$id];
+        return self::$idList[$itemID];
     }
 
-    public function getId()
+    public function getItemId()
     {
-        return $this->id;
+        return $this->itemID;
     }
 
     public function getName()
@@ -32,14 +32,14 @@ class ITEM
         return $this->name;
     }
 
-    public function getTalonID()
+    public function getAegisName()
     {
-        return $this->talonID;
+        return $this->aegisName;
     }
 
-    public function setId($id)
+    public function setId($itemID)
     {
-        $this->id = $id;
+        $this->itemID = $itemID;
     }
 
     public function setName($name)
@@ -47,9 +47,9 @@ class ITEM
         $this->name = $name;
     }
 
-    public function setTalonID($talonID)
+    public function setTalonID($aegisName)
     {
-        $this->talonID = $talonID;
+        $this->aegisName = $aegisName;
     }
 }
 

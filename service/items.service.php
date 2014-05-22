@@ -3,32 +3,19 @@ require_once("../data/item.DAO.php");
 
 class itemservice
 {
-    public function listAllItems()
+    public static function listAllItems()
     {
-        $itemdao = new ITEMDAO();
-        $itemlist = $itemdao->getAllItems();
-        return $itemlist;
+        return ITEMDAO::getAllItems();
     }
 
-    public function getItemById($id)
+    public static function getItemById($itemID)
     {
-        $itemdao = new ITEMDAO();
-        $item = $itemdao->getItemById($id);
-        return $item;
+        return ITEMDAO::getItemById($itemID);
     }
 
-    public function addItem($name)
+    public static function addItem($itemID, $aegisName, $name)
     {
-        $itemdao = new ITEMDAO();
-        $item = $itemdao->addItem($name);
-        return $item;
-    }
-
-    public function updateItem($id, $name)
-    {
-        $itemdao = new ITEMDAO();
-        $item = $itemdao->updateItem($id, $name);
-        return $item;
+        return ITEMDAO::addItem($itemID, $aegisName, $name);
     }
 }
 

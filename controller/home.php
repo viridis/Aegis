@@ -1,7 +1,7 @@
 <?php
 require_once("../service/page.service.php");
 require_once("../service/users.service.php");
-require_once("../service/items.service.php");
+require_once("../service/drop.service.php");
 
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     unset($_SESSION["userID"]);
@@ -52,6 +52,7 @@ $featuredlinks = $pageservice->generateFeaturedLinks(5);
 //var_dump(itemservice::getItemById(501));
 //var_dump(itemservice::listAllItems());
 //var_dump(itemservice::addItem(2, 'test','test'));
+//var_dump(dropservice::getDropByEventID(1));
 
 
 echo "<script type='text/javascript'>alert('$message');</script>";
