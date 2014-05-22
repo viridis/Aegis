@@ -1,7 +1,7 @@
 <?php
 require_once("../service/page.service.php");
 require_once("../service/users.service.php");
-require_once("../service/events.service.php");
+require_once("../service/items.service.php");
 
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     unset($_SESSION["userID"]);
@@ -42,6 +42,17 @@ if (isset($_SESSION["userID"])) {
 }
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
+
+//eventservice::addEvent(2,'2014.12.12 12.12.12','test1');
+//eventservice::deleteEvent(6);
+//slotservice::addSlot(1,4);
+//slotservice::deleteSlot(1);
+//var_dump(slotservice::getSlotByEventID(1));
+//dropservice::addDrop(1,1);
+//var_dump(itemservice::getItemById(501));
+//var_dump(itemservice::listAllItems());
+//var_dump(itemservice::addItem(2, 'test','test'));
+
 
 echo "<script type='text/javascript'>alert('$message');</script>";
 include("../view/home.view.php");

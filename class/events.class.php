@@ -34,7 +34,6 @@ class EVENT
                 $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName);
 
         }
-        var_dump(self::$idList[$eventID]);
         return self::$idList[$eventID];
     }
 

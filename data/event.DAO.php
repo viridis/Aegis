@@ -33,5 +33,53 @@ class EVENTDAO
         }
         return $result;
     }
+
+    public static function addEvent($eventType, $startDate, $eventName, $recurringEvent = 0, $dayOfWeek = 0, $hourOfDay = 0){
+        $sql = "INSERT INTO events VALUES(NULL, :eventType, :startDate, NULL, 0, :recurringEvent, :dayOfWeek, :hourOfDay, :eventName);";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':eventType', $eventType);
+        $stmt->bindParam(':startDate', $startDate);
+        $stmt->bindParam(':eventName', $eventName);
+        $stmt->bindParam(':recurringEvent', $recurringEvent);
+        $stmt->bindParam(':dayOfWeek', $dayOfWeek);
+        $stmt->bindParam(':hourOfDay', $hourOfDay);
+        $binds = array(
+            ":eventType" => $eventType,
+            ":startDate" => $startDate,
+            ":recurringEvent" => $recurringEvent,
+            ":dayOfWeek" => $dayOfWeek,
+            ":hourOfDay" => $hourOfDay,
+            ":eventName" => $eventName
+        );
+        $logdao = new LOGDAO();
+        if ($stmt->execute()) {
+            $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
+            return true;
+        } else {
+            $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
+            throw new Exception('Failed to add event (' . $userID . ')');
+            return false;
+        }
+    }
+
+    public static function deleteEvent($eventID){
+        $sql = "DELETE FROM events WHERE eventID = $eventID;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':eventID', $eventID);
+        $binds = array(
+            ":eventID" => $eventID
+        );
+        $logdao = new LOGDAO();
+        if ($stmt->execute()) {
+            $logdao->logPreparedStatement('DELETE', $stmt, $binds, 'SUCCESS');
+            return true;
+        } else {
+            $logdao->logPreparedStatement('DELETE', $stmt, $binds, 'FAILED');
+            throw new Exception('Failed to delete event (' . $eventID . ')');
+            return false;
+        }
+    }
 }
 ?>
