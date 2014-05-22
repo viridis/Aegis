@@ -20,6 +20,7 @@ $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
 $eventservice = new eventservice();
 $payoutservice = new payoutservice();
+$userservice= new userservice();
 $allowedToPayOut = true;
 
 if (isset ($_GET["action"]) && $_GET["action"] == 'payout' && $allowedToPayOut) {
@@ -46,7 +47,7 @@ if (isset($_GET["paidOut"])) {
 }
 
 $eventlist = $eventservice->listAllEvents();
-$userlist = userservice::listAllUsers();
+$userlist = $userservice->listAllUsers();
 
 include("../view/payout.view.php");
 

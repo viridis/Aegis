@@ -3,11 +3,10 @@ require_once("../data/user.DAO.php");
 
 class userservice
 {
-    public static function listAllUsers()
+    public function listAllUsers()
     {
         $userdao = new USERDAO();
-        $userlist = $userdao->getAllUsers();
-        return $userlist;
+        return $userdao->getAllUsers();
     }
 
     public static function getUserByID($id)

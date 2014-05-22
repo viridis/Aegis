@@ -1,5 +1,6 @@
 <?php
 require_once("../data/dbconfig.DAO.php");
+require_once("../data/gameaccount.DAO.php");
 require_once("../class/character.class.php");
 
 class CHARACTERDAO

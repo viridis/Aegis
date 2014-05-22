@@ -1,6 +1,8 @@
 <?php
 class USER{
 	private static $idList = array();
+
+    // DB fields
 	private $userID;
 	private $userLogin;
     private $email;
@@ -9,6 +11,9 @@ class USER{
     private $roleLevel;
     private $forumAccount;
     private $payout;
+
+    // Associated fields
+    private $gameAccountList; // List of account objects
 	
 	function __construct($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout){
 		$this->userID = $userID;
@@ -54,6 +59,14 @@ class USER{
     }
     public function getPayout(){
         return $this->payout;
+    }
+
+    public function getGameAccountList(){
+        return $this->gameAccountList;
+    }
+
+    public function setGameAccountList($gameAccountList){
+        $this->gameAccountList = $gameAccountList;
     }
 }
 

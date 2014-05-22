@@ -1,5 +1,6 @@
 <?php
 require_once("../data/dbconfig.DAO.php");
+require_once("../data/character.DAO.php");
 require_once("../class/gameaccount.class.php");
 require_once("../data/log.DAO.php");
 
@@ -90,6 +91,23 @@ class GAMEACCOUNTDAO
             throw new Exception('Failed to delete game account (' . $accountID . ')');
             return false;
         }
+    }
+
+    private function createGameAccountArray($gameAccountResults, $characterResults){
+        $result = array();
+        $characterPointer = 0;
+        foreach($gameAccountResults as $row){
+            $gameAccount = GAMEACCOUNT::create($row["userID"], $row["accountID"], $row["cooldown"]);
+            $characterList = array();
+            while($characterResults[$characterPointer]["accountID"] <= $row["accountID"]) {
+                $character = CHARACTER::create($row["accountID"], $row["charID"], $row["charName"],$row["cooldown"], $row["charClass"], $row["userID"]);
+                array_push($characterList, $character);
+                $characterPointer++;
+            }
+            $gameAccount->setCharacterList($characterList);
+            array_push($result, $gameAccount);
+        }
+        return $result;
     }
 }
 ?>

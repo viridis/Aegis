@@ -1,21 +1,25 @@
 <?php
 require_once("../data/dbconfig.DAO.php");
 require_once("../data/log.DAO.php");
+require_once("../class/character.class.php");
 require_once("../class/user.class.php");
+require_once("../class/gameaccount.class.php");
+require_once("../data/gameaccount.DAO.php");
 
 class USERDAO{
 	public function getAllUsers(){
-		$result = array();
-		$sql = "SELECT * FROM useraccount ORDER BY userLogin ASC;";
+		$sqluseraccount = "SELECT * FROM useraccount ORDER BY userID ASC;";
+        $sqlgameaccount = "SELECT * FROM gameaccounts ORDER BY userID ASC;";
+        $sqlcharacter = "SELECT * FROM characters ORDER BY userID, accountID ASC;";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sql);
-        $stmt->execute();
-        $resultSet = $stmt->fetchAll();
-		foreach ($resultSet as $row){
-			$user = USER::create($row['userID'], $row['userLogin'], $row['email'], $row['mailChar'],
-                $row['password'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
-			array_push($result, $user);
-		}
+        $resultSetUseraccount = $dbh->query($sqluseraccount);
+        $resultSetGameaccount = $dbh->query($sqlgameaccount);
+        $resultSetCharacter = $dbh->query($sqlcharacter);
+        $useraccountResults = $resultSetUseraccount->fetchAll(PDO::FETCH_ASSOC);
+        $gameaccountResults = $resultSetGameaccount->fetchAll(PDO::FETCH_ASSOC);
+        $characterResults = $resultSetCharacter->fetchAll(PDO::FETCH_ASSOC);
+        var_dump($useraccountResults);
+        $result = $this->createUserArray($useraccountResults, $gameaccountResults, $characterResults);
 		return $result;
 	}
 	
@@ -166,6 +170,36 @@ class USERDAO{
         $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
         throw new Exception('Failed to payout userID. (' . $userID . ')');
         return false;
+    }
+
+    private function createUserArray($userAccountResults, $gameAccountResults, $characterResults){
+        $result = array();
+        $gameAccountPointer = 0;
+        $characterPointer = 0;
+        foreach($userAccountResults as $row){
+            $user = USER::create($row['userID'], $row['userLogin'], $row['email'], $row['mailChar'],
+                $row['password'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
+            $gameAccountList = array();
+            while ($gameAccountResults[$gameAccountPointer]["userID"] <= $row["userID"] && isset($gameAccountResults[$gameAccountPointer])) {
+                $gameAccount = GAMEACCOUNT::create($gameAccountResults[$gameAccountPointer]["userID"],
+                    $gameAccountResults[$gameAccountPointer]["accountID"], $gameAccountResults[$gameAccountPointer]["cooldown"]);
+                $characterList = array();
+                while($characterResults[$characterPointer]["accountID"] == $gameAccountResults[$gameAccountPointer]["accountID"]) {
+                    $character = CHARACTER::create($characterResults[$characterPointer]["accountID"],
+                        $characterResults[$characterPointer]["charID"], $characterResults[$characterPointer]["charName"],
+                        $characterResults[$characterPointer]["cooldown"], $characterResults[$characterPointer]["charClass"],
+                        $characterResults[$characterPointer]["userID"]);
+                    array_push($characterList, $character);
+                    $characterPointer++;
+                }
+                $gameAccount->setCharacterList($characterList);
+                array_push($gameAccountList, $gameAccount);
+                $gameAccountPointer++;
+            }
+            $user->setGameAccountList($gameAccountList);
+            array_push($result, $user);
+        }
+        return $result;
     }
 }
 

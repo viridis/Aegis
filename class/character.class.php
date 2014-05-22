@@ -2,6 +2,8 @@
 class CHARACTER
 {
     private static $idList = array();
+
+    // DB fields
     private $accountID;
     private $charID;
     private $charName;
