@@ -5,7 +5,7 @@ require_once("../class/item.class.php");
 
 class ITEMDAO
 {
-    public static function getAllItems()
+    public function getAllItems()
     {
         $result = array();
         $sql = "SELECT * FROM items ORDER BY name ASC;";
@@ -18,7 +18,7 @@ class ITEMDAO
         return $result;
     }
 
-    public static function getItemById($itemID)
+    public function getItemById($itemID)
     {
         $sql = "SELECT * FROM items WHERE itemID = :itemID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
@@ -36,7 +36,7 @@ class ITEMDAO
         }
     }
 
-    public static function addItem($itemID, $aegisName, $name)
+    public function addItem($itemID, $aegisName, $name)
     {
         $sql = "INSERT INTO items VALUES (:itemID, :aegisName, :name);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
