@@ -3,21 +3,25 @@ require_once("../data/event.DAO.php");
 
 class eventservice
 {
-    public static function listAllEvents()
+    public function listAllEvents()
     {
-        return EVENTDAO::getAllEvents();
+        $eventDAO = new EVENTDAO();
+        return $eventDAO->getAllEvents();
     }
 
-    public static function getEventByID($eventID){
-        return EVENTDAO::getEventByID($eventID);
+    public function getEventByID($eventID){
+        $eventDAO = new EVENTDAO();
+        return $eventDAO->getEventByID($eventID);
     }
 
-    public static function addEvent($eventType, $startDate, $eventName, $recurringEvent = 0, $dayOfWeek = 0, $hourOfDay = 0){
-        return EVENTDAO::addEvent($eventType, $startDate, $eventName, $recurringEvent, $dayOfWeek, $hourOfDay);
+    public function addEvent($eventType, $startDate, $eventName, $recurringEvent = 0, $dayOfWeek = 0, $hourOfDay = 0){
+        $eventDAO = new EVENTDAO();
+        return $eventDAO->addEvent($eventType, $startDate, $eventName, $recurringEvent, $dayOfWeek, $hourOfDay);
     }
 
-    public static function deleteEvent($eventID){
-        return EVENTDAO::deleteEvent($eventID);
+    public function deleteEvent($eventID){
+        $eventDAO = new EVENTDAO();
+        return $eventDAO->deleteEvent($eventID);
     }
 }
 

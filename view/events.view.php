@@ -40,27 +40,24 @@
                     <div class="panel-body" style="font-size: 10px;">
                         <div class="col-sm-3">
                             <?php
-                            foreach (slotservice::getSlotByEventID($event->getEventID()) as $slot) :
+                            foreach (($event->getSlotList()) as $slot) :
+
                                 if ($slot->getTakenUserID()) {
-                                    print(userservice::getUserByID($slot->getTakenUserID())->getUserLogin());
+                                    print($slot->getUserLogin());
                                     print("<br >");
                                 }
                             endforeach; ?>
                         </div>
 
                        <div class="col-sm-9">
-                            <?php
-                            foreach ($droplist as $drop) :
-                            $item = itemservice::getItemById($drop->getItemID());
-
-                            ?>
+                            <?php foreach ($event->getDropList() as $drop) : ?>
                                 <div class="col-sm-6">
-                                    <?php if (strlen($item->getName()) > 10): ?>
-                                        <span title="<?php print($item->getName()); ?>">
-                                                    <?php print(substr($item->getName(), 0, 10) . '...'); ?>
+                                    <?php if (strlen($drop->getItemName()) > 10): ?>
+                                        <span title="<?php print($drop->getItemName()); ?>">
+                                                    <?php print(substr($drop->getItemName(), 0, 10) . '...'); ?>
                                                 </span>
                                     <?php else :
-                                        print($item->getName());
+                                        print($drop->getItemName());
                                     endif; ?>
                                 </div>
                                 <div class="col-sm-6" style="text-align: right; font-weight: bold;">

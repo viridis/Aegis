@@ -63,9 +63,12 @@
                             <?php
                             foreach ($slotlist as $slot) : ?>
                                 <li id="db_users_<?php print($slot->getTakenUserID()); ?>" draggable='true'
-                                    ondragstart='return drag(event)'>
+                                    ondragstart="return drag(event)">
                                     <?php
-                                    print(userservice::getUserByID($slot->getTakenUserID())->getUserLogin()); ?>
+                                    if ($slot->getTakenUserID() > 0)
+                                        print(userservice::getUserByID($slot->getTakenUserID())->getUserLogin());
+                                    else
+                                        print("vacant"); ?>
                                 </li>
                             <?php endforeach; ?>
                         </ul>
@@ -198,7 +201,7 @@
 
 
 <?php include('partials/footer.partial.view.php') ?>
-<script>
+<script type="text/javascript">
     <?php if($editing == 1){ ?>
     function DragOver(event) {
         var id = event.dataTransfer.getData("Text");
@@ -268,7 +271,7 @@
                 li.appendChild(item);
                 unorderedList.appendChild(li);
                 unorderedList.parentNode.style.background = "";
-                makeRequest("runs.php?editrun=<?php print($run->getID()); ?>&add=" + stripped[0] + "&id=" + stripped[1]);
+     //           makeRequest("runs.php?editrun=<?php print($run->getID()); ?>&add=" + stripped[0] + "&id=" + stripped[1]);
             }
             else {
                 unorderedList.parentNode.style.background = "";
@@ -277,7 +280,7 @@
         else if (stripped[0] == 'db' && unorderedList.id == 'bin') {
             //delete on success.
             unorderedList.parentNode.style.background = "";
-            makeRequest("runs.php?editrun=<?php print($run->getID()); ?>&delete=" + stripped[1] + "&id=" + stripped[2]);
+    //        makeRequest("runs.php?editrun=<?php print($run->getID()); ?>&delete=" + stripped[1] + "&id=" + stripped[2]);
         }
         else if (stripped[0] != unorderedList.id) {
             unorderedList.parentNode.style.background = "";
@@ -296,6 +299,7 @@
     }
 
     function drag(event) {
+        event.target.parentNode.style.background = "#6AA121";
         event.dataTransfer.effectAllowed = 'move';
         event.dataTransfer.setData("Text", event.target.id);
         return true;

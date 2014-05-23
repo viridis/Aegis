@@ -2,12 +2,19 @@
 class SLOT
 {
     private static $idList = array();
+
+    //DB Fields
     private $eventID;
     private $slotID;
     private $slotClass;
     private $taken;
     private $takenUserID;
     private $takenCharID;
+
+    //Associated Fields
+    private $userLogin; // From user class
+    private $charClass; // From character class
+    private $charName; // From character class
 
     function __construct($eventID, $slotID, $slotClass, $taken, $takenUserID, $takenCharID){
         $this->eventID = $eventID;
@@ -47,6 +54,30 @@ class SLOT
 
     function getTakenCharID(){
         return $this->takenCharID;
+    }
+
+    function getUserLogin(){
+        return $this->userLogin;
+    }
+
+    function getCharClass(){
+        return $this->charClass;
+    }
+
+    function getCharName(){
+        return $this->charName;
+    }
+
+    function setUserLogin($userLogin){
+        $this->userLogin = $userLogin;
+    }
+
+    function setCharClass($charClass){
+        $this->charClass = $charClass;
+    }
+
+    function setCharName($charName){
+        $this->charName = $charName;
     }
 }
 

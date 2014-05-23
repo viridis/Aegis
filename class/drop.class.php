@@ -2,12 +2,18 @@
 class DROP
 {
     private static $idList = array();
+
+    // DB fields
     private $eventID;
     private $dropID;
     private $holdingUserID;
     private $sold;
     private $soldPrice;
     private $itemID;
+
+    // Associated fields
+    private $itemName;  // From item class
+    private $aegisName; // From item class
 
     function __construct($eventID, $dropID, $holdingUserID, $sold, $soldPrice, $itemID)
     {
@@ -51,6 +57,21 @@ class DROP
     public function getItemID(){
         return $this->itemID;
     }
-}
 
+    public function getItemName(){
+        return $this->itemName;
+    }
+
+    public function getAegisName(){
+        return $this->aegisName;
+    }
+
+    public function setItemName($itemName){
+        $this->itemName = $itemName;
+    }
+
+    public function setAegisName($aegisName){
+        $this->aegisName = $aegisName;
+    }
+}
 ?>

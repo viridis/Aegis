@@ -2,6 +2,8 @@
 class EVENT
 {
     private static $idList = array();
+
+    //DB fields
     private $eventID;
     private $eventName;
     private $eventType;
@@ -11,6 +13,10 @@ class EVENT
     private $recurringEvent;
     private $dayOfWeek;
     private $hourOfDay;
+
+    //Associated fields
+    private $slotList; // List of slot objects
+    private $dropList; // List of drop objects
 
     function __construct($eventID, $eventType, $startDate, $completeDate,
                          $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName)
@@ -74,6 +80,22 @@ class EVENT
 
     public function getHourOfDay(){
         return $this->hourOfDay;
+    }
+
+    public function getSlotList(){
+        return $this->slotList;
+    }
+
+    public function getDropList(){
+        return $this->dropList;
+    }
+
+    public function setSlotList($slotList){
+        $this->slotList = $slotList;
+    }
+
+    public function setDropList($dropList){
+        $this->dropList = $dropList;
     }
 }
 ?>

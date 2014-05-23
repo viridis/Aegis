@@ -18,7 +18,7 @@ $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
 $eventservice = new eventservice();
-
 $eventlist = $eventservice->listAllEvents();
+
 include("../view/events.view.php");
 ?>
