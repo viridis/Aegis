@@ -5,7 +5,7 @@ require_once("../data/log.DAO.php");
 
 class SLOTDAO
 {
-    public static function addSlot($eventID, $slotClass){
+    public function addSlot($eventID, $slotClass){
         $sql = "INSERT INTO slots VALUES(:eventID, NULL, :slotClass, FALSE, NULL, NULL);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -26,7 +26,7 @@ class SLOTDAO
         }
     }
 
-    public static function deleteSlot($slotID){
+    public function deleteSlot($slotID){
         $sql = "DELETE FROM slots WHERE slotID = $slotID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -45,17 +45,25 @@ class SLOTDAO
         }
     }
 
-    public static function getSlotByEventID($eventID){
+    public function getSlotByEventID($eventID){
         $result = array();
-        $sqlslot = "SELECT * FROM slots WHERE eventID = :eventID;";
+        $sqlslot = "SELECT slots.*, useraccount.userLogin, characters.charClass, characters.charName
+                        FROM slots
+                        LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
+                        LEFT JOIN characters ON characters.charID = slots.takenCharID
+                        WHERE eventID = :eventID
+                        ORDER BY eventID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlslot);
         $stmt->bindParam(':eventID', $eventID);
         $stmt->execute();
-        $resultSet = $stmt->fetchAll();
+        $resultSet = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         foreach($resultSet as $row){
             $slot = SLOT::create($row["eventID"], $row["slotID"], $row["slotClass"], $row["taken"], $row["takenUserID"],$row["takenCharID"]);
+            $slot->setUserLogin($row["userLogin"]);
+            $slot->setCharClass($row["charClass"]);
+            $slot->setCharName($row["charName"]);
             array_push($result, $slot);
         }
         return $result;

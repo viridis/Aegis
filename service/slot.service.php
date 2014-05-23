@@ -3,17 +3,19 @@ require_once("../data/slot.DAO.php");
 
 class slotservice
 {
-    public static function addSlot($eventID, $slotClass){
-        return SLOTDAO::addSlot($eventID, $slotClass);
+    public function addSlot($eventID, $slotClass){
+        $slotDAO = new SLOTDAO();
+        return $slotDAO->addSlot($eventID, $slotClass);
     }
 
-    public static function deleteSlot($slotID){
-        return SLOTDAO::deleteSlot($slotID);
+    public function deleteSlot($slotID){
+        $slotDAO = new SLOTDAO();
+        return $slotDAO->deleteSlot($slotID);
     }
 
-    public static function getSlotByEventID($eventID){
-        return SLOTDAO::getSlotByEventID($eventID);
+    public function getSlotByEventID($eventID){
+        $slotDAO = new SLOTDAO();
+        return $slotDAO->getSlotByEventID($eventID);
     }
 }
-
 ?>

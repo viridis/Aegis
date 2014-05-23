@@ -43,16 +43,21 @@ if (isset($_SESSION["userID"])) {
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
+
+require_once("../service/slot.service.php");
+//$slotservice = new slotservice();
 //eventservice::addEvent(2,'2014.12.12 12.12.12','test1');
 //eventservice::deleteEvent(6);
-//slotservice::addSlot(1,4);
-//slotservice::deleteSlot(1);
-//var_dump(slotservice::getSlotByEventID(1));
+//$slotservice->addSlot(8,10);
+//$slotservice->deleteSlot(5);
+//var_dump($slotservice->getSlotByEventID(8));
 //dropservice::addDrop(1,1);
 //var_dump(itemservice::getItemById(501));
 //var_dump(itemservice::listAllItems());
 //var_dump(itemservice::addItem(2, 'test','test'));
 //var_dump(dropservice::getDropByEventID(1));
+
+
 
 echo "<script type='text/javascript'>alert('$message');</script>";
 include("../view/home.view.php");
