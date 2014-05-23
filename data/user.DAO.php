@@ -18,31 +18,32 @@ class USERDAO{
         $useraccountResults = $resultSetUseraccount->fetchAll(PDO::FETCH_ASSOC);
         $gameaccountResults = $resultSetGameaccount->fetchAll(PDO::FETCH_ASSOC);
         $characterResults = $resultSetCharacter->fetchAll(PDO::FETCH_ASSOC);
-        var_dump($useraccountResults);
         $result = $this->createUserArray($useraccountResults, $gameaccountResults, $characterResults);
 		return $result;
 	}
 	
 	public function getUserById($id){
-		$result = array();
-		$sql = "SELECT * FROM useraccount WHERE userID = :id;";
+        $sqluseraccount = "SELECT * FROM useraccount WHERE userID = :id ORDER BY userID ASC;";
+        $sqlgameaccount = "SELECT * FROM gameaccounts WHERE userID = :id ORDER BY userID ASC;";
+        $sqlcharacter = "SELECT * FROM characters WHERE userID = :id ORDER BY userID, accountID ASC;";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sql);
+        $stmt = $dbh->prepare($sqluseraccount);
         $stmt->bindParam(':id', $id);
         $stmt->execute();
-        $resultSet = $stmt->fetchAll();
-        if ($resultSet) {
-            foreach ($resultSet as $row) {
-                $user = USER::create($row['userID'], $row['userLogin'], $row['email'], $row['mailChar'],
-                    $row['password'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
-                $user->clearUser();
-                return $user;
-            }
-        } else {
-            throw new Exception('No user found. (' . $id . ')');
-        }
+        $useraccountResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $dbh->prepare($sqlgameaccount);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $gameaccountResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $stmt = $dbh->prepare($sqlcharacter);
+        $stmt->bindParam(':id', $id);
+        $stmt->execute();
+        $characterResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $this->createUserArray($useraccountResults, $gameaccountResults, $characterResults)[0];
+        return $result;
     }
 
+    // To be fixed
     public function addUser($username)
     {
         $sql = "INSERT INTO useraccount (`userLogin`) VALUES (:username);";
@@ -64,6 +65,7 @@ class USERDAO{
         return false;
     }
 
+    // To be fixed
     public function updateUser($id, $name, $mailname)
     {
         $sql = 'UPDATE useraccount SET userLogin = :name, mailChar = :mailname WHERE userID = :id;';
@@ -91,21 +93,18 @@ class USERDAO{
 
     public function getUserByNameAndPassword($name, $password)
     {
-        $sql = 'SELECT * FROM useraccount WHERE userLogin = :name AND userPassword = :password LIMIT 1';
+        $sqluseraccount = 'SELECT * FROM useraccount WHERE userLogin = :name AND userPassword = :password LIMIT 1';
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sql);
+        $stmt = $dbh->prepare($sqluseraccount);
         $stmt->bindParam(':name', $name);
         $stmt->bindParam(':password', $password);
         $stmt->execute();
-        $resultSet = $stmt->fetchAll();
-        foreach ($resultSet as $row) {
-            $user = USER::create($row['userID'], $row['userLogin'], $row['email'], $row['mailChar'],
-                $row['password'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
-            return $user;
-        }
-        return false;
+        $useraccountResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $result = $this->getUserById($useraccountResults[0]["userID"]);
+        return $result;
 	}
 
+    //To be fixed
     public function editUser($id, $mailName, $forumName, $email){
         $sql = 'UPDATE useraccount SET mailChar = :mailname, forumAccount = :forumname, email = :email WHERE userID = :id;';
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
@@ -132,6 +131,7 @@ class USERDAO{
         return false;
     }
 
+    // To be fixed
     public function editPasswordOfUser($id, $password){
         $sql = 'UPDATE useraccount SET userPassword = :password WHERE userID = :id;';
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
@@ -154,7 +154,7 @@ class USERDAO{
         return false;
     }
 
-    public static function payoutUserID($userID){
+    public function payoutUserID($userID){
         $sql = "UPDATE useraccount SET payout = 0 WHERE userID = :userID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);

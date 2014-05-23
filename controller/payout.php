@@ -18,17 +18,13 @@ if (isset($_SESSION["userID"])) {
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
-$eventservice = new eventservice();
 $payoutservice = new payoutservice();
 $userservice= new userservice();
-$allowedToPayOut = true;
 
 if (isset ($_GET["action"]) && $_GET["action"] == 'payout' && $allowedToPayOut) {
-    $userservice = new userservice();
     $user = $userservice->getUserByID($_POST["userId"]);
-
     try {
-        userservice::payoutByUserID($_POST["userId"]);
+        $userservice->payoutByUserID($_POST["userId"]);
         header("location: ./payout.php?paidOut=" . $user->getUserLogin());
     } catch (Exception $e) {
         $notification = array(
@@ -38,6 +34,7 @@ if (isset ($_GET["action"]) && $_GET["action"] == 'payout' && $allowedToPayOut) 
         );
     }
 }
+
 if (isset($_GET["paidOut"])) {
     $notification = array(
         'type' => 'success',
@@ -46,7 +43,6 @@ if (isset($_GET["paidOut"])) {
     );
 }
 
-$eventlist = $eventservice->listAllEvents();
 $userlist = $userservice->listAllUsers();
 
 include("../view/payout.view.php");

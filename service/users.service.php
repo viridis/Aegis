@@ -50,8 +50,9 @@ class userservice
         return $user;
     }
 
-    public static function payoutByUserID($userID){
-        return USERDAO::payoutUserID($userID);
+    public function payoutByUserID($userID){
+        $userdao = new USERDAO();
+        return $userdao->payoutUserID($userID);
     }
 }
 
