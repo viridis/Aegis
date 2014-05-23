@@ -44,8 +44,8 @@ $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
 
-require_once("../service/items.service.php");
-$itemservice = new itemservice();
+require_once("../service/gameaccount.service.php");
+$gameaccountservice = new gameaccountservice();
 //eventservice::addEvent(2,'2014.12.12 12.12.12','test1');
 //eventservice::deleteEvent(6);
 //$slotservice->addSlot(8,10);
@@ -56,7 +56,7 @@ $itemservice = new itemservice();
 //var_dump($itemservice->listAllItems());
 //var_dump($itemservice->addItem(3, 'test','test'));
 //var_dump(dropservice::getDropByEventID(1));
-
+//var_dump($gameaccountservice->getGameAccountByUser(1));
 
 
 echo "<script type='text/javascript'>alert('$message');</script>";

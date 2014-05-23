@@ -3,25 +3,24 @@ require_once("../data/gameaccount.DAO.php");
 
 class gameaccountservice
 {
-    public static function getGameAccountByUser($userID){
-        $gameAccounts = GAMEACCOUNTDAO::getGameAccountsByUser($userID);
-        return $gameAccounts;
+    public function getGameAccountByUser($userID){
+        $gameAccountDAO = new GAMEACCOUNTDAO();
+        return $gameAccountDAO->getGameAccountsByUser($userID);
     }
 
-    public static function getGameAccountCooldown($accountID){
-        return GAMEACCOUNTDAO::getGameAccountCooldown($accountID);
-    }
-
-    public static function setGameAccountCooldown($accountID, $duration){
-        return GAMEACCOUNTDAO::setAccountCooldown($accountID, $duration);
+    public function setGameAccountCooldown($accountID, $duration){
+        $gameAccountDAO = new GAMEACCOUNTDAO();
+        return $gameAccountDAO->setAccountCooldown($accountID, $duration);
     }
 
     public static function addGameAccount($userID){
-        return GAMEACCOUNTDAO::addGameAccount($userID);
+        $gameAccountDAO = new GAMEACCOUNTDAO();
+        return $gameAccountDAO->addGameAccount($userID);
     }
 
     public static function deleteGameAccount($accountID){
-        return GAMEACCOUNTDAO::deleteGameAccount($accountID);
+        $gameAccountDAO = new GAMEACCOUNTDAO();
+       return $gameAccountDAO->deleteGameAccount($accountID);
     }
 }
 ?>

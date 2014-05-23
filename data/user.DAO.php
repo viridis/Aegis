@@ -9,7 +9,7 @@ require_once("../data/gameaccount.DAO.php");
 class USERDAO{
 	public function getAllUsers(){
 		$sqluseraccount = "SELECT * FROM useraccount ORDER BY userID ASC;";
-        $sqlgameaccount = "SELECT * FROM gameaccounts ORDER BY userID ASC;";
+        $sqlgameaccount = "SELECT * FROM gameaccounts ORDER BY userID, accountID ASC;";
         $sqlcharacter = "SELECT * FROM characters ORDER BY userID, accountID ASC;";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultSetUseraccount = $dbh->query($sqluseraccount);
@@ -24,7 +24,7 @@ class USERDAO{
 	
 	public function getUserById($id){
         $sqluseraccount = "SELECT * FROM useraccount WHERE userID = :id ORDER BY userID ASC;";
-        $sqlgameaccount = "SELECT * FROM gameaccounts WHERE userID = :id ORDER BY userID ASC;";
+        $sqlgameaccount = "SELECT * FROM gameaccounts WHERE userID = :id ORDER BY userID, accountID ASC;";
         $sqlcharacter = "SELECT * FROM characters WHERE userID = :id ORDER BY userID, accountID ASC;";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqluseraccount);

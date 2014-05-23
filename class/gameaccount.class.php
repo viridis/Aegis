@@ -11,40 +11,40 @@ class GAMEACCOUNT
     // Associated fields
     private $characterList;
 
-    function __construct($userID, $accountID, $cooldown = 0){
-        $this->$userID = $userID;
-        $this->$accountID = $accountID;
-        $this->$cooldown = $cooldown;
+    private function __construct($userID, $accountID, $cooldown){
+        $this->userID = $userID;
+        $this->accountID = $accountID;
+        $this->cooldown = $cooldown;
     }
 
-    public static function create($userID, $accountID, $cooldown = 0){
+    public static function create($userID, $accountID, $cooldown){
         if (!isset(self::$idList[$accountID])) {
             self::$idList[$accountID] = new GAMEACCOUNT($userID, $accountID, $cooldown);
         }
         return self::$idList[$accountID];
     }
 
-    function getAccountID(){
+    public function getAccountID(){
         return $this->$accountID;
     }
 
-    function getCooldown(){
+    public function getCooldown(){
         return $this->$cooldown;
     }
 
-    function getUserID(){
+    public function getUserID(){
         return $this->$userID;
     }
 
-    function getCharacterList(){
+    public function getCharacterList(){
         return $this->characterList;
     }
 
-    function setCooldown($cooldown){
+    public function setCooldown($cooldown){
         $this->$cooldown = $cooldown;
     }
 
-    function setCharacterList($characterList){
+    public function setCharacterList($characterList){
         $this->characterList = $characterList;
     }
 }
