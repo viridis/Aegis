@@ -44,8 +44,10 @@ $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
 
-require_once("../service/gameaccount.service.php");
-$gameaccountservice = new gameaccountservice();
+require_once("../service/drop.service.php");
+require_once("../service/character.service.php");
+$dropservice = new dropservice();
+$characterservice = new characterservice();
 //eventservice::addEvent(2,'2014.12.12 12.12.12','test1');
 //eventservice::deleteEvent(6);
 //$slotservice->addSlot(8,10);
@@ -57,7 +59,12 @@ $gameaccountservice = new gameaccountservice();
 //var_dump($itemservice->addItem(3, 'test','test'));
 //var_dump(dropservice::getDropByEventID(1));
 //var_dump($gameaccountservice->getGameAccountByUser(1));
-
+//var_dump($eventservice->getEventByID(1));
+//$eventservice->addEvent(1,'2014/05/05 12.12.12', 'testEvent');
+//$eventservice->deleteEvent(11);
+//$dropservice->addDrop(2,501);
+//var_dump($dropservice->getDropByEventID(1));
+//var_dump($characterservice->deleteCharacter(4));
 
 echo "<script type='text/javascript'>alert('$message');</script>";
 include("../view/home.view.php");

@@ -5,7 +5,7 @@ require_once("../class/character.class.php");
 
 class CHARACTERDAO
 {
-    static function getCharactersByUserID($userID){
+    public function getCharactersByUserID($userID){
         $result = array();
         $sqlcharacters = "SELECT * FROM characters WHERE userID = :userID ORDER BY charID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
@@ -20,7 +20,7 @@ class CHARACTERDAO
         return $result;
     }
 
-    static function getCharactersByAccountID($accountID){
+    public function getCharactersByAccountID($accountID){
         $result = array();
         $sqlcharacters = "SELECT * FROM characters WHERE accountID = :accountID ORDER BY charID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
@@ -35,7 +35,7 @@ class CHARACTERDAO
         return $result;
     }
 
-    static function setCharacterCooldown($charID, $duration){
+    public function setCharacterCooldown($charID, $duration){
         $sql = "UPDATE characters SET cooldown=NOW()+:duration WHERE charID = :charID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -56,7 +56,7 @@ class CHARACTERDAO
         }
     }
 
-    static function addCharacter($userID, $accountID, $charName, $charClass){
+    public function addCharacter($userID, $accountID, $charName, $charClass){
         $sql = "INSERT INTO characters VALUES(:accountID, NULL, :charName, NULL, :charClass, :userID);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -81,7 +81,7 @@ class CHARACTERDAO
         }
     }
 
-    static function deleteCharacter($charID){
+    public function deleteCharacter($charID){
         $sql = "DELETE FROM characters WHERE charID = :charID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);

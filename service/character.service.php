@@ -2,20 +2,24 @@
 require_once("../data/character.DAO.php");
 
 class characterservice{
-    public static function getCharactersByUserID($userID){
-        return CHARACTERDAO::getCharactersByUserID($userID);
+    public function getCharactersByUserID($userID){
+        $characterDAO = new CHARACTERDAO();
+        return $characterDAO->getCharactersByUserID($userID);
     }
 
-    public static function setCharacterCooldown($userID, $duration){
-        return CHARACTERDAO::setCharacterCooldown($userID, $duration);
+    public function setCharacterCooldown($charID, $duration){
+        $characterDAO = new CHARACTERDAO();
+        return $characterDAO->setCharacterCooldown($charID, $duration);
     }
 
-    public static function addCharacter($userID, $accountID, $charName, $charClass){
-        return CHARACTERDAO::addCharacter($userID, $accountID, $charName, $charClass);
+    public function addCharacter($userID, $accountID, $charName, $charClass){
+        $characterDAO = new CHARACTERDAO();
+        return $characterDAO->addCharacter($userID, $accountID, $charName, $charClass);
     }
 
-    public static function deleteCharacter($charID){
-        return CHARACTERDAO::deleteCharacter($charID);
+    public function deleteCharacter($charID){
+        $characterDAO = new CHARACTERDAO();
+        return $characterDAO->deleteCharacter($charID);
     }
 }
 ?>

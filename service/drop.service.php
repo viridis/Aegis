@@ -3,12 +3,14 @@ require_once("../data/drop.DAO.php");
 
 class dropservice
 {
-    public static function addDrop($eventID, $itemID){
-        return DROPDAO::addDrop($eventID, $itemID);
+    public function addDrop($eventID, $itemID){
+        $dropDAO = new DROPDAO();
+        return $dropDAO->addDrop($eventID, $itemID);
     }
 
-    public static function getDropByEventID($eventID){
-        return DROPDAO::getDropByEventID($eventID);
+    public function getDropByEventID($eventID){
+        $dropDAO = new DROPDAO();
+        return $dropDAO->getDropByEventID($eventID);
     }
 }
 

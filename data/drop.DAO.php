@@ -5,7 +5,7 @@ require_once("../data/log.DAO.php");
 
 class DROPDAO
 {
-    public static function addDrop($eventID, $itemID){
+    public function addDrop($eventID, $itemID){
         $sql = "INSERT INTO drops VALUES(:eventID, NULL, NULL, FALSE, NULL, :itemID);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -26,16 +26,21 @@ class DROPDAO
         }
     }
 
-    public static function getDropByEventID($eventID){
+    public function getDropByEventID($eventID){
         $result = array();
-        $sql = "SELECT * FROM drops WHERE eventID = :eventID;";
+        $sqldrops = "SELECT drops.*, items.name, items.aegisName
+                        FROM drops
+                        LEFT JOIN items ON items.itemID = drops.itemID
+                        WHERE eventID = :eventID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sql);
+        $stmt = $dbh->prepare($sqldrops);
         $stmt->bindParam(':eventID', $eventID);
         $stmt->execute();
         $resultSet = $stmt->fetchAll();
         foreach($resultSet as $row){
             $drop = drop::create($row["eventID"], $row["dropID"], $row["holdingUserID"], $row["sold"], $row["soldPrice"], $row["itemID"]);
+            $drop->setItemName($row["name"]);
+            $drop->setAegisName($row["aegisName"]);
             array_push($result, $drop);
         }
         return $result;
