@@ -2,36 +2,35 @@
 session_start();
 error_reporting(E_ALL);
 require_once("../data/links.DAO.php");
-require_once("../data/user.DAO.php");
+require_once("../service/data.service.php");
 
-class PAGESERVICE
+class PageService
 {
     public function generateUsefulLinks($amount)
     {
-        $usefullinksdao = new USEFULLINKSDAO();
-        $links = $usefullinksdao->getLinks($amount);
+        $usefulLinksDAO = new UsefulLinksDAO();
+        $links = $usefulLinksDAO->getLinks($amount);
         return $links;
     }
 
     public function generateFeaturedLinks($amount)
     {
-        $featuredlinksdao = new FEATUREDLINKSDAO();
-        $links = $featuredlinksdao->getLinks($amount);
+        $featuredLinksDAO = new FeaturedLinksDAO();
+        $links = $featuredLinksDAO->getLinks($amount);
         return $links;
     }
 
     public function generateNavLinksForUser($userId = 0)
     {
-        $navbarlinksdao = new NAVBARLINKSDAO();
-        $links = $navbarlinksdao->getLinksForUser($userId);
+        $navBarLinksDAO = new NavBarLinksDAO();
+        $links = $navBarLinksDAO->getLinksForUser($userId);
         return $links;
     }
 
-    public function whoIsSessionUser($userId){
-        $userdao = new USERDAO();
-        $user = $userdao->getUserById($userId);
+    public function whoIsSessionUser($userID)
+    {
+        $dataService = new DataService();
+        $user = $dataService->getUserByUserID($userID);
         return $user;
     }
 }
-
-?>

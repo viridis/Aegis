@@ -1,8 +1,8 @@
 <?php
 require_once("../service/page.service.php");
-require_once("../service/users.service.php");
+require_once("../service/user.service.php");
 
-$pageservice = new PAGESERVICE();
+$pageservice = new PageService();
 $currentPageID = "Settings";
 if (isset($_SESSION["userID"])) {
     $sessionUser = $pageservice->whoIsSessionUser($_SESSION["userID"]);
@@ -11,7 +11,7 @@ if (isset($_SESSION["userID"])) {
     header("location: ./home.php");
 }
 
-$userservice = new userService();
+$userservice = new UserService();
 if(isset($_POST) && isset($_GET['action']) && $_GET['action'] == 'edit'){
     try {
         $user = $userservice->editUser($sessionUser->getId(), $_POST['mailname'], $_POST['forumname'], $_POST['email']);
@@ -37,8 +37,8 @@ if(isset($_POST) && isset($_GET['action']) && $_GET['action'] == 'password'){
             'message' => 'New Passwords don\'t match.',
         );
     } else {
-        $userservice = new userService();
-        $user = $userservice->getUserByNameAndPassword($sessionUser->getName(), md5($_POST['oldpassword']));
+        $userservice = new UserService();
+        $user = $userservice->getUserIDByLoginAndPassword($sessionUser->getName(), md5($_POST['oldpassword']));
         if ($user) {
             try {
                 $user = $userservice->editPasswordOfUser($sessionUser->getId(), md5($_POST['newpassword']));
@@ -67,5 +67,5 @@ if(isset($_POST) && isset($_GET['action']) && $_GET['action'] == 'password'){
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
-$user = $userservice->getUserByID($_SESSION["userID"]);
+$user = $userservice->getUserByUserID($_SESSION["userID"]);
 include("../view/settings.view.php");

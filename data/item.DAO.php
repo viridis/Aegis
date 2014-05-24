@@ -3,7 +3,7 @@ require_once("../data/dbconfig.DAO.php");
 require_once("../data/log.DAO.php");
 require_once("../class/item.class.php");
 
-class ITEMDAO
+class ItemDAO
 {
     public function getAllItems()
     {
@@ -12,7 +12,7 @@ class ITEMDAO
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultSet = $dbh->query($sql);
         foreach ($resultSet as $row) {
-            $item = ITEM::create($row["itemID"], $row["aegisName"], $row["name"]);
+            $item = Item::create($row["itemID"], $row["aegisName"], $row["name"]);
             array_push($result, $item);
         }
         return $result;
@@ -28,7 +28,7 @@ class ITEMDAO
         $resultSet = $stmt->fetchAll();
         if ($resultSet) {
             foreach ($resultSet as $row) {
-                $item = ITEM::create($row["itemID"], $row["aegisName"], $row["name"]);
+                $item = Item::create($row["itemID"], $row["aegisName"], $row["name"]);
                 return $item;
             }
         } else {
@@ -49,10 +49,10 @@ class ITEMDAO
             ":aegisName" => $aegisName,
             ":name" => $name
         );
-        $logdao = new LOGDAO();
+        $logdao = new LogDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
-            $dao = new ITEMDAO();
+            $dao = new ItemDAO();
             return true;
         }
         $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
@@ -60,5 +60,3 @@ class ITEMDAO
         return false;
     }
 }
-
-?>

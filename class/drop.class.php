@@ -1,9 +1,8 @@
 <?php
-class DROP
+class Drop
 {
     private static $idList = array();
 
-    // DB fields
     private $eventID;
     private $dropID;
     private $holdingUserID;
@@ -15,7 +14,7 @@ class DROP
     private $itemName;  // From item class
     private $aegisName; // From item class
 
-    function __construct($eventID, $dropID, $holdingUserID, $sold, $soldPrice, $itemID)
+    public function __construct($eventID, $dropID, $holdingUserID, $sold, $soldPrice, $itemID)
     {
         $this->eventID = $eventID;
         $this->dropID = $dropID;
@@ -28,12 +27,12 @@ class DROP
     public static function create($eventID, $dropID, $holdingUserID, $sold, $soldPrice, $itemID)
     {
         if (!isset(self::$idList[$dropID])) {
-            self::$idList[$dropID] = new DROP($eventID, $dropID, $holdingUserID, $sold, $soldPrice, $itemID);
+            self::$idList[$dropID] = new Drop($eventID, $dropID, $holdingUserID, $sold, $soldPrice, $itemID);
         }
         return self::$idList[$dropID];
     }
 
-    public function getEventId()
+    public function getEventID()
     {
         return $this->eventID;
     }
@@ -73,5 +72,15 @@ class DROP
     public function setAegisName($aegisName){
         $this->aegisName = $aegisName;
     }
+
+    public function setSold($isSold)
+    {
+        $this->sold = $isSold;
+    }
+
+    public function setSoldPrice($soldPrice)
+    {
+        $this->soldPrice = $soldPrice;
+    }
+
 }
-?>

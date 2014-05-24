@@ -1,92 +1,61 @@
 <?php
 require_once("../data/dbconfig.DAO.php");
 require_once("../class/events.class.php");
-require_once("../class/drop.class.php");
-require_once("../class/slot.class.php");
 
-class EVENTDAO
+class EventDAO
 {
     public function getAllEvents()
     {
-        $sqlevents = "SELECT * FROM events ORDER BY eventID ASC;";
-        $sqldrops = "SELECT drops.*, items.name, items.aegisName
-                        FROM drops
-                        LEFT JOIN items ON items.itemID = drops.itemID
-                        ORDER BY eventID ASC;";
-        $sqlslots = "SELECT slots.*, useraccount.userLogin, characters.charClass, characters.charName
-                        FROM slots
-                        LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
-                        LEFT JOIN characters ON characters.charID = slots.takenCharID
-                        ORDER BY eventID ASC;";
+        $sqlEvents = "SELECT * FROM events ORDER BY eventID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $resultSetEvents = $dbh->query($sqlevents);
-        $resultSetDrops = $dbh->query($sqldrops);
-        $resultSetSlots = $dbh->query($sqlslots);
+        $resultSetEvents = $dbh->query($sqlEvents);
         $eventResults = $resultSetEvents->fetchAll();
-        $dropResults = $resultSetDrops->fetchAll();
-        $slotResults = $resultSetSlots->fetchAll();
-        $result = $this->createEventArray($eventResults, $dropResults, $slotResults);
-        return $result;
+        return $eventResults;
     }
 
-    public function getEventByID($eventID){
-        $sqlevent = "SELECT * FROM events WHERE eventID = :eventID;";
-        $sqldrops = "SELECT drops.*, items.name, items.aegisName
-                        FROM drops
-                        LEFT JOIN items ON items.itemID = drops.itemID
-                        WHERE eventID = :eventID;";
-        $sqlslots = "SELECT slots.*, useraccount.userLogin, characters.charClass, characters.charName
-                        FROM slots
-                        LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
-                        LEFT JOIN characters ON characters.charID = slots.takenCharID
-                        WHERE eventID = :eventID;";
+    public function getEventByEventID($eventID)
+    {
+        $sqlEvents = "SELECT * FROM events WHERE eventID = :eventID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sqlevent);
+        $stmt = $dbh->prepare($sqlEvents);
         $stmt->bindParam(':eventID', $eventID);
         $stmt->execute();
         $eventResults = $stmt->fetchAll();
-        $stmt = $dbh->prepare($sqldrops);
-        $stmt->bindParam(':eventID', $eventID);
-        $stmt->execute();
-        $dropResults = $stmt->fetchAll();
-        $stmt = $dbh->prepare($sqlslots);
-        $stmt->bindParam(':eventID', $eventID);
-        $stmt->execute();
-        $slotResults = $stmt->fetchAll();
-        $result = $this->createEventArray($eventResults, $dropResults, $slotResults);
-        return $result;
+        return $eventResults;
     }
 
-    public function addEvent($eventType, $startDate, $eventName, $recurringEvent = 0, $dayOfWeek = 0, $hourOfDay = 0){
+    public function createEvent($event)
+    {
+        /** @var EVENT $event */
         $sql = "INSERT INTO events VALUES(NULL, :eventType, :startDate, NULL, 0, :recurringEvent, :dayOfWeek, :hourOfDay, :eventName);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':eventType', $eventType);
-        $stmt->bindParam(':startDate', $startDate);
-        $stmt->bindParam(':eventName', $eventName);
-        $stmt->bindParam(':recurringEvent', $recurringEvent);
-        $stmt->bindParam(':dayOfWeek', $dayOfWeek);
-        $stmt->bindParam(':hourOfDay', $hourOfDay);
+        $stmt->bindParam(':eventType', $event->getEventType());
+        $stmt->bindParam(':startDate', $event->getStartDate());
+        $stmt->bindParam(':eventName', $event->getEventName());
+        $stmt->bindParam(':recurringEvent', $event->isRecurringEvent());
+        $stmt->bindParam(':dayOfWeek', $event->getDayOfWeek());
+        $stmt->bindParam(':hourOfDay', $event->getHourOfDay());
         $binds = array(
-            ":eventType" => $eventType,
-            ":startDate" => $startDate,
-            ":recurringEvent" => $recurringEvent,
-            ":dayOfWeek" => $dayOfWeek,
-            ":hourOfDay" => $hourOfDay,
-            ":eventName" => $eventName
+            ":eventType" => $event->getEventType(),
+            ":startDate" => $event->getStartDate(),
+            ":recurringEvent" => $event->isRecurringEvent(),
+            ":dayOfWeek" => $event->getDayOfWeek(),
+            ":hourOfDay" => $event->getHourOfDay(),
+            ":eventName" => $event->getEventName()
         );
-        $logdao = new LOGDAO();
+        $logDAO = new LogDAO();
         if ($stmt->execute()) {
-            $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
+            $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
             return true;
         } else {
-            $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to add event (' . $userID . ')');
-            return false;
+            $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
+            throw new Exception('Failed to add event (' . $event->getEventName() . ')');
         }
     }
 
-    public function deleteEvent($eventID){
+    public function deleteEvent($eventID)
+    {
         $sql = "DELETE FROM events WHERE eventID = $eventID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -94,61 +63,56 @@ class EVENTDAO
         $binds = array(
             ":eventID" => $eventID
         );
-        $logdao = new LOGDAO();
+        $logdao = new LogDAO();
         if ($stmt->execute()) {
             $logdao->logPreparedStatement('DELETE', $stmt, $binds, 'SUCCESS');
             return true;
         } else {
             $logdao->logPreparedStatement('DELETE', $stmt, $binds, 'FAILED');
             throw new Exception('Failed to delete event (' . $eventID . ')');
-            return false;
         }
     }
 
-    /**
-     * This method creates an array of Event objects given results from sql queries
-     * @param $eventResults
-     * @param $dropResults
-     * @param $slotResults
-     * @return Event array
-     */
-    private function createEventArray($eventResults, $dropResults, $slotResults)
+    public function updateEvent($event)
     {
-        $result = array();
-        $dropPointer = 0;
-        $slotPointer = 0;
-        foreach ($eventResults as $row) {
-            $event = EVENT::create($row["eventID"], $row["eventType"], $row["startDate"], $row["completeDate"],
-                $row["eventState"], $row["recurringEvent"], $row["dayOfWeek"], $row["hourOfDay"], $row["eventName"]);
-
-            $dropList = array();
-            while ($dropResults[$dropPointer]["eventID"] == $row["eventID"]) {
-                $drop = DROP::create($dropResults[$dropPointer]["eventID"], $dropResults[$dropPointer]["dropID"],
-                    $dropResults[$dropPointer]["holdingUserID"], $dropResults[$dropPointer]["sold"],
-                    $dropResults[$dropPointer]["soldPrice"], $dropResults[$dropPointer]["itemID"]);
-                $drop->setItemName($dropResults[$dropPointer]["name"]);
-                $drop->setAegisName($dropResults[$dropPointer]["aegisName"]);
-                array_push($dropList, $drop);
-                $dropPointer++;
-            }
-            $event->setDropList($dropList);
-
-            $slotList = array();
-            while ($slotResults[$slotPointer]["eventID"] == $row["eventID"]) {
-                $slot = SLOT::create($slotResults[$slotPointer]["eventID"], $slotResults[$slotPointer]["slotID"],
-                    $slotResults[$slotPointer]["slotClass"], $slotResults[$slotPointer]["taken"],
-                    $slotResults[$slotPointer]["takenUserID"], $slotResults[$slotPointer]["takenCharID"]);
-                $slot->setUserLogin($slotResults[$slotPointer]["userLogin"]);
-                $slot->setCharClass($slotResults[$slotPointer]["charClass"]);
-                $slot->setCharName($slotResults[$slotPointer]["charName"]);
-                array_push($slotList, $slot);
-                $slotPointer++;
-            }
-            $event->setSlotList($slotList);
-
-            array_push($result, $event);
+        /** @var EVENT $event */
+        $sqlUpdate = "UPDATE events SET eventType = :eventType,
+                        startDate = :startDate,
+                        completeDate = :completeDate,
+                        eventState = :eventState,
+                        recurringEvent = :recurringEvent,
+                        dayOfWeek = :dayOfWeek,
+                        hourOfDay = :hourOfDay,
+                        eventName = :eventName
+                        WHERE eventID = :eventID;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlUpdate);
+        $stmt->bindParam(':eventType', $event->getEventType());
+        $stmt->bindParam(':startDate', $event->getStartDate());
+        $stmt->bindParam(':completeDate', $event->getCompleteDate());
+        $stmt->bindParam(':eventState', $event->getEventState());
+        $stmt->bindParam(':recurringEvent', $event->isRecurringEvent());
+        $stmt->bindParam(':dayOfWeek', $event->getDayOfWeek());
+        $stmt->bindParam(':hourOfDay', $event->getHourOfDay());
+        $stmt->bindParam(':eventName', $event->getEventName());
+        $stmt->bindParam(':eventID', $event->getEventID());
+        $binds = array(
+            ":eventType" => $event->getEventType(),
+            ":startDate" => $event->getStartDate(),
+            ":completeDate" => $event->getCompleteDate(),
+            ":eventState" => $event->getEventState(),
+            ":recurringEvent" => $event->isRecurringEvent(),
+            ":dayOfWeek" => $event->getDayOfWeek(),
+            ":hourOfDay" => $event->getHourOfDay(),
+            ":eventName" => $event->getEventName(),
+            ":eventID" => $event->getEventID(),
+        );
+        $logDAO = new LogDAO();
+        if ($stmt->execute()) { //1 if success, 0 if fail
+            $logDAO->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
+            return true;
         }
-        return $result;
+        $logDAO->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
+        throw new Exception('Failed to update event. (' . $event->getEventID() . ')');
     }
 }
-?>

@@ -9,8 +9,9 @@
     <div class="container" role="main">
         <div class="row">
             <?php
-            foreach ($eventlist as $event) :
-            $droplist = dropservice::getDropByEventID($event->getEventID());
+            foreach ($eventContainer as $event) :
+                /** @var Event $event */
+            $dropList = $event->getDropList();
             ?>
 
             <div class="col-sm-4">
@@ -19,13 +20,14 @@
                         <h3 class="panel-title">
                             <div class="pull-right">
                                 <?php
-                                $totalvalue = 0;
-                                foreach($droplist as $drop){
+                                $totalValue = 0;
+                                foreach($dropList as $drop){
+                                    /** @var Drop $drop */
                                     if ($drop->isSold()){
-                                        $totalvalue += $drop->getSoldPrice();
+                                        $totalValue += $drop->getSoldPrice();
                                     }
                                 }
-                                print($totalvalue);
+                                print($totalValue);
                                 ?>
                             </div>
                             <?php
@@ -41,7 +43,7 @@
                         <div class="col-sm-3">
                             <?php
                             foreach (($event->getSlotList()) as $slot) :
-
+                                /** @var Slot $slot */
                                 if ($slot->getTakenUserID()) {
                                     print($slot->getUserLogin());
                                     print("<br >");

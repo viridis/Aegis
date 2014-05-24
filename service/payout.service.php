@@ -1,22 +1,11 @@
 <?php
-require_once("../data/payout.DAO.php");
-require_once("../data/event.DAO.php");
+require_once("../service/data.service.php");
 
-class payoutservice
+class PayoutService
 {
-    public function listAllPayouts($eventList)
+    public function payoutUser($user)
     {
-        $payoutdao = new PAYOUTDAO();
-        $userlist = $payoutdao->getAllPayoutsFromEvents($eventList);
-        return $userlist;
-    }
-
-    public function payOutUserID($id, $eventList)
-    {
-        $payoutdao = new PAYOUTDAO();
-        $payout = $payoutdao->payOutUser($id, $eventList);
-        return $payout;
+        $dataService = new DataService();
+        $dataService->setUserPayout($user, 0);
     }
 }
-
-?>

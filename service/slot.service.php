@@ -1,21 +1,37 @@
 <?php
 require_once("../data/slot.DAO.php");
 
-class slotService
+class SlotService
 {
-    public function addSlotToEvent($event, $slotClass){
-        /** @var  $event EVENT */
-        $slotDAO = new SLOTDAO();
-        return $slotDAO->addSlot($event->getEventID(), $slotClass);
+    public function getAllSlots()
+    {
+        $slotDAO = new SlotDAO();
+        return $slotDAO->getAllSlots();
     }
 
-    public function deleteSlot($slotID){
-        $slotDAO = new SLOTDAO();
-        return $slotDAO->deleteSlot($slotID);
+    public function createSlot($slot)
+    {
+        /** @var  $event Event */
+        $slotDAO = new SlotDAO();
+        return $slotDAO->createSlot($slot);
     }
 
-    public function getSlotByEventID($eventID){
-        $slotDAO = new SLOTDAO();
+    public function deleteSlot($slot)
+    {
+        /** @var $slot Slot */
+        $slotDAO = new SlotDAO();
+        return $slotDAO->deleteSlot($slot->getSlotID());
+    }
+
+    public function getSlotByEventID($eventID)
+    {
+        $slotDAO = new SlotDAO();
         return $slotDAO->getSlotByEventID($eventID);
+    }
+
+    public function updateSlot($slot)
+    {
+        $slotDAO = new SlotDAO();
+        return $slotDAO->updateSlot($slot);
     }
 }

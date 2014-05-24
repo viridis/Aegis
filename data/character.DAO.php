@@ -1,87 +1,68 @@
 <?php
 require_once("../data/dbconfig.DAO.php");
-require_once("../data/gameaccount.DAO.php");
 require_once("../class/character.class.php");
 
-class CHARACTERDAO
+class CharacterDAO
 {
-    public function getCharactersByUserID($userID){
-        $result = array();
-        $sqlcharacters = "SELECT * FROM characters WHERE userID = :userID ORDER BY charID ASC;";
+    public function getAllCharacters()
+    {
+        $sqlCharacters = "SELECT * FROM characters ORDER BY userID, accountID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sqlcharacters);
+        $resultSetCharacter = $dbh->query($sqlCharacters);
+        $characterResults = $resultSetCharacter->fetchAll(PDO::FETCH_ASSOC);
+        return $characterResults;
+    }
+
+    public function getCharactersByUserID($userID)
+    {
+        $sqlCharacters = "SELECT * FROM characters WHERE userID = :id ORDER BY userID, accountID ASC;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlCharacters);
         $stmt->bindParam(':userID', $userID);
         $stmt->execute();
-        $resultSet = $stmt->fetchAll();
-        foreach($resultSet as $row){
-            $character = CHARACTER::create($row["accountID"], $row["charID"], $row["charName"],$row["cooldown"], $row["charClass"], $row["userID"]);
-            array_push($result, $character);
-        }
-        return $result;
+        $characterResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $characterResults;
     }
 
-    public function getCharactersByAccountID($accountID){
-        $result = array();
-        $sqlcharacters = "SELECT * FROM characters WHERE accountID = :accountID ORDER BY charID ASC;";
+    public function getCharactersByAccountID($accountID)
+    {
+        $sqlCharacters = "SELECT * FROM characters WHERE accountID = :accountID ORDER BY charID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sqlcharacters);
+        $stmt = $dbh->prepare($sqlCharacters);
         $stmt->bindParam(':accountID', $accountID);
         $stmt->execute();
-        $resultSet = $stmt->fetchAll();
-        foreach($resultSet as $row){
-            $character = CHARACTER::create($row["accountID"], $row["charID"], $row["charName"],$row["cooldown"], $row["charClass"], $row["userID"]);
-            array_push($result, $character);
-        }
-        return $result;
+        $characterResults = $stmt->fetchAll();
+        return $characterResults;
     }
 
-    public function setCharacterCooldown($charID, $duration){
-        $sql = "UPDATE characters SET cooldown=NOW()+:duration WHERE charID = :charID;";
+    public function createCharacter($character)
+    {
+        /** @var Character $character */
+        $sqlInsert = "INSERT INTO characters VALUES(:accountID, NULL, :charName, NULL, :charClass, :userID);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':duration', $duration);
-        $stmt->bindParam(':charID', $charID);
+        $stmt = $dbh->prepare($sqlInsert);
+        $stmt->bindParam(':userID', $character->getUserID());
+        $stmt->bindParam(':accountID', $character->getAccountID());
+        $stmt->bindParam(':charName', $character->getCharName());
+        $stmt->bindParam(':charClass', $character->getCharClass());
         $binds = array(
-            ":duration" => $duration,
-            ":charID" => $charID,
+            ":userID" => $character->getUserID(),
+            ":accountID" => $character->getAccountID(),
+            ":charName" => $character->getCharName(),
+            ":charClass" => $character->getCharClass()
         );
-        $logdao = new LOGDAO();
+        $logDAO = new LogDAO();
         if ($stmt->execute()) {
-            $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
+            $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
             return true;
         } else {
-            $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to update character cooldown id (' . $charID . ')');
-            return false;
+            $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
+            throw new Exception('Failed to add character to account(' . $character->getAccountID() . ')');
         }
     }
 
-    public function addCharacter($userID, $accountID, $charName, $charClass){
-        $sql = "INSERT INTO characters VALUES(:accountID, NULL, :charName, NULL, :charClass, :userID);";
-        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':userID', $userID);
-        $stmt->bindParam(':accountID', $accountID);
-        $stmt->bindParam(':charName', $charName);
-        $stmt->bindParam(':charClass', $charClass);
-        $binds = array(
-            ":userID" => $userID,
-            ":accountID" => $accountID,
-            ":charName" => $charName,
-            ":charClass" => $charClass
-        );
-        $logdao = new LOGDAO();
-        if ($stmt->execute()) {
-            $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
-            return true;
-        } else {
-            $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to add character (' . $accountID . ')');
-            return false;
-        }
-    }
-
-    public function deleteCharacter($charID){
+    public function deleteCharacter($charID)
+    {
         $sql = "DELETE FROM characters WHERE charID = :charID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -89,15 +70,50 @@ class CHARACTERDAO
         $binds = array(
             ":charID" => $charID,
         );
-        $logdao = new LOGDAO();
+        $logDAO = new LogDAO();
         if ($stmt->execute()) {
-            $logdao->logPreparedStatement('DELETE', $stmt, $binds, 'SUCCESS');
+            $logDAO->logPreparedStatement('DELETE', $stmt, $binds, 'SUCCESS');
             return true;
         } else {
-            $logdao->logPreparedStatement('DELETE', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to delete character (' . $accountID . ')');
-            return false;
+            $logDAO->logPreparedStatement('DELETE', $stmt, $binds, 'FAILED');
+            throw new Exception('Failed to delete character (' . $charID . ')');
+        }
+    }
+
+    public function updateCharacter($character)
+    {
+        /** @var Character $character */
+        $sqlUpdate = "UPDATE characters
+                        SET accountID = :accountID,
+                        charName = :charName,
+                        cooldown = NOW() + :cooldown,
+                        charClass = :charClass,
+                        userID = :userID
+                        WHERE charID = :charID;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlUpdate);
+
+        $stmt->bindParam(':accountID', $character->getAccountID());
+        $stmt->bindParam(':charName', $character->getCharName());
+        $stmt->bindParam(':cooldown', $character->getCooldown());
+        $stmt->bindParam(':charClass', $character->getCharClass());
+        $stmt->bindParam(':userID', $character->getUserID());
+        $stmt->bindParam(':charID', $character->getCharID());
+        $binds = array(
+            ":accountID" => $character->getAccountID(),
+            ":charName" => $character->getCharName(),
+            ":cooldown" => $character->getCooldown(),
+            ":charClass" => $character->getCharClass(),
+            ":userID" => $character->getUserID(),
+            ":charID" => $character->getCharID()
+        );
+        $logDAO = new LogDAO();
+        if ($stmt->execute()) {
+            $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
+            return true;
+        } else {
+            $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
+            throw new Exception('Failed to add character to account(' . $character->getCharID() . ')');
         }
     }
 }
-?>

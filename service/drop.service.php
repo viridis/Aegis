@@ -2,19 +2,36 @@
 require_once("../data/drop.DAO.php");
 require_once("../class/events.class.php");
 
-class dropservice
+class DropService
 {
-    public function addDropToEvent($event, $item){
-        $dropDAO = new DROPDAO();
-        /** @var $event EVENT */
-        /** @var $item ITEM */
-        return $dropDAO->addDrop($event->getEventID(), $item->getItemID());
+    public function getAllDrops()
+    {
+        $dropDAO = new DropDAO();
+        return $dropDAO->getAllDrops();
     }
 
-    public function getDropByEventID($eventID){
-        $dropDAO = new DROPDAO();
+    public function createDrop($drop)
+    {
+        $dropDAO = new DropDAO();
+        return $dropDAO->createDrop($drop);
+    }
+
+    public function getDropByEventID($eventID)
+    {
+        $dropDAO = new DropDAO();
         return $dropDAO->getDropByEventID($eventID);
     }
-}
 
-?>
+    public function updateDrop($drop)
+    {
+        $dropDAO = new DropDAO();
+        $dropDAO->updateDrop($drop);
+    }
+
+    public function removeDrop($drop)
+    {
+        /** @var Drop $drop */
+        $dropDAO = new DropDAO();
+        $dropDAO->removeDrop($drop->getDropID());
+    }
+}

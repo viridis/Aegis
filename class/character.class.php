@@ -1,9 +1,9 @@
 <?php
-class CHARACTER
+
+class Character
 {
     private static $idList = array();
 
-    // DB fields
     private $accountID;
     private $charID;
     private $charName;
@@ -11,7 +11,8 @@ class CHARACTER
     private $charClass;
     private $userID;
 
-    function __construct($accountID, $charID, $charName, $cooldown, $charClass, $userID){
+    public function __construct($accountID, $charID, $charName, $cooldown, $charClass, $userID)
+    {
         $this->accountID = $accountID;
         $this->charID = $charID;
         $this->charName = $charName;
@@ -20,36 +21,46 @@ class CHARACTER
         $this->userID = $userID;
     }
 
-    public static function create($accountID, $charID, $charName, $cooldown, $charClass, $userID){
+    public static function create($accountID, $charID, $charName, $cooldown, $charClass, $userID)
+    {
         if (!isset(self::$idList[$charID])) {
-            self::$idList[$charID] = new CHARACTER($accountID, $charID, $charName, $cooldown, $charClass, $userID);
+            self::$idList[$charID] = new Character($accountID, $charID, $charName, $cooldown, $charClass, $userID);
         }
         return self::$idList[$charID];
     }
 
-    function getAccountID(){
+    public function getAccountID()
+    {
         return $this->accountID;
     }
 
-    function getCharID(){
+    public function getCharID()
+    {
         return $this->charID;
     }
 
-    function getCharName(){
+    public function getCharName()
+    {
         return $this->charName;
     }
 
-    function getCooldown(){
+    public function getCooldown()
+    {
         return $this->cooldown;
     }
 
-    function getCharClass(){
+    public function getCharClass()
+    {
         return $this->charClass;
     }
 
-    function setCooldown($cooldown){
+    public function getUserID()
+    {
+        return $this->userID;
+    }
+
+    public function setCooldown($cooldown)
+    {
         $this->$cooldown = $cooldown;
     }
 }
-
-?>

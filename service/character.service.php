@@ -1,25 +1,41 @@
 <?php
 require_once("../data/character.DAO.php");
 
-class characterservice{
-    public function getCharactersByUserID($userID){
-        $characterDAO = new CHARACTERDAO();
+class CharacterService
+{
+    public function getAllCharacters()
+    {
+        $characterDAO = new CharacterDAO();
+        return $characterDAO->getAllCharacters();
+    }
+
+    public function getCharactersByUserID($userID)
+    {
+        $characterDAO = new CharacterDAO();
         return $characterDAO->getCharactersByUserID($userID);
     }
 
-    public function setCharacterCooldown($charID, $duration){
-        $characterDAO = new CHARACTERDAO();
-        return $characterDAO->setCharacterCooldown($charID, $duration);
+    public function createCharacter($character)
+    {
+        $characterDAO = new CharacterDAO();
+        return $characterDAO->createCharacter($character);
     }
 
-    public function addCharacter($userID, $accountID, $charName, $charClass){
-        $characterDAO = new CHARACTERDAO();
-        return $characterDAO->addCharacter($userID, $accountID, $charName, $charClass);
+    public function deleteCharacter($character)
+    {
+        /** @var $character Character */
+        $characterDAO = new CharacterDAO();
+        return $characterDAO->deleteCharacter($character->getCharID());
     }
 
-    public function deleteCharacter($charID){
-        $characterDAO = new CHARACTERDAO();
-        return $characterDAO->deleteCharacter($charID);
+    public function getCharactersByAccountID($accountID){
+        $characterDAO = new CharacterDAO();
+        return $characterDAO->getCharactersByAccountID($accountID);
+    }
+
+    public function updateCharacter($character)
+    {
+        $characterDAO = new CharacterDAO();
+        $characterDAO->updateCharacter($character);
     }
 }
-?>

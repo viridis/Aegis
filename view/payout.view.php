@@ -34,7 +34,8 @@
                     </thead>
                     <?php
                     $i = 0;
-                    foreach ($userlist as $user) {
+                    foreach ($userContainer as $user) {
+                        /** @var User $user */
                         if ($user != 0) {
                             $i++;
                             ?>

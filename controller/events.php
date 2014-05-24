@@ -1,24 +1,19 @@
 <?php
 require_once("../service/page.service.php");
-require_once("../service/events.service.php");
-require_once("../service/users.service.php");
-require_once("../service/slot.service.php");
-require_once("../service/drop.service.php");
-require_once("../service/items.service.php");
+require_once("../service/data.service.php");
 
-
-$pageservice = new PAGESERVICE();
+$pageService = new PageService();
 $currentPageID = "Events";
-if ($_SESSION["userID"]) {
-    $navbarlinks = $pageservice->generateNavLinksForUser($_SESSION["userID"]);
-} else {
-    $navbarlinks = $pageservice->generateNavLinksForUser();
-}
-$usefulllinks = $pageservice->generateUsefulLinks(5);
-$featuredlinks = $pageservice->generateFeaturedLinks(5);
 
-$eventservice = new eventservice();
-$eventlist = $eventservice->listAllEvents();
+if ($_SESSION["userID"]) {
+    $navBarLinks = $pageService->generateNavLinksForUser($_SESSION["userID"]);
+} else {
+    $navBarLinks = $pageService->generateNavLinksForUser();
+}
+$usefulLinks = $pageService->generateUsefulLinks(5);
+$featuredLinks = $pageService->generateFeaturedLinks(5);
+
+$dataService = new DataService();
+$eventContainer = $dataService->getAllEventInfo();
 
 include("../view/events.view.php");
-?>

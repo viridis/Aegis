@@ -2,7 +2,7 @@
 require_once("../data/dbconfig.DAO.php");
 require_once("../class/links.class.php");
 
-class USEFULLINKSDAO
+class UsefulLinksDAO
 {
     public function getLinks($amount)
     {
@@ -18,7 +18,7 @@ class USEFULLINKSDAO
     }
 }
 
-class FEATUREDLINKSDAO
+class FeaturedLinksDAO
 {
     public function getLinks($amount)
     {
@@ -34,7 +34,7 @@ class FEATUREDLINKSDAO
     }
 }
 
-class NAVBARLINKSDAO
+class NavBarLinksDAO
 {
     public function getLinksForUser($userId)
     {
@@ -66,5 +66,3 @@ class NAVBARLINKSDAO
         return $result;
     }
 }
-
-?>

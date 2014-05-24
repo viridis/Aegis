@@ -1,23 +1,23 @@
 <?php
 require_once("../data/item.DAO.php");
 
-class itemService
+class ItemService
 {
     public function listAllItems()
     {
-        $itemDAO = new ITEMDAO();
+        $itemDAO = new ItemDAO();
         return $itemDAO->getAllItems();
     }
 
     public function getItemByID($itemID)
     {
-        $itemDAO = new ITEMDAO();
+        $itemDAO = new ItemDAO();
         return $itemDAO->getItemByID($itemID);
     }
 
     public function createItem($itemID, $aegisName, $name)
     {
-        $itemDAO = new ITEMDAO();
+        $itemDAO = new ItemDAO();
         return $itemDAO->createItem($itemID, $aegisName, $name);
     }
 }

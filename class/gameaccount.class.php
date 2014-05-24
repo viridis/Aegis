@@ -1,9 +1,8 @@
 <?php
-class GAMEACCOUNT
+class GameAccount
 {
     private static $idList = array();
 
-    // DB fields
     private $userID;
     private $accountID;
     private $cooldown;
@@ -11,7 +10,7 @@ class GAMEACCOUNT
     // Associated fields
     private $characterList;
 
-    private function __construct($userID, $accountID, $cooldown){
+    public function __construct($userID, $accountID, $cooldown){
         $this->userID = $userID;
         $this->accountID = $accountID;
         $this->cooldown = $cooldown;
@@ -19,21 +18,21 @@ class GAMEACCOUNT
 
     public static function create($userID, $accountID, $cooldown){
         if (!isset(self::$idList[$accountID])) {
-            self::$idList[$accountID] = new GAMEACCOUNT($userID, $accountID, $cooldown);
+            self::$idList[$accountID] = new GameAccount($userID, $accountID, $cooldown);
         }
         return self::$idList[$accountID];
     }
 
     public function getAccountID(){
-        return $this->$accountID;
+        return $this->accountID;
     }
 
     public function getCooldown(){
-        return $this->$cooldown;
+        return $this->cooldown;
     }
 
     public function getUserID(){
-        return $this->$userID;
+        return $this->userID;
     }
 
     public function getCharacterList(){
@@ -41,11 +40,10 @@ class GAMEACCOUNT
     }
 
     public function setCooldown($cooldown){
-        $this->$cooldown = $cooldown;
+        $this->cooldown = $cooldown;
     }
 
     public function setCharacterList($characterList){
         $this->characterList = $characterList;
     }
 }
-?>

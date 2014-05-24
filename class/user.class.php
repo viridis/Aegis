@@ -1,6 +1,6 @@
 <?php
 
-class USER
+class User
 {
     private static $idList = array();
 
@@ -16,7 +16,7 @@ class USER
     // Associated fields
     private $gameAccountContainer;
 
-    function __construct($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout)
+    public function __construct($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout)
     {
         $this->userID = $userID;
         $this->userLogin = $userLogin;
@@ -31,7 +31,7 @@ class USER
     public static function create($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout)
     {
         if (!isset(self::$idList[$userID])) {
-            self::$idList[$userID] = new USER($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout);
+            self::$idList[$userID] = new User($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout);
         }
         return self::$idList[$userID];
     }
@@ -95,6 +95,15 @@ class USER
     {
         $this->payout = $payout;
     }
-}
 
-?>
+    public function setMailChar($mailChar)
+    {
+        $this->mailChar = $mailChar;
+    }
+
+    public function setUserPassword($userPassword)
+    {
+        $this->password = $userPassword;
+    }
+
+}

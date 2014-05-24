@@ -84,7 +84,7 @@
                     </thead>
                     <?php
                     $i = 0;
-                    foreach ($userlist as $user) {
+                    foreach ($userContainer as $user) {
                         $i++;
                         ?>
                         <tr>

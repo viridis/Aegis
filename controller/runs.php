@@ -1,8 +1,8 @@
 <?php
 require_once("../service/page.service.php");
 require_once("../service/runs.service.php");
-require_once("../service/items.service.php");
-require_once("../service/users.service.php");
+require_once("../service/item.service.php");
+require_once("../service/user.service.php");
 require_once("../service/slot.service.php");
 require_once("../service/drop.service.php");
 
@@ -11,7 +11,7 @@ if (!$_SESSION["userID"]) {
 }
 
 
-$pageservice = new PAGESERVICE();
+$pageservice = new PageService();
 $currentPageID = "Manage Runs";
 if (isset($_SESSION["userID"])) {
     $sessionUser = $pageservice->whoIsSessionUser($_SESSION["userID"]);
@@ -22,7 +22,7 @@ if (isset($_SESSION["userID"])) {
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
-$runservice = new runService();
+$runservice = new RunService();
 
 if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["runName"]) && isset($_POST["runDate"])) {
     if ($_POST["runName"] == "" || $_POST["runDate"] == "") {
@@ -76,8 +76,8 @@ if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["dele
 $editing = 0;
 if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"])) {
     $run = $runservice->getRunById($_GET["editrun"]);
-    $slotlist = slotService::getSlotByEventID($_GET["editrun"]);
-    $itemList = itemService::listAllItems();
+    $slotlist = SlotService::getSlotByEventID($_GET["editrun"]);
+    $itemList = ItemService::listAllItems();
     $itemListCount = ceil(count($itemList) / 3);
     $itemList = array(
         array_slice($itemList, 0, $itemListCount),
@@ -85,8 +85,8 @@ if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"])) {
         array_slice($itemList, $itemListCount * 2, $itemListCount),
 
     );
-    $userservice = new userService();
-    $userList = userService::listAllUsers();
+    $userservice = new UserService();
+    $userList = UserService::getAllUsers();
     $userListCount = ceil(count($userList) / 3);
     $userList = array(
         array_slice($userList, 0, $userListCount),

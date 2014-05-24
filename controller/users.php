@@ -1,11 +1,11 @@
 <?php
 require_once("../service/page.service.php");
-require_once("../service/users.service.php");
+require_once("../service/user.service.php");
 
 if (!$_SESSION["userID"]) {
     header("location: ./home.php");
 }
-$pageservice = new PAGESERVICE();
+$pageservice = new PageService();
 $currentPageID = "Manage Users";
 if (isset($_SESSION["userID"])) {
     $sessionUser = $pageservice->whoIsSessionUser($_SESSION["userID"]);
@@ -16,10 +16,10 @@ if (isset($_SESSION["userID"])) {
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
-$userservice = new userService();
+$userservice = new UserService();
 if (isset($_POST["addUser"])) {
     try {
-        $user = $userservice->addUser($_POST["addUser"]);
+        $user = $userservice->createUser($_POST["addUser"]);
         $notification = array(
             'type' => 'success',
             'title' => 'Success',
@@ -35,7 +35,7 @@ if (isset($_POST["addUser"])) {
 
 if (isset($_GET['editUser']) && is_numeric($_GET['editUser'])) {
     try {
-        $user = $userservice->getUserById($_GET['editUser']);
+        $user = $userservice->getUserByUserID($_GET['editUser']);
         $result['action'] = 'requestUser';
         $result['user']['id'] = $user->getId();
         $result['user']['name'] = $user->getName();
@@ -65,6 +65,6 @@ if (isset($_POST['editUserID']) && isset($_POST['editUserName']) && isset($_POST
     }
 }
 
-$userlist = $userservice->listAllUsers();
+$userlist = $userservice->getAllUsers();
 include("../view/users.view.php");
 ?>

@@ -30,7 +30,7 @@ class PAYOUTDAO
     public function payOutUser($id, $eventList)
     {
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $logdao = new LOGDAO();
+        $logdao = new LogDAO();
         foreach ($eventList as $event) {
             if ($event->getTotalValue() > 0) {
                 $eventTotalWorth = $event->getTotalValue();

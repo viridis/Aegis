@@ -1,9 +1,9 @@
 <?php
-class EVENT
+
+class Event
 {
     private static $idList = array();
 
-    //DB fields
     private $eventID;
     private $eventName;
     private $eventType;
@@ -18,8 +18,8 @@ class EVENT
     private $slotList; // List of slot objects
     private $dropList; // List of drop objects
 
-    function __construct($eventID, $eventType, $startDate, $completeDate,
-                         $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName)
+    public function __construct($eventID, $eventType, $startDate, $completeDate,
+                                $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName)
     {
         $this->eventID = $eventID;
         $this->eventName = $eventName;
@@ -36,7 +36,7 @@ class EVENT
                                   $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName)
     {
         if (!isset(self::$idList[$eventID])) {
-            self::$idList[$eventID] = new EVENT($eventID, $eventType, $startDate, $completeDate,
+            self::$idList[$eventID] = new Event($eventID, $eventType, $startDate, $completeDate,
                 $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName);
 
         }
@@ -53,7 +53,8 @@ class EVENT
         return $this->eventName;
     }
 
-    public function getEventType(){
+    public function getEventType()
+    {
         return $this->eventType;
     }
 
@@ -62,40 +63,53 @@ class EVENT
         return $this->startDate;
     }
 
-    public function getCompleteDate(){
+    public function getCompleteDate()
+    {
         return $this->completeDate;
     }
 
-    public function getEventState(){
+    public function getEventState()
+    {
         return $this->eventState;
     }
 
-    public function isRecurringEvent(){
+    public function isRecurringEvent()
+    {
         return $this->recurringEvent;
     }
 
-    public function getDayOfWeek(){
+    public function getDayOfWeek()
+    {
         return $this->dayOfWeek;
     }
 
-    public function getHourOfDay(){
+    public function getHourOfDay()
+    {
         return $this->hourOfDay;
     }
 
-    public function getSlotList(){
+    public function getSlotList()
+    {
         return $this->slotList;
     }
 
-    public function getDropList(){
+    public function getDropList()
+    {
         return $this->dropList;
     }
 
-    public function setSlotList($slotList){
+    public function setSlotList($slotList)
+    {
         $this->slotList = $slotList;
     }
 
-    public function setDropList($dropList){
+    public function setDropList($dropList)
+    {
         $this->dropList = $dropList;
     }
+
+    public function setEventName($eventName)
+    {
+        $this->eventName = $eventName;
+    }
 }
-?>

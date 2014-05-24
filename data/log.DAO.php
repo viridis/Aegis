@@ -1,7 +1,7 @@
 <?php
 require_once("../data/dbconfig.DAO.php");
 
-class LOGDAO
+class LogDAO
 {
     public function logPreparedStatement($action, $stmt, $binds, $result)
     {
@@ -27,5 +27,3 @@ class LOGDAO
         return false;
     }
 }
-
-?>

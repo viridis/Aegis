@@ -21,7 +21,7 @@ class RUNDAO
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultset = $dbh->query($sql);
         foreach ($resultset as $row) {
-            $event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
+            $event = Event::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
             $result[$row["eventID"]] = $event;
         }
         return $result;
@@ -38,7 +38,7 @@ class RUNDAO
             ":name" => $name,
             ":time" => $time,
         );
-        $logdao = new LOGDAO();
+        $logdao = new LogDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
             return true;
@@ -108,16 +108,16 @@ class RUNDAO
         $stmt2->execute();
         $resultSet2 = $stmt2->fetchAll();
         foreach ($resultSet1 as $row) {
-            $event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
+            $event = Event::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
             if (isset($row["dropID"])) {
-                $drop = DROP::create($row["dropID"], $row["itemName"], $row["itemTalonID"], $row["dropValue"]);
+                $drop = Drop::create($row["dropID"], $row["itemName"], $row["itemTalonID"], $row["dropValue"]);
                 $event->setTotalValue($row["totalValue"]);
                 $event->appendDrop($drop);
             }
             $result = $event;
         }
         foreach ($resultSet2 as $row) {
-            $event = EVENT::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
+            $event = Event::create($row["eventID"], $row["eventName"], $row["eventTime"], $row["eventDesc"]);
             if (isset($row["participantID"])) {
                 $participant = PARTICIPANT::create($row["participantID"], $row["userID"], $row["userName"], $row["userMailname"], $row["participantsPaidOut"]);
                 $event->setTotalParticipants($row["totalParticipants"]);
@@ -139,7 +139,7 @@ class RUNDAO
             ":runID" => $runID,
             ":userID" => $userID,
         );
-        $logdao = new LOGDAO();
+        $logdao = new LogDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
             return true;
@@ -159,7 +159,7 @@ class RUNDAO
             ":runID" => $runID,
             ":itemID" => $itemID,
         );
-        $logdao = new LOGDAO();
+        $logdao = new LogDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
             $lastID = $dbh->lastInsertId();
             $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
@@ -180,7 +180,7 @@ class RUNDAO
             ":runID" => $runID,
             ":userID" => $userID,
         );
-        $logdao = new LOGDAO();
+        $logdao = new LogDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('DELETE', $stmt, $binds, 'SUCCESS');
             return $userID;
@@ -198,7 +198,7 @@ class RUNDAO
         $binds = array(
             ":dropID" => $dropID,
         );
-        $logdao = new LOGDAO();
+        $logdao = new LogDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('DELETE', $stmt, $binds, 'SUCCESS');
             return $dropID;
@@ -237,7 +237,7 @@ class RUNDAO
                 ":value" => $value,
                 ":list" => $list,
             );
-            $logdao = new LOGDAO();
+            $logdao = new LogDAO();
             if ($stmt->execute()) { //1 if success, 0 if fail
                 $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
                 return true;

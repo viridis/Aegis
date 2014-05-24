@@ -1,13 +1,13 @@
 <?php
 require_once("../service/page.service.php");
-require_once("../service/items.service.php");
+require_once("../service/item.service.php");
 require_once("../service/runs.service.php");
 
 if (!$_SESSION["userID"]) {
     header("location: ./home.php");
 }
 
-$pageservice = new PAGESERVICE();
+$pageservice = new PageService();
 $currentPageID = "Manage Items";
 if (isset($_SESSION["userID"])) {
     $sessionUser = $pageservice->whoIsSessionUser($_SESSION["userID"]);
@@ -18,8 +18,8 @@ if (isset($_SESSION["userID"])) {
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
-$itemservice = new itemService();
-$runservice = new runService();
+$itemservice = new ItemService();
+$runservice = new RunService();
 if (isset($_POST["addItem"])) {
     try {
         $item = $itemservice->createItem($_POST["addItem"]);

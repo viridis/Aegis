@@ -1,5 +1,5 @@
 <?php
-class ITEM
+class Item
 {
     private static $idList = array();
     private $itemID;
@@ -7,7 +7,7 @@ class ITEM
     private $name;
 
 
-    function __construct($itemID, $aegisName, $name)
+    public function __construct($itemID, $aegisName, $name)
     {
         $this->itemID = $itemID;
         $this->aegisName = $aegisName;
@@ -17,12 +17,12 @@ class ITEM
     public static function create($itemID, $aegisName, $name)
     {
         if (!isset(self::$idList[$itemID])) {
-            self::$idList[$itemID] = new ITEM($itemID, $aegisName, $name);
+            self::$idList[$itemID] = new Item($itemID, $aegisName, $name);
         }
         return self::$idList[$itemID];
     }
 
-    public function getItemId()
+    public function getItemID()
     {
         return $this->itemID;
     }

@@ -1,7 +1,9 @@
 <?php
 require_once("../service/page.service.php");
-require_once("../service/users.service.php");
-require_once("../service/events.service.php");
+require_once("../service/data.service.php");
+
+$pageService = new PageService();
+$dataService = new DataService();
 
 if (isset($_GET['action']) && $_GET['action'] === 'logout') {
     unset($_SESSION["userID"]);
@@ -13,8 +15,8 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 }
 
 if (isset($_GET['action']) && $_GET['action'] === 'login' && $_POST['name'] && $_POST['password']) {
-    $userservice = new userService();
-    $user = $userservice->getUserByNameAndPassword($_POST['name'], md5($_POST['password']));
+    $user = $dataService->getUserByLoginAndPassword($_POST['name'], md5($_POST['password']));
+    /** @var $user User */
     if ($user) {
         $_SESSION["userID"] = $user->getUserID();
         $notification = array(
@@ -30,17 +32,15 @@ if (isset($_GET['action']) && $_GET['action'] === 'login' && $_POST['name'] && $
         );
     }
 }
-
-$pageservice = new PAGESERVICE();
 $currentPageID = "home";
 
 if (isset($_SESSION["userID"])) {
-    $sessionUser = $pageservice->whoIsSessionUser($_SESSION["userID"]);
-    $navbarlinks = $pageservice->generateNavLinksForUser($_SESSION["userID"]);
+    $sessionUser = $pageService->whoIsSessionUser($_SESSION["userID"]);
+    $navBarLinks = $pageService->generateNavLinksForUser($_SESSION["userID"]);
 } else {
-    $navbarlinks = $pageservice->generateNavLinksForUser();
+    $navBarLinks = $pageService->generateNavLinksForUser();
 }
-$usefulllinks = $pageservice->generateUsefulLinks(5);
-$featuredlinks = $pageservice->generateFeaturedLinks(5);
+$usefulLinks = $pageService->generateUsefulLinks(5);
+$featuredLinks = $pageService->generateFeaturedLinks(5);
 
 include("../view/home.view.php");

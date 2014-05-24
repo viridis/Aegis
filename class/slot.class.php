@@ -1,9 +1,8 @@
 <?php
-class SLOT
+class Slot
 {
     private static $idList = array();
 
-    //DB Fields
     private $eventID;
     private $slotID;
     private $slotClass;
@@ -16,7 +15,7 @@ class SLOT
     private $charClass; // From character class
     private $charName; // From character class
 
-    function __construct($eventID, $slotID, $slotClass, $taken, $takenUserID, $takenCharID){
+    public function __construct($eventID, $slotID, $slotClass, $taken, $takenUserID, $takenCharID){
         $this->eventID = $eventID;
         $this->slotID = $slotID;
         $this->slotClass = $slotClass;
@@ -27,58 +26,61 @@ class SLOT
 
     public static function create($eventID, $slotID, $slotClass, $taken, $takenUserID, $takenCharID){
         if (!isset(self::$idList[$slotID])) {
-            self::$idList[$slotID] = new SLOT($eventID, $slotID, $slotClass, $taken, $takenUserID, $takenCharID);
+            self::$idList[$slotID] = new Slot($eventID, $slotID, $slotClass, $taken, $takenUserID, $takenCharID);
         }
         return self::$idList[$slotID];
     }
 
-    function getEventID(){
+    public function getEventID(){
         return $this->eventID;
     }
 
-    function getSlotID(){
+    public function getSlotID(){
         return $this->slotID;
     }
 
-    function getSlotClass(){
+    public function getSlotClass(){
         return $this->slotClass;
     }
 
-    function isTaken(){
+    public function isTaken(){
         return $this->taken;
     }
 
-    function getTakenUserID(){
+    public function getTakenUserID(){
         return $this->takenUserID;
     }
 
-    function getTakenCharID(){
+    public function getTakenCharID(){
         return $this->takenCharID;
     }
 
-    function getUserLogin(){
+    public function getUserLogin(){
         return $this->userLogin;
     }
 
-    function getCharClass(){
+    public function getCharClass(){
         return $this->charClass;
     }
 
-    function getCharName(){
+    public function getCharName(){
         return $this->charName;
     }
 
-    function setUserLogin($userLogin){
+    public function setUserLogin($userLogin){
         $this->userLogin = $userLogin;
     }
 
-    function setCharClass($charClass){
+    public function setCharClass($charClass){
         $this->charClass = $charClass;
     }
 
-    function setCharName($charName){
+    public function setCharName($charName){
         $this->charName = $charName;
     }
-}
 
-?>
+    public function setSlotClass($slotClass)
+    {
+        $this->slotClass = $slotClass;
+    }
+}

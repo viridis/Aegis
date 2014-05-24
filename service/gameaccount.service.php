@@ -1,26 +1,43 @@
 <?php
-require_once("../data/gameaccount.DAO.php");
+require_once("../data/gameAccount.DAO.php");
 
-class gameAccountService
+class GameAccountService
 {
-    public function getGameAccountByUser($userID){
-        $gameAccountDAO = new GAMEACCOUNTDAO();
-        return $gameAccountDAO->getGameAccountsByUser($userID);
+    public function getAllGameAccounts()
+    {
+        $gameAccountDAO = new GameAccountDAO();
+        return $gameAccountDAO->getAllGameAccounts();
     }
 
-    public function setGameAccountCooldown($accountID, $duration){
-        $gameAccountDAO = new GAMEACCOUNTDAO();
-        return $gameAccountDAO->setAccountCooldown($accountID, $duration);
+    public function getGameAccountByUserID($userID)
+    {
+        $gameAccountDAO = new GameAccountDAO();
+        return $gameAccountDAO->getGameAccountsByUserID($userID);
     }
 
-    public static function addGameAccount($userID){
-        $gameAccountDAO = new GAMEACCOUNTDAO();
-        return $gameAccountDAO->addGameAccount($userID);
+    public function createGameAccount($gameAccount)
+    {
+        $gameAccountDAO = new GameAccountDAO();
+        return $gameAccountDAO->createGameAccount($gameAccount);
     }
 
-    public static function deleteGameAccount($accountID){
-        $gameAccountDAO = new GAMEACCOUNTDAO();
-       return $gameAccountDAO->deleteGameAccount($accountID);
+    public function deleteGameAccount($gameAccount)
+    {
+        /** @var $gameAccount GameAccount */
+        $gameAccountDAO = new GameAccountDAO();
+        return $gameAccountDAO->deleteGameAccount($gameAccount->getAccountID());
     }
+
+    public function updateGameAccount($gameAccount)
+    {
+        $gameAccountDAO = new GameAccountDAO();
+        $gameAccountDAO->updateGameAccount($gameAccount);
+    }
+
+    public function getGameAccountByAccountID($accountID)
+    {
+        $gameAccountDAO = new GameAccountDAO();
+        return $gameAccountDAO->getGameAccountByAccountID($accountID);
+    }
+
 }
-?>

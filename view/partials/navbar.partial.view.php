@@ -13,7 +13,7 @@
             <div class="navbar-collapse collapse navbar-right">
                 <ul class="nav navbar-nav">
                     <?php
-                    foreach ($navbarlinks as $link) {
+                    foreach ($navBarLinks as $link) {
                         if (strtoupper($currentPageID) == strtoupper($link->getName())) {
                             print('<li class="active"><a href="'. $link->getLocation() .'">'. $link->getName() .'</a></li>');
                         } else {
