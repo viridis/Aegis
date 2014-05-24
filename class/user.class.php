@@ -23,6 +23,7 @@ class USER{
         $this->roleLevel = $roleLevel;
         $this->forumAccount = $forumAccount;
         $this->payout = $payout;
+        $this->password = $password;
 	}
 	
 	public static function create($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout){
@@ -67,6 +68,10 @@ class USER{
 
     public function setGameAccountList($gameAccountList){
         $this->gameAccountList = $gameAccountList;
+    }
+
+    public function setPayout($payout){
+        $this->payout = $payout;
     }
 }
 

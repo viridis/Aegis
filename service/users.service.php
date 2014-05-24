@@ -12,22 +12,21 @@ class userservice
     public static function getUserByID($id)
     {
         $userdao = new USERDAO();
-        $user = $userdao->getUserById($id);
+        $user = $userdao->getUserByID($id);
         return $user;
     }
 
-    public function addUser($name)
+    public function addUser($userLogin, $userPassword, $roleLevel, $email, $mailChar, $forumAccount)
     {
         $userdao = new USERDAO();
-        $user = $userdao->addUser($name);
+        $user = $userdao->addUser($userLogin, $userPassword, $roleLevel, $email, $mailChar, $forumAccount);
         return $user;
     }
 
-    public function updateUser($id, $name, $mailName)
+    public function updateUser($user)
     {
         $userdao = new USERDAO();
-        $user = $userdao->updateUser($id, $name, $mailName);
-        return $user;
+        return $userdao->updateUser($user);
     }
 
     public function getUserByNameAndPassword($name, $password)

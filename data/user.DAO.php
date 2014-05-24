@@ -22,7 +22,7 @@ class USERDAO{
 		return $result;
 	}
 	
-	public function getUserById($id){
+	public function getUserByID($id){
         $sqluseraccount = "SELECT * FROM useraccount WHERE userID = :id ORDER BY userID ASC;";
         $sqlgameaccount = "SELECT * FROM gameaccounts WHERE userID = :id ORDER BY userID, accountID ASC;";
         $sqlcharacter = "SELECT * FROM characters WHERE userID = :id ORDER BY userID, accountID ASC;";
@@ -43,15 +43,24 @@ class USERDAO{
         return $result;
     }
 
-    // To be fixed
-    public function addUser($username)
+    public function addUser($userLogin, $userPassword, $roleLevel, $email, $mailChar, $forumAccount)
     {
-        $sql = "INSERT INTO useraccount (`userLogin`) VALUES (:username);";
+        $sql = "INSERT INTO useraccount VALUES (NULL, :userLogin, :userPassword, :roleLevel, :email, :mailChar, :forumAccount, 0);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':userLogin', $userLogin);
+        $stmt->bindParam(':userPassword', $userPassword);
+        $stmt->bindParam(':roleLevel', $roleLevel);
+        $stmt->bindParam(':email', $email);
+        $stmt->bindParam(':mailChar', $mailChar);
+        $stmt->bindParam(':forumAccount', $forumAccount);
         $binds = array(
-            ":username" => $username,
+            ":username" => $userLogin,
+            ":userPassword" => $userPassword,
+            ":roleLevel" => $roleLevel,
+            ":email" => $email,
+            ":mailChar" => $mailChar,
+            ":forumAccount" => $forumAccount,
         );
         $logdao = new LOGDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
@@ -65,29 +74,46 @@ class USERDAO{
         return false;
     }
 
-    // To be fixed
-    public function updateUser($id, $name, $mailname)
+    public function updateUser($user)
     {
-        $sql = 'UPDATE useraccount SET userLogin = :name, mailChar = :mailname WHERE userID = :id;';
+        /** @var $user USER */
+        $sql = 'UPDATE useraccount
+                    SET userLogin = :userLogin,
+                     userPassword = :userPassword,
+                     roleLevel = :roleLevel,
+                     email = :email,
+                     mailChar = :mailChar,
+                     forumAccount = :forumAccount,
+                     payout = :payout
+                    WHERE userID = :userID;';
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':name', $name);
-        $stmt->bindParam(':mailname', $mailname);
-        $stmt->bindParam(':id', $id);
+        $stmt->bindParam(':userLogin', $user->getUserLogin());
+        $stmt->bindParam(':userPassword', $user->getUserPassword());
+        $stmt->bindParam(':roleLevel', $user->getRoleLevel());
+        $stmt->bindParam(':email', $user->getEmail());
+        $stmt->bindParam(':mailChar', $user->getMailChar());
+        $stmt->bindParam(':forumAccount', $user->getForumAccount());
+        $stmt->bindParam(':payout', $user->getPayout());
+        $stmt->bindParam(':userID', $user->getUserID());
         $binds = array(
-            ":name" => $name,
-            ":id" => $id,
-            ":mailname" => $mailname,
+            ":userLogin" => $user->getUserLogin(),
+            ":userPassword" => $user->getUserPassword(),
+            ":roleLevel" => $user->getRoleLevel(),
+            ":email" => $user->getEmail(),
+            ":mailChar" => $user->getMailChar(),
+            ":forumAccount" => $user->getForumAccount(),
+            ":payout" => $user->getPayout(),
+            ":userID" => $user->getUserID(),
         );
         $logdao = new LOGDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
             $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
             $dao = new USERDAO();
-            $user = $dao->getUserById($id);
-            return $user;
+            return $dao->getUserById($user->getUserID());
         }
         $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
-        throw new Exception('Failed to update user. (' . $name . ')');
+        throw new Exception('Failed to update user. (' . $user->getUserLogin() . ')');
         return false;
     }
 
@@ -103,56 +129,6 @@ class USERDAO{
         $result = $this->getUserById($useraccountResults[0]["userID"]);
         return $result;
 	}
-
-    //To be fixed
-    public function editUser($id, $mailName, $forumName, $email){
-        $sql = 'UPDATE useraccount SET mailChar = :mailname, forumAccount = :forumname, email = :email WHERE userID = :id;';
-        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':mailname', $mailName);
-        $stmt->bindParam(':forumname', $forumName);
-        $stmt->bindParam(':email', $email);
-        $stmt->bindParam(':id', $id);
-        $binds = array(
-            ":mailname" => $mailName,
-            ":forumname" => $forumName,
-            ":email" => $email,
-            ":id" => $id,
-        );
-        $logdao = new LOGDAO();
-        if ($stmt->execute()) { //1 if success, 0 if fail
-            $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
-            $dao = new USERDAO();
-            $user = $dao->getUserById($id);
-            return $user;
-        }
-        $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
-        throw new Exception('Failed to update user. (' . $mailName . ')');
-        return false;
-    }
-
-    // To be fixed
-    public function editPasswordOfUser($id, $password){
-        $sql = 'UPDATE useraccount SET userPassword = :password WHERE userID = :id;';
-        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
-        $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':password', $password);
-        $stmt->bindParam(':id', $id);
-        $binds = array(
-            ":password" => $password,
-            ":id" => $id,
-        );
-        $logdao = new LOGDAO();
-        if ($stmt->execute()) { //1 if success, 0 if fail
-            $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'SUCCESS');
-            $dao = new USERDAO();
-            $user = $dao->getUserById($id);
-            return $user;
-        }
-        $logdao->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
-        throw new Exception('Failed to update password.');
-        return false;
-    }
 
     public function payoutUserID($userID){
         $sql = "UPDATE useraccount SET payout = 0 WHERE userID = :userID;";
@@ -178,7 +154,7 @@ class USERDAO{
         $characterPointer = 0;
         foreach($userAccountResults as $row){
             $user = USER::create($row['userID'], $row['userLogin'], $row['email'], $row['mailChar'],
-                $row['password'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
+                $row['userPassword'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
             $gameAccountList = array();
             while ($gameAccountResults[$gameAccountPointer]["userID"] <= $row["userID"] && isset($gameAccountResults[$gameAccountPointer])) {
                 $gameAccount = GAMEACCOUNT::create($gameAccountResults[$gameAccountPointer]["userID"],
