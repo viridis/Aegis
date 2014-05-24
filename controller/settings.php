@@ -11,7 +11,7 @@ if (isset($_SESSION["userID"])) {
     header("location: ./home.php");
 }
 
-$userservice = new userservice();
+$userservice = new userService();
 if(isset($_POST) && isset($_GET['action']) && $_GET['action'] == 'edit'){
     try {
         $user = $userservice->editUser($sessionUser->getId(), $_POST['mailname'], $_POST['forumname'], $_POST['email']);
@@ -37,7 +37,7 @@ if(isset($_POST) && isset($_GET['action']) && $_GET['action'] == 'password'){
             'message' => 'New Passwords don\'t match.',
         );
     } else {
-        $userservice = new userservice();
+        $userservice = new userService();
         $user = $userservice->getUserByNameAndPassword($sessionUser->getName(), md5($_POST['oldpassword']));
         if ($user) {
             try {

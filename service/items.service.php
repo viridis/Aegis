@@ -1,7 +1,7 @@
 <?php
 require_once("../data/item.DAO.php");
 
-class itemservice
+class itemService
 {
     public function listAllItems()
     {
@@ -9,17 +9,15 @@ class itemservice
         return $itemDAO->getAllItems();
     }
 
-    public function getItemById($itemID)
+    public function getItemByID($itemID)
     {
         $itemDAO = new ITEMDAO();
-        return $itemDAO->getItemById($itemID);
+        return $itemDAO->getItemByID($itemID);
     }
 
-    public function addItem($itemID, $aegisName, $name)
+    public function createItem($itemID, $aegisName, $name)
     {
         $itemDAO = new ITEMDAO();
-        return $itemDAO->addItem($itemID, $aegisName, $name);
+        return $itemDAO->createItem($itemID, $aegisName, $name);
     }
 }
-
-?>

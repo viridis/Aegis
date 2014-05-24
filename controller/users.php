@@ -16,7 +16,7 @@ if (isset($_SESSION["userID"])) {
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
-$userservice = new userservice();
+$userservice = new userService();
 if (isset($_POST["addUser"])) {
     try {
         $user = $userservice->addUser($_POST["addUser"]);

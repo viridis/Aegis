@@ -18,11 +18,11 @@ if (isset($_SESSION["userID"])) {
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
-$itemservice = new itemservice();
-$runservice = new runservice();
+$itemservice = new itemService();
+$runservice = new runService();
 if (isset($_POST["addItem"])) {
     try {
-        $item = $itemservice->addItem($_POST["addItem"]);
+        $item = $itemservice->createItem($_POST["addItem"]);
         $notification = array(
             'type' => 'success',
             'title' => 'Success',
@@ -38,7 +38,7 @@ if (isset($_POST["addItem"])) {
 
 if (isset($_GET['editItem']) && is_numeric($_GET['editItem'])) {
     try {
-        $item = $itemservice->getItemById($_GET['editItem']);
+        $item = $itemservice->getItemByID($_GET['editItem']);
         $result['action'] = 'requestItem';
         $result['item']['id'] = $item->getId();
         $result['item']['name'] = $item->getName();

@@ -13,7 +13,7 @@ if (isset($_GET['action']) && $_GET['action'] === 'logout') {
 }
 
 if (isset($_GET['action']) && $_GET['action'] === 'login' && $_POST['name'] && $_POST['password']) {
-    $userservice = new userservice();
+    $userservice = new userService();
     $user = $userservice->getUserByNameAndPassword($_POST['name'], md5($_POST['password']));
     if ($user) {
         $_SESSION["userID"] = $user->getUserID();

@@ -1,7 +1,7 @@
 <?php
 require_once("../data/gameaccount.DAO.php");
 
-class gameaccountservice
+class gameAccountService
 {
     public function getGameAccountByUser($userID){
         $gameAccountDAO = new GAMEACCOUNTDAO();

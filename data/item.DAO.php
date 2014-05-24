@@ -18,7 +18,7 @@ class ITEMDAO
         return $result;
     }
 
-    public function getItemById($itemID)
+    public function getItemByID($itemID)
     {
         $sql = "SELECT * FROM items WHERE itemID = :itemID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
@@ -36,7 +36,7 @@ class ITEMDAO
         }
     }
 
-    public function addItem($itemID, $aegisName, $name)
+    public function createItem($itemID, $aegisName, $name)
     {
         $sql = "INSERT INTO items VALUES (:itemID, :aegisName, :name);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);

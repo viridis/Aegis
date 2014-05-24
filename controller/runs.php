@@ -22,7 +22,7 @@ if (isset($_SESSION["userID"])) {
 $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
-$runservice = new runservice();
+$runservice = new runService();
 
 if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["runName"]) && isset($_POST["runDate"])) {
     if ($_POST["runName"] == "" || $_POST["runDate"] == "") {
@@ -76,8 +76,8 @@ if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["dele
 $editing = 0;
 if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"])) {
     $run = $runservice->getRunById($_GET["editrun"]);
-    $slotlist = slotservice::getSlotByEventID($_GET["editrun"]);
-    $itemList = itemservice::listAllItems();
+    $slotlist = slotService::getSlotByEventID($_GET["editrun"]);
+    $itemList = itemService::listAllItems();
     $itemListCount = ceil(count($itemList) / 3);
     $itemList = array(
         array_slice($itemList, 0, $itemListCount),
@@ -85,8 +85,8 @@ if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"])) {
         array_slice($itemList, $itemListCount * 2, $itemListCount),
 
     );
-    $userservice = new userservice();
-    $userList = userservice::listAllUsers();
+    $userservice = new userService();
+    $userList = userService::listAllUsers();
     $userListCount = ceil(count($userList) / 3);
     $userList = array(
         array_slice($userList, 0, $userListCount),

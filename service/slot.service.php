@@ -1,11 +1,12 @@
 <?php
 require_once("../data/slot.DAO.php");
 
-class slotservice
+class slotService
 {
-    public function addSlot($eventID, $slotClass){
+    public function addSlotToEvent($event, $slotClass){
+        /** @var  $event EVENT */
         $slotDAO = new SLOTDAO();
-        return $slotDAO->addSlot($eventID, $slotClass);
+        return $slotDAO->addSlot($event->getEventID(), $slotClass);
     }
 
     public function deleteSlot($slotID){
@@ -18,4 +19,3 @@ class slotservice
         return $slotDAO->getSlotByEventID($eventID);
     }
 }
-?>

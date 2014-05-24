@@ -19,7 +19,7 @@ $usefulllinks = $pageservice->generateUsefulLinks(5);
 $featuredlinks = $pageservice->generateFeaturedLinks(5);
 
 $payoutservice = new payoutservice();
-$userservice= new userservice();
+$userservice= new userService();
 
 if (isset ($_GET["action"]) && $_GET["action"] == 'payout' && $allowedToPayOut) {
     $user = $userservice->getUserByID($_POST["userId"]);

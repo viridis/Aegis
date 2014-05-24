@@ -66,7 +66,7 @@
                                     ondragstart="return drag(event)">
                                     <?php
                                     if ($slot->getTakenUserID() > 0)
-                                        print(userservice::getUserByID($slot->getTakenUserID())->getUserLogin());
+                                        print(userService::getUserByID($slot->getTakenUserID())->getUserLogin());
                                     else
                                         print("vacant"); ?>
                                 </li>
@@ -118,7 +118,7 @@
                                 <li id="db_items_<?php print($drop->getDropID()); ?>" draggable='true'
                                     ondragstart='return drag(event)'>
                                     <?php
-                                    print(itemservice::getItemById($drop->getItemID())->getName()); ?>
+                                    print(itemService::getItemByID($drop->getItemID())->getName()); ?>
                                 </li>
                             <?php endforeach; ?>
                         </ul>

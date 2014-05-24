@@ -1,58 +1,43 @@
 <?php
 require_once("../data/user.DAO.php");
 
-class userservice
+class userService
 {
     public function listAllUsers()
     {
-        $userdao = new USERDAO();
-        return $userdao->getAllUsers();
+        $userDAO = new USERDAO();
+        return $userDAO->getAllUsers();
     }
 
-    public static function getUserByID($id)
+    public function getUserByID($userID)
     {
-        $userdao = new USERDAO();
-        $user = $userdao->getUserByID($id);
-        return $user;
+        $userDAO = new USERDAO();
+        return $userDAO->getUserByID($userID);
     }
 
     public function addUser($userLogin, $userPassword, $roleLevel, $email, $mailChar, $forumAccount)
     {
-        $userdao = new USERDAO();
-        $user = $userdao->addUser($userLogin, $userPassword, $roleLevel, $email, $mailChar, $forumAccount);
+        $userDAO = new USERDAO();
+        $user = $userDAO->addUser($userLogin, $userPassword, $roleLevel, $email, $mailChar, $forumAccount);
         return $user;
     }
 
     public function updateUser($user)
     {
-        $userdao = new USERDAO();
-        return $userdao->updateUser($user);
+        $userDAO = new USERDAO();
+        return $userDAO->updateUser($user);
     }
 
     public function getUserByNameAndPassword($name, $password)
     {
-        $userdao = new USERDAO();
-        $user = $userdao->getUserByNameAndPassword($name, $password);
-        return $user;
+        $userDAO = new USERDAO();
+        return $userDAO->getUserByNameAndPassword($name, $password);
     }
 
-    public function editUser($id, $mailName, $forumName, $email)
+    public function payoutByUser($user)
     {
-        $userdao = new USERDAO();
-        $user = $userdao->editUser($id, $mailName, $forumName, $email);
-        return $user;
-    }
-
-    public function editPasswordOfUser($id, $password){
-        $userdao = new USERDAO();
-        $user = $userdao->editPasswordOfUser($id, $password);
-        return $user;
-    }
-
-    public function payoutByUserID($userID){
-        $userdao = new USERDAO();
-        return $userdao->payoutUserID($userID);
+        /** @var $user USER */
+        $userDAO = new USERDAO();
+        return $userDAO->payoutUserID($user->getUserID());
     }
 }
-
-?>
