@@ -1,28 +1,25 @@
 <?php
 require_once("../service/page.service.php");
 require_once("../service/runs.service.php");
-require_once("../service/item.service.php");
-require_once("../service/user.service.php");
-require_once("../service/slot.service.php");
-require_once("../service/drop.service.php");
+require_once("../service/data.service.php");
 
 if (!$_SESSION["userID"]) {
     header("location: ./home.php");
 }
 
-
-$pageservice = new PageService();
-$currentPageID = "Manage Runs";
+$pageService = new PageService();
+$dataService = new DataService();
+$currentPageID = "Manage Events";
 if (isset($_SESSION["userID"])) {
-    $sessionUser = $pageservice->whoIsSessionUser($_SESSION["userID"]);
-    $navbarlinks = $pageservice->generateNavLinksForUser($_SESSION["userID"]);
+    $sessionUser = $pageService->whoIsSessionUser($_SESSION["userID"]);
+    $navBarLinks = $pageService->generateNavLinksForUser($_SESSION["userID"]);
 } else {
-    $navbarlinks = $pageservice->generateNavLinksForUser();
+    $navBarLinks = $pageService->generateNavLinksForUser();
 }
-$usefulllinks = $pageservice->generateUsefulLinks(5);
-$featuredlinks = $pageservice->generateFeaturedLinks(5);
+$usefulLinks = $pageService->generateUsefulLinks(5);
+$featuredLinks = $pageService->generateFeaturedLinks(5);
 
-$runservice = new RunService();
+$runService = new RunService();
 
 if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["runName"]) && isset($_POST["runDate"])) {
     if ($_POST["runName"] == "" || $_POST["runDate"] == "") {
@@ -32,7 +29,7 @@ if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["runName"]) &
             'message' => 'Name and Date should be filled in.',
         );
     } else {
-        $runservice->addRun($_POST["runName"], $_POST["runDate"]);
+        $runService->addRun($_POST["runName"], $_POST["runDate"]);
         $notification = array(
             'type' => 'success',
             'title' => 'Success',
@@ -42,7 +39,7 @@ if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["runName"]) &
 
 }
 if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["add"]) && $_GET["add"] == 'users') {
-    $run = $runservice->addParticipantToRun($_GET["editrun"], $_GET["id"]);
+    $event = $runService->addParticipantToRun($_GET["editrun"], $_GET["id"]);
     $result["action"] = 'added';
     $result["database"] = 'users';
     $result["id"] = $_GET["id"];
@@ -50,7 +47,7 @@ if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["add"
     exit();
 }
 if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["add"]) && $_GET["add"] == 'items') {
-    $runID = $runservice->addItemToRun($_GET["editrun"], $_GET["id"]);
+    $runID = $runService->addItemToRun($_GET["editrun"], $_GET["id"]);
     $result["action"] = 'added';
     $result["database"] = 'items';
     $result["id"] = $runID;
@@ -58,26 +55,27 @@ if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["add"
     exit();
 }
 if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["delete"]) && $_GET["delete"] == 'users') {
-    $run = $runservice->removeParticipantFromRun($_GET["editrun"], $_GET["id"]);
+    $event = $runService->removeParticipantFromRun($_GET["editrun"], $_GET["id"]);
     $result["action"] = 'deleted';
     $result["database"] = 'users';
-    $result["id"] = $run;
+    $result["id"] = $event;
     print(json_encode($result));
     exit();
 }
 if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"]) && isset($_GET["delete"]) && $_GET["delete"] == 'items') {
-    $run = $runservice->removeItemFromRun($_GET["editrun"], $_GET["id"]);
+    $event = $runService->removeItemFromRun($_GET["editrun"], $_GET["id"]);
     $result["action"] = 'deleted';
     $result["database"] = 'items';
-    $result["id"] = $run;
+    $result["id"] = $event;
     print(json_encode($result));
     exit();
 }
 $editing = 0;
 if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"])) {
-    $run = $runservice->getRunById($_GET["editrun"]);
-    $slotlist = SlotService::getSlotByEventID($_GET["editrun"]);
-    $itemList = ItemService::listAllItems();
+    /** @var Event $event */
+    $event = $dataService->getEventByEventID($_GET["editrun"]);
+    $slotList = $event->getSlotList();
+    $itemList = $dataService->listAllItems();
     $itemListCount = ceil(count($itemList) / 3);
     $itemList = array(
         array_slice($itemList, 0, $itemListCount),
@@ -85,19 +83,17 @@ if (isset($_GET["editrun"]) && is_numeric($_GET["editrun"])) {
         array_slice($itemList, $itemListCount * 2, $itemListCount),
 
     );
-    $userservice = new UserService();
-    $userList = UserService::getAllUsers();
-    $userListCount = ceil(count($userList) / 3);
-    $userList = array(
-        array_slice($userList, 0, $userListCount),
-        array_slice($userList, $userListCount, $userListCount),
-        array_slice($userList, $userListCount * 2, $userListCount),
+    $userContainer = $dataService->getAllUserInfo();
+    $userContainerCount = ceil(count($userContainer) / 3);
+    $userContainer = array(
+        array_slice($userContainer, 0, $userContainerCount),
+        array_slice($userContainer, $userContainerCount, $userContainerCount),
+        array_slice($userContainer, $userContainerCount * 2, $userContainerCount),
 
     );
     $editing = 1;
 }
 
-$eventlist = $runservice->listAllEvents();
-
+$eventContainer = $dataService->getAllEventInfo();
 
 include("../view/runs.view.php");

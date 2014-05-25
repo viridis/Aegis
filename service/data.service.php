@@ -123,6 +123,12 @@ class DataService
         return $itemDAO->getItemByID($itemID);
     }
 
+    public function listAllItems()
+    {
+        $itemDAO = new ItemDAO();
+        return $itemDAO->getAllItems();
+    }
+
     public function getAllUserInfo()
     {
         $userService = new UserService();
