@@ -1,62 +1,24 @@
 <?php
-require_once("../data/run.DAO.php");
-require_once("../service/event.service.php");
+require_once("../service/data.service.php");
 
 class RunService
 {
-    public function listAllEvents()
+    public function validCreateEvent()
     {
-        $eventService = new EventService();
-        return $eventService->getAllEvents();
+
+        return false;
     }
 
-    public function addRun($name, $date)
+    public function createEventFromPostData()
     {
-        $rundao = new RUNDAO();
-        $run = $rundao->addRun($name, $date);
-        return $run;
+
     }
 
-    public function getRunById($eventID)
+    public function test_input($data)
     {
-        $eventService = new EventService();
-        return $eventService->getAllEvents();
-    }
-
-    public function addParticipantToRun($runID, $userID)
-    {
-        $rundao = new RUNDAO();
-        $run = $rundao->addParticipantToRun($runID, $userID);
-        return $run;
-    }
-
-    public function addItemToRun($runID, $itemID)
-    {
-        $rundao = new RUNDAO();
-        $run = $rundao->addItemToRun($runID, $itemID);
-        return $run;
-    }
-
-    public function removeParticipantFromRun($runID, $userID)
-    {
-        $rundao = new RUNDAO();
-        $run = $rundao->removeParticipantFromRun($runID, $userID);
-        return $run;
-    }
-
-    public function removeItemFromRun($runID, $itemID)
-    {
-        $rundao = new RUNDAO();
-        $run = $rundao->removeItemFromRun($runID, $itemID);
-        return $run;
-    }
-
-    public function sellDrop($amount, $itemId, $value)
-    {
-        $rundao = new RUNDAO();
-        $item = $rundao->sellDrop($amount, $itemId, $value);
-        return $item;
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = htmlspecialchars($data);
+        return $data;
     }
 }
-
-?>
