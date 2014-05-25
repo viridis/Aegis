@@ -49,7 +49,7 @@
                             <input type="text" class="form-control" id="numSlot" name="numSlot" value="12">
                         </div>
                         <label for="recurringEvent" class="col-sm-3 control-label">Recurring?</label>
-                        <input type="checkbox" id="recurringEvent" name="recurringEvent" value="true">
+                        <input type="checkbox" id="recurringEvent" name="recurringEvent" value="1">
 
                         <div style="height: 10px;"></div>
 

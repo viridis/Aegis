@@ -47,7 +47,7 @@ class EventDAO
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
             $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
-            return true;
+            return $dbh->lastInsertId();
         } else {
             $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
             throw new Exception('Failed to add event (' . $event->getEventName() . ')');

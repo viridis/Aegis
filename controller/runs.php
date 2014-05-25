@@ -22,12 +22,11 @@ $featuredLinks = $pageService->generateFeaturedLinks(5);
 $runService = new RunService();
 
 if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["eventName"])) {
-    if ($runService->validCreateEvent()) {
-        $runService->createEventFromPostData();
+    if ($runService->createEventFromPostData()) {
         $notification = array(
             'type' => 'success',
             'title' => 'Success',
-            'message' => 'Added run: '. $_POST["runName"] .'.',
+            'message' => 'Added run: '. $_POST["eventName"] .'.',
         );
     } else {
         $notification = array(

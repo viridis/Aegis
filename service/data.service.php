@@ -36,7 +36,7 @@ class DataService
     public function createEvent($event)
     {
         $eventService = new EventService();
-        $eventService->createEvent($event);
+        return $eventService->createEvent($event);
     }
 
     public function setEventName($event, $eventName)
