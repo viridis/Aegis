@@ -19,50 +19,49 @@
             <form class="form-horizontal" action="runs.php?addRun=1" method="post">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="eventName" class="col-sm-3 control-label">Event Name</label>
+                        <label for="eventName" class="col-sm-4 control-label">Event Name</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="eventName" name="eventName"
                                    placeholder="Event Name">
                         </div>
-                        <label for="eventType" class="col-sm-3 control-label">Event Type</label>
+                        <label for="eventType" class="col-sm-4 control-label">Event Type</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="eventType" name="eventType"
                                    placeholder="Event Type">
                         </div>
-                        <label for="startDate" class="col-sm-3 control-label">Start Date</label>
+                        <label for="startDate" class="col-sm-4 control-label">Date (mm/dd/yyyy)</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <input type="date" class="form-control" id="startDate" name="startDate"
                                    placeholder="Date">
                         </div>
-                        <label for="startTime" class="col-sm-3 control-label">Start Date</label>
+                        <label for="startTime" class="col-sm-4 control-label">Time (hh:mm AM/PM)</label>
 
-                        <div class="col-sm-9">
-                            <input type="time" class="form-control" id="startTime" name="startTime"
-                                   >
+                        <div class="col-sm-8">
+                            <input type="time" class="form-control" id="startTime" name="startTime">
                         </div>
-                        <label for="numSlot" class="col-sm-3 control-label">Num Slots</label>
+                        <label for="numSlot" class="col-sm-4 control-label">Num Slots</label>
 
-                        <div class="col-sm-9">
+                        <div class="col-sm-8">
                             <input type="text" class="form-control" id="numSlot" name="numSlot" value="12">
                         </div>
-                        <label for="recurringEvent" class="col-sm-3 control-label">Recurring?</label>
+                        <label for="recurringEvent" class="col-sm-4 control-label">Recurring?</label>
                         <input type="checkbox" id="recurringEvent" name="recurringEvent" value="1">
 
                         <div style="height: 10px;"></div>
 
                         <div class="recurring" id="recur" style="display: none;">
-                            <label for="dayOfWeek" class="col-sm-3 control-label">Day Of Week</label>
+                            <label for="dayOfWeek" class="col-sm-4 control-label">Day Of Week</label>
 
-                            <div class="col-sm-9">
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control" id="dayOfWeek" name="dayOfWeek"
                                        placeholder="Day Of Week (1-7)">
                             </div>
-                            <label for="hourOfDay" class="col-sm-3 control-label">Hour Of Day</label>
+                            <label for="hourOfDay" class="col-sm-4 control-label">Hour Of Day</label>
 
-                            <div class="col-sm-9">
+                            <div class="col-sm-8">
                                 <input type="text" class="form-control" id="hourOfDay" name="hourOfDay"
                                        placeholder="Hour Of Day (1-24)">
                             </div>
