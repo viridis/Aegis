@@ -20,12 +20,14 @@
         <form action="settings.php?action=edit" method="post" class="form-horizontal" role="form">
             <div class="form-group">
                 <label for="name" class="col-sm-2 control-label">Username</label>
+
                 <div class="col-sm-4">
                     <?php print($user->getName()); ?>
                 </div>
             </div>
             <div class="form-group">
                 <label for="mailname" class="col-sm-2 control-label">Mail Name (ingame)</label>
+
                 <div class="col-sm-4">
                     <input type="text" class="form-control" id="mailname" name="mailname"
                            placeholder="Ingame Mailname" value="<?php print($user->getMailName()) ?>">
@@ -33,6 +35,7 @@
             </div>
             <div class="form-group">
                 <label for="forumname" class="col-sm-2 control-label">Forum Name</label>
+
                 <div class="col-sm-4">
                     <input type="text" class="form-control" id="forumname" name="forumname"
                            placeholder="Forum Name" value="<?php print($user->getForumName()) ?>">
@@ -40,6 +43,7 @@
             </div>
             <div class="form-group">
                 <label for="email" class="col-sm-2 control-label">E-mail</label>
+
                 <div class="col-sm-4">
                     <input type="text" class="form-control" id="email" name="email"
                            placeholder="E-mail Address" value="<?php print($user->getEmail()) ?>">
@@ -57,6 +61,7 @@
         <form action="settings.php?action=password" method="post" class="form-horizontal" role="form">
             <div class="form-group">
                 <label for="mailname" class="col-sm-2 control-label">Old Password</label>
+
                 <div class="col-sm-4">
                     <input type="password" class="form-control" id="oldpassword" name="oldpassword"
                            placeholder="Old Password">
@@ -64,6 +69,7 @@
             </div>
             <div class="form-group">
                 <label for="forumname" class="col-sm-2 control-label">New Password</label>
+
                 <div class="col-sm-4">
                     <input type="password" class="form-control" id="newpassword" name="newpassword"
                            placeholder="New Password">
@@ -71,6 +77,7 @@
             </div>
             <div class="form-group">
                 <label for="email" class="col-sm-2 control-label">Confirm Password</label>
+
                 <div class="col-sm-4">
                     <input type="password" class="form-control" id="confirmpassword" name="confirmpassword"
                            placeholder="Confirm Password">

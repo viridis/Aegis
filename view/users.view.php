@@ -40,11 +40,14 @@
                 <form id="submitEditUser" action="users.php" method="post">
                     <div class="modal-body">
                         <div class="form-group">
-                            <input type="hidden" class="form-control" id="editUserID" name="editUserID" placeholder="User ID">
+                            <input type="hidden" class="form-control" id="editUserID" name="editUserID"
+                                   placeholder="User ID">
                             <label class="control-label">Username: </label>
-                            <input type="text" class="form-control" id="editUserName" name="editUserName" placeholder="User Name">
+                            <input type="text" class="form-control" id="editUserName" name="editUserName"
+                                   placeholder="User Name">
                             <label class="control-label">Mailname: </label>
-                            <input type="text" class="form-control" id="editUserMailName" name="editUserMailName" placeholder="User Mail Name">
+                            <input type="text" class="form-control" id="editUserMailName" name="editUserMailName"
+                                   placeholder="User Mail Name">
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -92,7 +95,9 @@
                             <td><?php print($user->getName()); ?></td>
                             <td><?php print($user->getMailName()); ?></td>
                             <td>
-                                <span class="glyphicon glyphicon-pencil hand" onclick="editUser(<?php print($user->getId()); ?>);" data-toggle="modal" data-target="#editUser"></span>
+                                <span class="glyphicon glyphicon-pencil hand"
+                                      onclick="editUser(<?php print($user->getId()); ?>);" data-toggle="modal"
+                                      data-target="#editUser"></span>
                             </td>
                         </tr>
                     <?php
@@ -107,76 +112,76 @@
 
 
 <?php include('partials/footer.partial.view.php') ?>
-    <script>
-        window.onload = function () {
-            document.getElementById("addUserButton").onclick = function (event) {
-                popup('popAddUser', 'block');
-                setFocus('addUser');
-            }
-            document.getElementById("popupWrapper").onclick = function (event) {
-                popup('popAddUser', 'none');
-                popup('popEditUser', 'none');
-            }
-
+<script>
+    window.onload = function () {
+        document.getElementById("addUserButton").onclick = function (event) {
+            popup('popAddUser', 'block');
+            setFocus('addUser');
         }
-        window.onresize = initializePage;
-
-        //close popup boxes using ESC key.
-        document.onkeydown = function (event) {
-            event = event || window.event;
-            if (event.keyCode == 27) {
-                popup('popAddUser', 'none');
-            }
+        document.getElementById("popupWrapper").onclick = function (event) {
+            popup('popAddUser', 'none');
+            popup('popEditUser', 'none');
         }
 
-        function editUser(id) {
-            makeRequest("users.php?editUser=" + id);
-        }
+    }
+    window.onresize = initializePage;
 
-        function serverResponse(httpRequest) {
-            if (httpRequest.readyState === 4) {
-                if (httpRequest.status === 200) {
-                    result = JSON.parse(httpRequest.responseText);
-                    if (result['action'] == "requestUser") {
-                        document.getElementById("editUserID").value = result['user']['id'];
-                        document.getElementById("editUserName").value = result['user']['name'];
-                        document.getElementById("editUserMailName").value = result['user']['mailName'];
-                    }
-                }
-                else {
-                    alert('There was a problem with the request.');
+    //close popup boxes using ESC key.
+    document.onkeydown = function (event) {
+        event = event || window.event;
+        if (event.keyCode == 27) {
+            popup('popAddUser', 'none');
+        }
+    }
+
+    function editUser(id) {
+        makeRequest("users.php?editUser=" + id);
+    }
+
+    function serverResponse(httpRequest) {
+        if (httpRequest.readyState === 4) {
+            if (httpRequest.status === 200) {
+                result = JSON.parse(httpRequest.responseText);
+                if (result['action'] == "requestUser") {
+                    document.getElementById("editUserID").value = result['user']['id'];
+                    document.getElementById("editUserName").value = result['user']['name'];
+                    document.getElementById("editUserMailName").value = result['user']['mailName'];
                 }
             }
-        }
-
-        function makeRequest(url) {
-            var httpRequest;
-            if (window.XMLHttpRequest) { // Mozilla, Safari, ...
-                httpRequest = new XMLHttpRequest();
+            else {
+                alert('There was a problem with the request.');
             }
-            else if (window.ActiveXObject) { // IE
+        }
+    }
+
+    function makeRequest(url) {
+        var httpRequest;
+        if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+            httpRequest = new XMLHttpRequest();
+        }
+        else if (window.ActiveXObject) { // IE
+            try {
+                httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+            }
+            catch (e) {
                 try {
-                    httpRequest = new ActiveXObject("Msxml2.XMLHTTP");
+                    httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
                 }
                 catch (e) {
-                    try {
-                        httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
-                    }
-                    catch (e) {
-                    }
                 }
             }
-
-            if (!httpRequest) {
-                alert('Giving up :( Cannot create an XMLHTTP instance');
-                return false;
-            }
-            httpRequest.onreadystatechange = function () {
-                serverResponse(httpRequest);
-            };
-            httpRequest.open('POST', url, true);
-            httpRequest.send();
         }
-    </script>
+
+        if (!httpRequest) {
+            alert('Giving up :( Cannot create an XMLHTTP instance');
+            return false;
+        }
+        httpRequest.onreadystatechange = function () {
+            serverResponse(httpRequest);
+        };
+        httpRequest.open('POST', url, true);
+        httpRequest.send();
+    }
+</script>
 </body>
 </html>

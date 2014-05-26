@@ -5,25 +5,26 @@
     <?php include('partials/headers.partial.view.php') ?>
 </head>
 <body role="document">
-    <?php include('partials/navbar.partial.view.php') ?>
-    <div class="container" role="main">
-        <div class="row">
-            <?php
-            foreach ($eventContainer as $event) :
-                /** @var Event $event */
+<?php include('partials/navbar.partial.view.php') ?>
+<div class="container" role="main">
+    <div class="row">
+        <?php
+        foreach ($eventContainer as $event) :
+            /** @var Event $event */
             $dropList = $event->getDropList();
             ?>
 
             <div class="col-sm-4">
                 <div class="panel panel-warning">
-                    <div class="panel-heading" title="<?php print($event->getEventName()); ?> - <?php print($event->getStartDate()); ?>">
+                    <div class="panel-heading"
+                         title="<?php print($event->getEventName()); ?> - <?php print($event->getStartDate()); ?>">
                         <h3 class="panel-title">
                             <div class="pull-right">
                                 <?php
                                 $totalValue = 0;
-                                foreach($dropList as $drop){
+                                foreach ($dropList as $drop) {
                                     /** @var Drop $drop */
-                                    if ($drop->isSold()){
+                                    if ($drop->isSold()) {
                                         $totalValue += $drop->getSoldPrice();
                                     }
                                 }
@@ -51,14 +52,15 @@
                             endforeach; ?>
                         </div>
 
-                       <div class="col-sm-9">
+                        <div class="col-sm-9">
                             <?php foreach ($event->getDropList() as $drop) : ?>
                                 <div class="col-sm-6">
                                     <?php if (strlen($drop->getItemName()) > 10): ?>
                                         <span title="<?php print($drop->getItemName()); ?>">
                                                     <?php print(substr($drop->getItemName(), 0, 10) . '...'); ?>
                                                 </span>
-                                    <?php else :
+                                    <?php
+                                    else :
                                         print($drop->getItemName());
                                     endif; ?>
                                 </div>
@@ -66,30 +68,26 @@
                                     <?php print(number_format($drop->getSoldPrice())); ?>
                                 </div>
                             <?php endforeach; ?>
-                       </div>
+                        </div>
                     </div>
                 </div>
             </div>
-            <?php endforeach; ?>
-        </div>
+        <?php endforeach; ?>
+    </div>
 
 
-
-
-
-
-<!--        <br>
+    <!--        <br>
         <?php
-        //foreach ($eventlist as $event) {
-            ?>
+    //foreach ($eventlist as $event) {
+    ?>
             <table class="featured-node event-item">
                 <tr>
 
                     <td class="event-itemlist">
                         <table style="width: 100%">
                             <?php
-                            //foreach ($event->getDrops() as $drop) {
-                                ?>
+    //foreach ($event->getDrops() as $drop) {
+    ?>
                                 <tr>
                                     <td>
                                         <?php //if (strlen($drop->getName()) > 15): ?>
@@ -97,29 +95,30 @@
                                                     <?php //print(substr($drop->getName(), 0, 15) . '...'); ?>
                                                 </span>
                                         <?php
-                                        //else: print($drop->getName());
-                                       // endif; ?>
+    //else: print($drop->getName());
+    // endif;
+    ?>
                                     </td>
                                     <td style="text-align: right; font-weight: bold;padding-left: 5px;">
                                         <?php //print(number_format($drop->getDropValue())); ?>
                                     </td>
                                 </tr>
                             <?php
-                         //   }
-                            ?>
+    //   }
+    ?>
                         </table>
 
                     </td>
                 </tr>
             </table>
         <?php
-     //   }
-        ?>
+    //   }
+    ?>
 -->
-        <div style="clear:both;"></div>
-    </div>
+    <div style="clear:both;"></div>
+</div>
 
 
-    <?php include('partials/footer.partial.view.php') ?>
+<?php include('partials/footer.partial.view.php') ?>
 </body>
 </html>

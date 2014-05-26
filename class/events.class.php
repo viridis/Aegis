@@ -112,4 +112,39 @@ class Event
     {
         $this->eventName = $eventName;
     }
+
+    public function setEventType($eventType)
+    {
+        $this->eventType = $eventType;
+    }
+
+    public function setStartDate($startDate)
+    {
+        $this->startDate = $startDate;
+    }
+
+    public function setCompleteDate($completeDate)
+    {
+        $this->completeDate = $completeDate;
+    }
+
+    public function setEventState($eventState)
+    {
+        $this->eventState = $eventState;
+    }
+
+    public function setRecurringEvent($recurringEvent)
+    {
+        $this->recurringEvent = $recurringEvent;
+    }
+
+    public function setDayOfWeek($dayOfWeek)
+    {
+        $this->dayOfWeek = $dayOfWeek;
+    }
+
+    public function setHourOfDay($hourOfDay)
+    {
+        $this->hourOfDay = $hourOfDay;
+    }
 }

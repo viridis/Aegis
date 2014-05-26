@@ -20,13 +20,35 @@ $usefulLinks = $pageService->generateUsefulLinks(5);
 $featuredLinks = $pageService->generateFeaturedLinks(5);
 
 $runService = new RunService();
+$editing = 0;
+
+if (isset($_GET["editRun"]) && is_numeric($_GET["editRun"]) && isset($_POST["eventName"])) {
+    if ($runService->updateEventFromPostData()){
+        $notification = array(
+            'type' => 'success',
+            'title' => 'Success',
+            'message' => 'Successfully updated event: ' . $_POST["eventID"] . '.',
+        );
+    } else {
+        $notification = array(
+            'type' => 'danger',
+            'title' => 'Error',
+            'message' => 'Failed to update event ' . $_POST["eventID"] . '.',
+        );
+    }
+}
+
+if (isset($_GET["editRun"]) && is_numeric($_GET["editRun"])) {
+    $editing = 1;
+    $eventEditing = $dataService->getEventByEventID($_GET["editRun"]);
+}
 
 if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["eventName"])) {
     if ($runService->createEventFromPostData()) {
         $notification = array(
             'type' => 'success',
             'title' => 'Success',
-            'message' => 'Added run: '. $_POST["eventName"] .'.',
+            'message' => 'Added event: ' . $_POST["eventName"] . '.',
         );
     } else {
         $notification = array(

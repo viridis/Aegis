@@ -3,7 +3,7 @@ require_once("../service/data.service.php");
 
 class RunService
 {
-    public function validCreateEvent()
+    public function validEventData()
     {
         if (empty($_POST["eventName"])) {
             return false;
@@ -17,7 +17,7 @@ class RunService
         if (empty($_POST["startTime"])) {
             return false;
         }
-        if (empty($_POST["numSlot"])) {
+        if (empty($_POST["numSlot"]) && ($_GET["addRun"] == 1)) {
             return false;
         }
         if (!empty($_POST["recurringEvent"])) {
@@ -31,7 +31,7 @@ class RunService
     public function createEventFromPostData()
     {
         $dataService = new DataService();
-        if ($this->validCreateEvent()) {
+        if ($this->validEventData()) {
             $eventName = $this->test_input($_POST["eventName"]);
             $eventType = $this->test_input($_POST["eventType"]);
             $startDate = $this->test_input($_POST["startDate"]);
@@ -62,6 +62,44 @@ class RunService
         } else {
             return false;
         }
+    }
+
+    public function updateEventFromPostData()
+    {
+        var_dump($_POST);
+        $dataService = new DataService();
+        if ($this->validEventData()) {
+            /** @var Event $event */
+            $event = $dataService->getEventByEventID($_GET["editRun"]);
+            $event->setEventName($this->test_input($_POST["eventName"]));
+            $event->setEventType($this->test_input($_POST["eventType"]));
+            $startDate = $this->test_input($_POST["startDate"]);
+            $startTime = $this->test_input($_POST["startTime"]);
+            $startDate = $startDate . ' ' . $startTime;
+            $event->setStartDate($startDate);
+            $event->setRecurringEvent($this->test_input($_POST["recurringEvent"]));
+            if ($event->isRecurringEvent()) {
+                $event->setDayOfWeek($this->test_input($_POST["dayOfWeek"]));
+                $event->setHourOfDay($this->test_input($_POST["hourOfDay"]));
+            } else {
+                $event->setDayOfWeek(0);
+                $event->setHourOfDay(0);
+            }
+            try {
+                $dataService->updateEvent($event);
+                foreach($event->getSlotList() as $slot)
+                {
+                    /** @var Slot $slot */
+                    $slot->setSlotClass($this->test_input($_POST["slotEdit_" . $slot->getSlotID()]));
+                    $dataService->updateSlot($slot);
+                }
+            } catch (Exception $e) {
+                echo 'Caught exception' . $e->getMessage();
+                return false;
+            }
+            return true;
+        }
+        return false;
     }
 
 

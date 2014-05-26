@@ -28,7 +28,7 @@
                         <th>Mailname</th>
                         <th>Payout</th>
                         <?php if (isset($allowedToPayOut) && $allowedToPayOut): ?>
-                        <th></th>
+                            <th></th>
                         <?php endif; ?>
                     </tr>
                     </thead>
