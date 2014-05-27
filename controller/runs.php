@@ -3,12 +3,14 @@ require_once("../service/page.service.php");
 require_once("../service/runs.service.php");
 require_once("../service/data.service.php");
 
-if (!$_SESSION["userID"]) {
+$pageService = new PageService();
+$dataService = new DataService();
+$runService = new RunService();
+
+if (!$pageService->authorizedUser($_SESSION["userID"], 10)) {
     header("location: ./home.php");
 }
 
-$pageService = new PageService();
-$dataService = new DataService();
 $currentPageID = "Manage Events";
 $allowedToCloseEvent = true;
 if (isset($_SESSION["userID"])) {
@@ -20,7 +22,6 @@ if (isset($_SESSION["userID"])) {
 $usefulLinks = $pageService->generateUsefulLinks(5);
 $featuredLinks = $pageService->generateFeaturedLinks(5);
 
-$runService = new RunService();
 $editing = 0;
 
 if (isset($_GET["action"]) && $_GET["action"] == ("openEvent")) {

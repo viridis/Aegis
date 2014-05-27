@@ -35,4 +35,16 @@ class PageService
         $user = $dataService->getUserByUserID($userID);
         return $user;
     }
+
+    public function authorizedUser($userID, $requiredRoleLevel)
+    {
+        $dataService = new DataService();
+        /** @var User $user */
+        $user = $dataService->getUserByUserID($userID);
+        if ($user->getRoleLevel() < $requiredRoleLevel)
+        {
+            return false;
+        }
+        return true;
+    }
 }

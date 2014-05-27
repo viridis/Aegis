@@ -3,6 +3,7 @@ require_once("../service/data.service.php");
 
 class RunService
 {
+
     public function validEventData()
     {
         if (empty($_POST["eventName"])) {
