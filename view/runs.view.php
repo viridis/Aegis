@@ -192,7 +192,6 @@
         <div class="col-sm-6 col-md-offset-3">
             <table class="table table-condensed table-hover table-striped table-bordered">
                 <thead>
-                <a href="/any/url/delete.php?ref=ID" data-confirm="Are you sure you want to delete?">Delete</a>
                 <tr>
                     <th>#</th>
                     <th>Event</th>
