@@ -36,26 +36,24 @@
                     $i = 0;
                     foreach ($userContainer as $user) {
                         /** @var User $user */
-                        if ($user != 0) {
-                            $i++;
-                            ?>
-                            <tr>
-                                <td><?php print($i); ?></td>
-                                <td><?php print($user->getUserLogin()); ?></td>
-                                <td><?php print($user->getMailChar()); ?></td>
-                                <td><?php print(number_format($user->getPayout())); ?></td>
-                                <?php if (isset($allowedToPayOut) && $allowedToPayOut): ?>
-                                    <td>
-                                        <form action="payout.php?action=payout" method="post">
-                                            <input name="userId" id="userId" type="hidden"
-                                                   value="<?php print($user->getUserID()); ?>">
-                                            <button type="submit" class="btn btn-xs btn-success">Pay Out</button>
-                                        </form>
-                                    </td>
-                                <?php endif; ?>
-                            </tr>
-                        <?php
-                        }
+                        $i++;
+                        ?>
+                        <tr>
+                            <td><?php print($i); ?></td>
+                            <td><?php print($user->getUserLogin()); ?></td>
+                            <td><?php print($user->getMailChar()); ?></td>
+                            <td><?php print(number_format($user->getPayout())); ?></td>
+                            <?php if (isset($allowedToPayOut) && $allowedToPayOut): ?>
+                                <td>
+                                    <form action="payout.php?action=payout" method="post">
+                                        <input name="userId" id="userId" type="hidden"
+                                               value="<?php print($user->getUserID()); ?>">
+                                        <button type="submit" class="btn btn-xs btn-success">Pay Out</button>
+                                    </form>
+                                </td>
+                            <?php endif; ?>
+                        </tr>
+                    <?php
                     }
                     ?>
                 </table>

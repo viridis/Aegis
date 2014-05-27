@@ -33,19 +33,25 @@ class UserDAO
         $sql = "INSERT INTO useraccount VALUES (NULL, :userLogin, :userPassword, :roleLevel, :email, :mailChar, :forumAccount, 0);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':userLogin', $user->getUserLogin());
-        $stmt->bindParam(':userPassword', $user->getUserPassword());
-        $stmt->bindParam(':roleLevel', $user->getRoleLevel());
-        $stmt->bindParam(':email', $user->getEmail());
-        $stmt->bindParam(':mailChar', $user->getMailChar());
-        $stmt->bindParam(':forumAccount', $user->getForumAccount());
+        $userLogin = $user->getUserLogin();
+        $stmt->bindParam(':userLogin', $userLogin);
+        $userPassword = $user->getUserPassword();
+        $stmt->bindParam(':userPassword', $userPassword);
+        $roleLevel = $user->getRoleLevel();
+        $stmt->bindParam(':roleLevel', $roleLevel);
+        $email = $user->getEmail();
+        $stmt->bindParam(':email', $email);
+        $mailChar = $user->getMailChar();
+        $stmt->bindParam(':mailChar', $mailChar);
+        $forumAccount = $user->getForumAccount();
+        $stmt->bindParam(':forumAccount', $forumAccount);
         $binds = array(
-            ":userLogin" => $user->getUserLogin(),
-            ":userPassword" => $user->getUserPassword(),
-            ":roleLevel" => $user->getRoleLevel(),
-            ":email" => $user->getEmail(),
-            ":mailChar" => $user->getMailChar(),
-            ":forumAccount" => $user->getForumAccount(),
+            ":userLogin" => $userLogin,
+            ":userPassword" => $userPassword,
+            ":roleLevel" => $roleLevel,
+            ":email" => $email,
+            ":mailChar" => $mailChar,
+            ":forumAccount" => $forumAccount,
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
@@ -53,7 +59,7 @@ class UserDAO
             return true;
         }
         $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-        throw new Exception('Failed to add user. (' . $user->getUserLogin() . ')');
+        throw new Exception('Failed to add user. (' . $userLogin . ')');
     }
 
     public function updateUser($user)
@@ -70,23 +76,31 @@ class UserDAO
                     WHERE userID = :userID;';
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':userLogin', $user->getUserLogin());
-        $stmt->bindParam(':userPassword', $user->getUserPassword());
-        $stmt->bindParam(':roleLevel', $user->getRoleLevel());
-        $stmt->bindParam(':email', $user->getEmail());
-        $stmt->bindParam(':mailChar', $user->getMailChar());
-        $stmt->bindParam(':forumAccount', $user->getForumAccount());
-        $stmt->bindParam(':payout', $user->getPayout());
-        $stmt->bindParam(':userID', $user->getUserID());
+        $userLogin = $user->getUserLogin();
+        $stmt->bindParam(':userLogin', $userLogin);
+        $userPassword = $user->getUserPassword();
+        $stmt->bindParam(':userPassword', $userPassword);
+        $roleLevel = $user->getRoleLevel();
+        $stmt->bindParam(':roleLevel', $roleLevel);
+        $email = $user->getEmail();
+        $stmt->bindParam(':email', $email);
+        $mailChar = $user->getMailChar();
+        $stmt->bindParam(':mailChar', $mailChar);
+        $forumAccount = $user->getForumAccount();
+        $stmt->bindParam(':forumAccount', $forumAccount);
+        $payout = $user->getPayout();
+        $stmt->bindParam(':payout', $payout);
+        $userID = $user->getUserID();
+        $stmt->bindParam(':userID', $userID);
         $binds = array(
-            ":userLogin" => $user->getUserLogin(),
-            ":userPassword" => $user->getUserPassword(),
-            ":roleLevel" => $user->getRoleLevel(),
-            ":email" => $user->getEmail(),
-            ":mailChar" => $user->getMailChar(),
-            ":forumAccount" => $user->getForumAccount(),
-            ":payout" => $user->getPayout(),
-            ":userID" => $user->getUserID(),
+            ":userLogin" => $userLogin,
+            ":userPassword" => $userPassword,
+            ":roleLevel" => $roleLevel,
+            ":email" => $email,
+            ":mailChar" => $mailChar,
+            ":forumAccount" => $forumAccount,
+            ":payout" => $payout,
+            ":userID" => $userID,
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
@@ -94,7 +108,7 @@ class UserDAO
             return true;
         }
         $logDAO->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
-        throw new Exception('Failed to update user. (' . $user->getUserLogin() . ')');
+        throw new Exception('Failed to update user. (' . $userLogin . ')');
     }
 
     public function getUserIDByLoginAndPassword($userLogin, $userPassword)
@@ -106,6 +120,7 @@ class UserDAO
         $stmt->bindParam(':userPassword', $userPassword);
         $stmt->execute();
         $userAccountResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return $userAccountResults[0]["userID"];
+        if (isset($userAccountResults[0]))
+            return $userAccountResults[0]["userID"];
     }
 }

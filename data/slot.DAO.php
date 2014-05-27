@@ -24,11 +24,13 @@ class SlotDAO
         $sqlInsert = "INSERT INTO slots VALUES(:eventID, NULL, :slotClass, FALSE, NULL, NULL);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlInsert);
-        $stmt->bindParam(':eventID', $slot->getEventID());
-        $stmt->bindParam(':slotClass', $slot->getSlotClass());
+        $eventID = $slot->getEventID();
+        $stmt->bindParam(':eventID', $eventID);
+        $slotClass = $slot->getSlotClass();
+        $stmt->bindParam(':slotClass', $slotClass);
         $binds = array(
-            ":eventID" => $slot->getEventID(),
-            ":slotClass" => $slot->getSlotClass()
+            ":eventID" => $eventID,
+            ":slotClass" => $slotClass
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -36,7 +38,7 @@ class SlotDAO
             return true;
         } else {
             $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to add slot to eventID (' . $slot->getEventID() . ')');
+            throw new Exception('Failed to add slot to eventID (' . $eventID . ')');
         }
     }
 
@@ -87,19 +89,25 @@ class SlotDAO
                       WHERE slotID = :slotID";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlSlot);
-        $stmt->bindParam(':eventID', $slot->getEventID());
-        $stmt->bindParam(':slotClass', $slot->getSlotClass());
-        $stmt->bindParam(':taken', $slot->isTaken());
-        $stmt->bindParam(':takenUserID', $slot->getTakenUserID());
-        $stmt->bindParam(':takenCharID', $slot->getTakenCharID());
-        $stmt->bindParam(':slotID', $slot->getSlotID());
+        $eventID = $slot->getEventID();
+        $stmt->bindParam(':eventID', $eventID);
+        $slotClass = $slot->getSlotClass();
+        $stmt->bindParam(':slotClass', $slotClass);
+        $isTaken = $slot->isTaken();
+        $stmt->bindParam(':taken', $isTaken);
+        $takenUserID = $slot->getTakenUserID();
+        $stmt->bindParam(':takenUserID', $takenUserID);
+        $takenCharID = $slot->getTakenCharID();
+        $stmt->bindParam(':takenCharID', $takenCharID);
+        $slotID = $slot->getSlotID();
+        $stmt->bindParam(':slotID', $slotID);
         $binds = array(
-            ":eventID" => $slot->getEventID(),
-            ":slotClass" => $slot->getSlotClass(),
-            ":taken" => $slot->isTaken(),
-            ":takenUserID" => $slot->getTakenUserID(),
-            ":takenCharID" => $slot->getTakenCharID(),
-            ":slotID" => $slot->getSlotID()
+            ":eventID" => $eventID,
+            ":slotClass" => $slotClass,
+            ":taken" => $isTaken,
+            ":takenUserID" => $takenUserID,
+            ":takenCharID" => $takenCharID,
+            ":slotID" => $slotID
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -107,7 +115,7 @@ class SlotDAO
             return true;
         } else {
             $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to update slot (' . $slot->getSlotID() . ')');
+            throw new Exception('Failed to update slot (' . $slotID . ')');
         }
     }
 }

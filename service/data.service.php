@@ -150,7 +150,9 @@ class DataService
         $characterService = new CharacterService();
         $completeCharacters = $characterService->getCharactersByUserID($userID);
         $completeUsers = $this->createUserArray($incompleteUsers, $incompleteGameAccounts, $completeCharacters);
-        return $completeUsers[0];
+        if (isset($completeUsers[0])){
+            return $completeUsers[0];
+        }
     }
 
     public function getUserByLoginAndPassword($userLogin, $userPassword)
@@ -250,12 +252,12 @@ class DataService
             $user = User::create($row['userID'], $row['userLogin'], $row['email'], $row['mailChar'],
                 $row['userPassword'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
             $gameAccountList = array();
-            while ($gameAccountResults[$gameAccountPointer]["userID"] <= $row["userID"] && isset($gameAccountResults[$gameAccountPointer])) {
+            while (isset($gameAccountResults[$gameAccountPointer]) && $gameAccountResults[$gameAccountPointer]["userID"] <= $row["userID"]) {
                 /** @var GameAccount $gameAccount */
                 $gameAccount = GameAccount::create($gameAccountResults[$gameAccountPointer]["userID"],
                     $gameAccountResults[$gameAccountPointer]["accountID"], $gameAccountResults[$gameAccountPointer]["cooldown"]);
                 $characterList = array();
-                while ($characterResults[$characterPointer]["accountID"] == $gameAccountResults[$gameAccountPointer]["accountID"]) {
+                while (isset($characterResults[$characterPointer]["accountID"]) && $characterResults[$characterPointer]["accountID"] == $gameAccountResults[$gameAccountPointer]["accountID"]) {
                     $character = Character::create($characterResults[$characterPointer]["accountID"],
                         $characterResults[$characterPointer]["charID"], $characterResults[$characterPointer]["charName"],
                         $characterResults[$characterPointer]["cooldown"], $characterResults[$characterPointer]["charClass"],
@@ -290,7 +292,7 @@ class DataService
             $event = Event::create($row["eventID"], $row["eventType"], $row["startDate"], $row["completeDate"],
                 $row["eventState"], $row["recurringEvent"], $row["dayOfWeek"], $row["hourOfDay"], $row["eventName"]);
             $dropList = array();
-            while ($dropResults[$dropPointer]["eventID"] == $row["eventID"]) {
+            while (isset($dropResults[$dropPointer]["eventID"]) && $dropResults[$dropPointer]["eventID"] == $row["eventID"]) {
                 /** @var Drop $drop */
                 $drop = Drop::create($dropResults[$dropPointer]["eventID"], $dropResults[$dropPointer]["dropID"],
                     $dropResults[$dropPointer]["holdingUserID"], $dropResults[$dropPointer]["sold"],
@@ -303,7 +305,7 @@ class DataService
             $event->setDropList($dropList);
 
             $slotList = array();
-            while ($slotResults[$slotPointer]["eventID"] == $row["eventID"]) {
+            while (isset($slotResults[$slotPointer]["eventID"]) && $slotResults[$slotPointer]["eventID"] == $row["eventID"]) {
                 /** @var Slot $slot */
                 $slot = Slot::create($slotResults[$slotPointer]["eventID"], $slotResults[$slotPointer]["slotID"],
                     $slotResults[$slotPointer]["slotClass"], $slotResults[$slotPointer]["taken"],

@@ -57,6 +57,5 @@ class ItemDAO
         }
         $logdao->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
         throw new Exception('Failed to add item. (' . $name . ')');
-        return false;
     }
 }

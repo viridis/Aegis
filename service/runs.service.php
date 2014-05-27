@@ -17,7 +17,7 @@ class RunService
         if (empty($_POST["startTime"])) {
             return false;
         }
-        if (empty($_POST["numSlot"]) && ($_GET["addRun"] == 1)) {
+        if (empty($_POST["numSlot"]) && (isset($_GET["addRun"])) && ($_GET["addRun"]) == 1) {
             return false;
         }
         if (!empty($_POST["recurringEvent"])) {
@@ -48,7 +48,6 @@ class RunService
             }
             try {
                 $newEvent = new Event(NULL, $eventType, $startDate, NULL, NULL, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName);
-
                 $eventID = $dataService->createEvent($newEvent);
                 $event = $dataService->getEventByEventID($eventID);
                 for ($i = 0; $i < $numSlot; $i++) {
@@ -66,7 +65,6 @@ class RunService
 
     public function updateEventFromPostData()
     {
-        var_dump($_POST);
         $dataService = new DataService();
         if ($this->validEventData()) {
             /** @var Event $event */
@@ -77,11 +75,12 @@ class RunService
             $startTime = $this->test_input($_POST["startTime"]);
             $startDate = $startDate . ' ' . $startTime;
             $event->setStartDate($startDate);
-            $event->setRecurringEvent($this->test_input($_POST["recurringEvent"]));
-            if ($event->isRecurringEvent()) {
+            if (isset($_POST["recurringEvent"])){
+                $event->setRecurringEvent($this->test_input($_POST["recurringEvent"]));
                 $event->setDayOfWeek($this->test_input($_POST["dayOfWeek"]));
                 $event->setHourOfDay($this->test_input($_POST["hourOfDay"]));
             } else {
+                $event->setRecurringEvent(false);
                 $event->setDayOfWeek(0);
                 $event->setHourOfDay(0);
             }
@@ -102,8 +101,43 @@ class RunService
         return false;
     }
 
+    public function closeEventFromPostData()
+    {
+        $dataService = new DataService();
+        $eventID = $this->test_input($_POST["eventID"]);
+        /** @var Event $event */
+        $event = $dataService->getEventByEventID($eventID);
+        $startDate = $event->getStartDate();
+        $event->setCompleteDate(date("Y-m-d H:i:s"));
+        $event->setEventState(1);
+        try {
+            $dataService->updateEvent($event);
+        } catch (Exception $e){
+            echo 'Caught exception' . $e->getMessage();
+            return false;
+        }
+        return true;
+    }
 
-    public function test_input($data)
+    public function openEventFromPostData()
+    {
+        $dataService = new DataService();
+        $eventID = $this->test_input($_POST["eventID"]);
+        /** @var Event $event */
+        $event = $dataService->getEventByEventID($eventID);
+        $event->setCompleteDate(NULL);
+        $event->setEventState(0);
+        try {
+            $dataService->updateEvent($event);
+        } catch (Exception $e){
+            echo 'Caught exception' . $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
+
+    private function test_input($data)
     {
         $data = trim($data);
         $data = stripslashes($data);

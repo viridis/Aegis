@@ -23,11 +23,13 @@ class DropDAO
         $sqlInsert = "INSERT INTO drops VALUES(:eventID, NULL, NULL, FALSE, NULL, :itemID);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlInsert);
-        $stmt->bindParam(':eventID', $drop->getEventID());
-        $stmt->bindParam(':itemID', $drop->getItemID());
+        $eventID = $drop->getEventID();
+        $stmt->bindParam(':eventID', $eventID);
+        $itemID = $drop->getItemID();
+        $stmt->bindParam(':itemID', $itemID);
         $binds = array(
-            ":eventID" => $drop->getEventID(),
-            ":itemID" => $drop->getItemID(),
+            ":eventID" => $eventID,
+            ":itemID" => $itemID,
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -35,7 +37,7 @@ class DropDAO
             return true;
         } else {
             $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to create drop for eventID (' . $drop->getEventID() . ')');
+            throw new Exception('Failed to create drop for eventID (' . $eventID . ')');
         }
     }
 
@@ -65,19 +67,25 @@ class DropDAO
                         WHERE dropID = :dropID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlUpdate);
-        $stmt->bindParam(':eventID', $drop->getEventID());
-        $stmt->bindParam(':holdingUserID', $drop->getHoldingUserID());
-        $stmt->bindParam(':sold', $drop->isSold());
-        $stmt->bindParam(':soldPrice', $drop->getSoldPrice());
-        $stmt->bindParam(':itemID', $drop->getItemID());
-        $stmt->bindParam(':dropID', $drop->getDropID());
+        $eventID = $drop->getEventID();
+        $stmt->bindParam(':eventID', $eventID);
+        $holdingUserID = $drop->getHoldingUserID();
+        $stmt->bindParam(':holdingUserID', $holdingUserID);
+        $isSold = $drop->isSold();
+        $stmt->bindParam(':sold', $isSold);
+        $soldPrice = $drop->getSoldPrice();
+        $stmt->bindParam(':soldPrice', $soldPrice);
+        $itemID = $drop->getItemID();
+        $stmt->bindParam(':itemID', $itemID);
+        $dropID = $drop->getDropID();
+        $stmt->bindParam(':dropID', $dropID);
         $binds = array(
-            ":eventID" => $drop->getEventID(),
-            ":holdingUserID" => $drop->getHoldingUserID(),
-            ":sold" => $drop->isSold(),
-            ":soldPrice" => $drop->getSoldPrice(),
-            ":itemID" => $drop->getItemID(),
-            ":dropID" => $drop->getDropID(),
+            ":eventID" => $eventID,
+            ":holdingUserID" => $holdingUserID,
+            ":sold" => $isSold,
+            ":soldPrice" => $soldPrice,
+            ":itemID" => $itemID,
+            ":dropID" => $dropID,
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -85,7 +93,7 @@ class DropDAO
             return true;
         } else {
             $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to update drop (' . $drop->getDropID() . ')');
+            throw new Exception('Failed to update drop (' . $dropID . ')');
         }
     }
 

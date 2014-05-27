@@ -30,19 +30,25 @@ class EventDAO
         $sql = "INSERT INTO events VALUES(NULL, :eventType, :startDate, NULL, 0, :recurringEvent, :dayOfWeek, :hourOfDay, :eventName);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
-        $stmt->bindParam(':eventType', $event->getEventType());
-        $stmt->bindParam(':startDate', $event->getStartDate());
-        $stmt->bindParam(':eventName', $event->getEventName());
-        $stmt->bindParam(':recurringEvent', $event->isRecurringEvent());
-        $stmt->bindParam(':dayOfWeek', $event->getDayOfWeek());
-        $stmt->bindParam(':hourOfDay', $event->getHourOfDay());
+        $eventType = $event->getEventType();
+        $stmt->bindParam(':eventType', $eventType);
+        $startDate = $event->getStartDate();
+        $stmt->bindParam(':startDate', $startDate);
+        $eventName = $event->getEventName();
+        $stmt->bindParam(':eventName', $eventName);
+        $isRecurringEvent = $event->isRecurringEvent();
+        $stmt->bindParam(':recurringEvent', $isRecurringEvent);
+        $dayOfWeek = $event->getDayOfWeek();
+        $stmt->bindParam(':dayOfWeek', $dayOfWeek);
+        $hourOfDay = $event->getHourOfDay();
+        $stmt->bindParam(':hourOfDay', $hourOfDay);
         $binds = array(
-            ":eventType" => $event->getEventType(),
-            ":startDate" => $event->getStartDate(),
-            ":recurringEvent" => $event->isRecurringEvent(),
-            ":dayOfWeek" => $event->getDayOfWeek(),
-            ":hourOfDay" => $event->getHourOfDay(),
-            ":eventName" => $event->getEventName()
+            ":eventType" => $eventType,
+            ":startDate" => $startDate,
+            ":recurringEvent" => $isRecurringEvent,
+            ":dayOfWeek" => $dayOfWeek,
+            ":hourOfDay" => $hourOfDay,
+            ":eventName" => $eventName
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -50,7 +56,7 @@ class EventDAO
             return $dbh->lastInsertId();
         } else {
             $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to add event (' . $event->getEventName() . ')');
+            throw new Exception('Failed to add event (' . $eventName . ')');
         }
     }
 
@@ -87,25 +93,34 @@ class EventDAO
                         WHERE eventID = :eventID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlUpdate);
-        $stmt->bindParam(':eventType', $event->getEventType());
-        $stmt->bindParam(':startDate', $event->getStartDate());
-        $stmt->bindParam(':completeDate', $event->getCompleteDate());
-        $stmt->bindParam(':eventState', $event->getEventState());
-        $stmt->bindParam(':recurringEvent', $event->isRecurringEvent());
-        $stmt->bindParam(':dayOfWeek', $event->getDayOfWeek());
-        $stmt->bindParam(':hourOfDay', $event->getHourOfDay());
-        $stmt->bindParam(':eventName', $event->getEventName());
-        $stmt->bindParam(':eventID', $event->getEventID());
+        $eventType = $event->getEventType();
+        $stmt->bindParam(':eventType', $eventType);
+        $startDate = $event->getStartDate();
+        $stmt->bindParam(':startDate', $startDate);
+        $completeDate = $event->getCompleteDate();
+        $stmt->bindParam(':completeDate', $completeDate);
+        $eventState = $event->getEventState();
+        $stmt->bindParam(':eventState', $eventState);
+        $isRecurringEvent = $event->isRecurringEvent();
+        $stmt->bindParam(':recurringEvent', $isRecurringEvent);
+        $dayOfWeek = $event->getDayOfWeek();
+        $stmt->bindParam(':dayOfWeek', $dayOfWeek);
+        $hourOfDay = $event->getHourOfDay();
+        $stmt->bindParam(':hourOfDay', $hourOfDay);
+        $eventName = $event->getEventName();
+        $stmt->bindParam(':eventName', $eventName);
+        $eventID = $event->getEventID();
+        $stmt->bindParam(':eventID', $eventID);
         $binds = array(
-            ":eventType" => $event->getEventType(),
-            ":startDate" => $event->getStartDate(),
-            ":completeDate" => $event->getCompleteDate(),
-            ":eventState" => $event->getEventState(),
-            ":recurringEvent" => $event->isRecurringEvent(),
-            ":dayOfWeek" => $event->getDayOfWeek(),
-            ":hourOfDay" => $event->getHourOfDay(),
-            ":eventName" => $event->getEventName(),
-            ":eventID" => $event->getEventID(),
+            ":eventType" => $eventType,
+            ":startDate" => $startDate,
+            ":completeDate" => $completeDate,
+            ":eventState" => $eventState,
+            ":recurringEvent" => $isRecurringEvent,
+            ":dayOfWeek" => $dayOfWeek,
+            ":hourOfDay" => $hourOfDay,
+            ":eventName" => $eventName,
+            ":eventID" => $eventID,
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
@@ -113,6 +128,6 @@ class EventDAO
             return true;
         }
         $logDAO->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
-        throw new Exception('Failed to update event. (' . $event->getEventID() . ')');
+        throw new Exception('Failed to update event. (' . $eventID . ')');
     }
 }

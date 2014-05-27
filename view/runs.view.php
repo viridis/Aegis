@@ -42,7 +42,7 @@
                         <div class="col-sm-8">
                             <input type="time" class="form-control" id="startTime" name="startTime">
                         </div>
-                        <label for="numSlot" class="col-sm-4 control-label" >Num Slots</label>
+                        <label for="numSlot" class="col-sm-4 control-label">Num Slots</label>
 
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="numSlot" name="numSlot" value="12" readonly>
@@ -85,94 +85,99 @@
 <div style="height: 20px;"></div>
 
 <?php if ($editing == 1): ?>
-<div class="jumbotron">
-    <h3>
-        <?php
-        /** @var Event $eventEditing */
-        print("Editing event (Event ID: ");
-        print($eventEditing->getEventID());
-        print(" - ");
-        print($eventEditing->getEventName());
-        print(")");
-        ?>
-    </h3>
-    <br>
+    <div class="jumbotron">
+        <h3>
+            <?php
+            /** @var Event $eventEditing */
+            print("Editing event (Event ID: ");
+            print($eventEditing->getEventID());
+            print(" - ");
+            print($eventEditing->getEventName());
+            print(")");
+            ?>
+        </h3>
+        <br>
 
-    <div class="container">
-        <form class="form-horizontal" action="runs.php?editRun=<?php print $eventEditing->getEventID() ?>"
-              method="post">
-            <div class="form-group">
-                <label for="eventNameEdit" class="col-sm-4 control-label">Event Name</label>
-
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" id="eventNameEdit" name="eventName"
-                           placeholder="Event Name" value="<?php print $eventEditing->getEventName() ?>">
-                </div>
-                <label for="eventTypeEdit" class="col-sm-4 control-label">Event Type</label>
-
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" id="eventTypeEdit" name="eventType"
-                           placeholder="Event Type" value="<?php print $eventEditing->getEventType() ?>">
-                </div>
-                <label for="startDateEdit" class="col-sm-4 control-label">Date (mm/dd/yyyy)</label>
-
-                <div class="col-sm-8">
-                    <input type="date" class="form-control" id="startDateEdit" name="startDate"
-                           placeholder="Date" value="<?php print explode(' ', $eventEditing->getStartDate())[0] ?>">
-                </div>
-                <label for="startTimeEdit" class="col-sm-4 control-label">Time (hh:mm AM/PM)</label>
-
-                <div class="col-sm-8">
-                    <input type="time" class="form-control" id="startTimeEdit" name="startTime"
-                           value="<?php print explode(' ', $eventEditing->getStartDate())[1] ?>">
-                </div>
-
-                <?php $slotNum = 0;
-                foreach ($eventEditing->getSlotList() as $slot) :
-                    $slotNum++;
-                    /** @var Slot $slot */ ?>
-                <label for="slotEdit_<?php print $slot->getSlotID() ?>" class="col-sm-4 control-label">Slot <?php print $slotNum ?> Class</label>
-
-                <div class="col-sm-8">
-                    <input type="text" class="form-control" id="slotEdit_<?php print $slot->getSlotID() ?>" name="slotEdit_<?php print $slot->getSlotID() ?>" value="<?php print $slot->getSlotClass() ?>">
-                </div>
-                <?php endforeach; ?>
-                <div><h5 style="padding-left: 200px">note: set class to -1 disable/reserve</h5></div>
-                <label for="recurringEventEdit" class="col-sm-4 control-label">Recurring?</label>
-                <input type="checkbox" id="recurringEventEdit" name="recurringEvent"
-                       value="1" <?php if ($eventEditing->isRecurringEvent()) echo 'checked' ?> >
-
-                <div style="height: 10px;"></div>
-
-                <div id="recurEdit" <?php if (!$eventEditing->isRecurringEvent()) print 'style="display: none;"' ?> >
-                    <label for="dayOfWeekEdit" class="col-sm-4 control-label">Day Of Week</label>
+        <div class="container">
+            <form class="form-horizontal" action="runs.php?editRun=<?php print $eventEditing->getEventID() ?>"
+                  method="post">
+                <div class="form-group">
+                    <label for="eventNameEdit" class="col-sm-4 control-label">Event Name</label>
 
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="dayOfWeekEdit" name="dayOfWeek"
-                               placeholder="Day Of Week (1-7)"
-                               value="<?php print $eventEditing->getDayOfWeek() ?>">
+                        <input type="text" class="form-control" id="eventNameEdit" name="eventName"
+                               placeholder="Event Name" value="<?php print $eventEditing->getEventName() ?>">
                     </div>
-                    <label for="hourOfDayEdit" class="col-sm-4 control-label">Hour Of Day</label>
+                    <label for="eventTypeEdit" class="col-sm-4 control-label">Event Type</label>
 
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="hourOfDayEdit" name="hourOfDay"
-                               placeholder="Hour Of Day (1-24)"
-                               value="<?php print $eventEditing->getHourOfDay() ?>">
+                        <input type="text" class="form-control" id="eventTypeEdit" name="eventType"
+                               placeholder="Event Type" value="<?php print $eventEditing->getEventType() ?>">
+                    </div>
+                    <label for="startDateEdit" class="col-sm-4 control-label">Date (mm/dd/yyyy)</label>
+
+                    <div class="col-sm-8">
+                        <input type="date" class="form-control" id="startDateEdit" name="startDate"
+                               placeholder="Date" value="<?php print explode(' ', $eventEditing->getStartDate())[0] ?>">
+                    </div>
+                    <label for="startTimeEdit" class="col-sm-4 control-label">Time (hh:mm AM/PM)</label>
+
+                    <div class="col-sm-8">
+                        <input type="time" class="form-control" id="startTimeEdit" name="startTime"
+                               value="<?php print explode(' ', $eventEditing->getStartDate())[1] ?>">
+                    </div>
+
+                    <?php $slotNum = 0;
+                    foreach ($eventEditing->getSlotList() as $slot) :
+                        $slotNum++;
+                        /** @var Slot $slot */
+                        ?>
+                        <label for="slotEdit_<?php print $slot->getSlotID() ?>"
+                               class="col-sm-4 control-label">Slot <?php print $slotNum ?> Class</label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="slotEdit_<?php print $slot->getSlotID() ?>"
+                                   name="slotEdit_<?php print $slot->getSlotID() ?>"
+                                   value="<?php print $slot->getSlotClass() ?>">
+                        </div>
+                    <?php endforeach; ?>
+                    <div><h5 style="padding-left: 200px">note: set class to -1 disable/reserve</h5></div>
+                    <label for="recurringEventEdit" class="col-sm-4 control-label">Recurring?</label>
+                    <input type="checkbox" id="recurringEventEdit" name="recurringEvent"
+                           value="1" <?php if ($eventEditing->isRecurringEvent()) echo 'checked' ?> >
+
+                    <div style="height: 10px;"></div>
+
+                    <div
+                        id="recurEdit" <?php if (!$eventEditing->isRecurringEvent()) print 'style="display: none;"' ?> >
+                        <label for="dayOfWeekEdit" class="col-sm-4 control-label">Day Of Week</label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="dayOfWeekEdit" name="dayOfWeek"
+                                   placeholder="Day Of Week (1-7)"
+                                   value="<?php print $eventEditing->getDayOfWeek() ?>">
+                        </div>
+                        <label for="hourOfDayEdit" class="col-sm-4 control-label">Hour Of Day</label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="hourOfDayEdit" name="hourOfDay"
+                                   placeholder="Hour Of Day (1-24)"
+                                   value="<?php print $eventEditing->getHourOfDay() ?>">
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-10">
-                    <input class="btn btn-primary" type="button" onclick="window.location.replace('runs.php')"
-                           value="Cancel"/>
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <input class="btn btn-primary" type="button" onclick="window.location.replace('runs.php')"
+                               value="Cancel"/>
+                    </div>
+                    <div class="col-sm-2">
+                        <input type="submit" class="btn btn-primary" value="Save Changes">
+                    </div>
                 </div>
-                <div class="col-sm-2">
-                    <input type="submit" class="btn btn-primary" value="Save Changes">
-                </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </div>
-</div>
 
 <?php endif; ?>
 
@@ -187,10 +192,15 @@
         <div class="col-sm-6 col-md-offset-3">
             <table class="table table-condensed table-hover table-striped table-bordered">
                 <thead>
+                <a href="/any/url/delete.php?ref=ID" data-confirm="Are you sure you want to delete?">Delete</a>
                 <tr>
                     <th>#</th>
                     <th>Event</th>
                     <th>Date</th>
+                    <th>Status</th>
+                    <?php if (isset($allowedToCloseEvent) && $allowedToCloseEvent): ?>
+                        <th>Action</th>
+                    <?php endif; ?>
                 </tr>
                 </thead>
                 <?php
@@ -202,11 +212,45 @@
                     <tr>
                         <td><?php print($i); ?></td>
                         <td>
-                            <a href="./runs.php?editRun=<?php print($event->getEventID()) ?>">
-                                <?php print($event->getEventName()); ?>
-                            </a>
+                            <?php if ($event->getEventState() == 0) : ?>
+                                <a href="./runs.php?editRun=<?php print($event->getEventID()) ?>">
+                                    <?php print($event->getEventName()); ?>
+                                </a>
+                            <?php
+                            else : print($event->getEventName());
+                            endif ?>
                         </td>
                         <td><?php print($event->getStartDate()); ?></td>
+                        <?php if ($event->getEventState() == 1) : ?>
+
+                            <?php print('<td style="background-color:red"> Closed</td>');
+                        else : print('<td style="background-color:green"> Open</td>');
+                        endif ?>
+
+                        <?php if (isset($allowedToCloseEvent) && $allowedToCloseEvent):
+                            if ($event->getCompleteDate() == NULL) : ?>
+                                <td>
+                                    <form action="runs.php?action=closeEvent" method="post">
+                                        <input name="eventID" id="eventID" type="hidden"
+                                               value="<?php print($event->getEventID()); ?>">
+                                        <button id="closeEventButton<?php print($event->getEventID()); ?>" type="submit" class="btn btn-xs btn-warning">Close
+                                            this event
+                                        </button>
+                                    </form>
+                                </td>
+                            <?php endif;
+                            if ($event->getCompleteDate() !== NULL) : ?>
+                                <td>
+                                    <form action="runs.php?action=openEvent" method="post">
+                                        <input name="eventID" id="eventID" type="hidden"
+                                               value="<?php print($event->getEventID()); ?>">
+                                        <button id="openEventButton<?php print($event->getEventID()); ?>" type="submit" class="btn btn-xs btn-warning">Open
+                                            this event
+                                        </button>
+                                    </form>
+                                </td>
+                            <?php endif; ?>
+                        <?php endif; ?>
                     </tr>
                 <?php
                 }
@@ -237,7 +281,19 @@
                 $("#recurEdit").hide("fast");
             }
         });
+        $('a[data-confirm]').click(function(ev) {
+            var href = $(this).attr('href');
+
+            if (!$('#dataConfirmModal').length) {
+                $('body').append('<div id="dataConfirmModal" class="modal fade" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true"><div class="modal-dialog modal-sm"><div class ="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3 id="dataConfirmLabel">Please Confirm</h3></div><div class="modal-body"></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button><a class="btn btn-primary" id="dataConfirmOK">OK</a></div></div></div></div>');
+            }
+            $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
+            $('#dataConfirmOK').attr('href', href);
+            $('#dataConfirmModal').modal({show:true});
+            return false;
+        });
     });
+
 </script>
 </body>
 </html>

@@ -10,6 +10,7 @@ if (!$_SESSION["userID"]) {
 $pageService = new PageService();
 $dataService = new DataService();
 $currentPageID = "Manage Events";
+$allowedToCloseEvent = true;
 if (isset($_SESSION["userID"])) {
     $sessionUser = $pageService->whoIsSessionUser($_SESSION["userID"]);
     $navBarLinks = $pageService->generateNavLinksForUser($_SESSION["userID"]);
@@ -22,18 +23,50 @@ $featuredLinks = $pageService->generateFeaturedLinks(5);
 $runService = new RunService();
 $editing = 0;
 
-if (isset($_GET["editRun"]) && is_numeric($_GET["editRun"]) && isset($_POST["eventName"])) {
-    if ($runService->updateEventFromPostData()){
+if (isset($_GET["action"]) && $_GET["action"] == ("openEvent")) {
+    if ($runService->openEventFromPostData()) {
         $notification = array(
             'type' => 'success',
             'title' => 'Success',
-            'message' => 'Successfully updated event: ' . $_POST["eventID"] . '.',
+            'message' => 'Successfully opened eventID: ' . $_POST["eventID"] . '.',
+        );
+    } else {
+        $notification = array(
+            'type' => 'success',
+            'title' => 'Success',
+            'message' => 'Failed to open eventID: ' . $_POST["eventID"] . '.',
+        );
+    }
+}
+
+if (isset($_GET["action"]) && $_GET["action"] == ("closeEvent")) {
+    if ($runService->closeEventFromPostData()) {
+        $notification = array(
+            'type' => 'success',
+            'title' => 'Success',
+            'message' => 'Successfully closed eventID: ' . $_POST["eventID"] . '.',
+        );
+    } else {
+        $notification = array(
+            'type' => 'success',
+            'title' => 'Success',
+            'message' => 'Failed to close eventID: ' . $_POST["eventID"] . '.',
+        );
+    }
+}
+
+if (isset($_GET["editRun"]) && is_numeric($_GET["editRun"]) && isset($_POST["eventName"])) {
+    if ($runService->updateEventFromPostData()) {
+        $notification = array(
+            'type' => 'success',
+            'title' => 'Success',
+            'message' => 'Successfully updated event: ' . $_POST["eventName"] . '.',
         );
     } else {
         $notification = array(
             'type' => 'danger',
             'title' => 'Error',
-            'message' => 'Failed to update event ' . $_POST["eventID"] . '.',
+            'message' => 'Failed to update event ' . $_POST["eventName"] . '.',
         );
     }
 }
@@ -57,7 +90,6 @@ if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["eventName"])
             'message' => 'Event details not filled in correctly',
         );
     }
-
 }
 
 $eventContainer = $dataService->getAllEventInfo();

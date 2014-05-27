@@ -73,13 +73,16 @@ class GameAccountDAO
                         WHERE accountID = :accountID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlUpdate);
-        $stmt->bindParam(':userID', $gameAccount->getUserID());
-        $stmt->bindParam(':cooldown', $gameAccount->getCooldown());
-        $stmt->bindParam(':accountID', $gameAccount->getAccountID());
+        $userID = $gameAccount->getUserID();
+        $stmt->bindParam(':userID', $userID);
+        $cooldown = $gameAccount->getCooldown();
+        $stmt->bindParam(':cooldown', $cooldown);
+        $accountID = $gameAccount->getAccountID();
+        $stmt->bindParam(':accountID', $accountID);
         $binds = array(
-            ":userID" => $gameAccount->getUserID(),
-            ":cooldown" => $gameAccount->getCooldown(),
-            ":accountID" => $gameAccount->getAccountID(),
+            ":userID" => $userID,
+            ":cooldown" => $cooldown,
+            ":accountID" => $accountID,
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -87,7 +90,7 @@ class GameAccountDAO
             return true;
         } else {
             $logDAO->logPreparedStatement('UPDATE', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to update game account (' . $gameAccount->getAccountID() . ')');
+            throw new Exception('Failed to update game account (' . $accountID . ')');
         }
     }
 

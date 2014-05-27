@@ -15,7 +15,7 @@ class CharacterDAO
 
     public function getCharactersByUserID($userID)
     {
-        $sqlCharacters = "SELECT * FROM characters WHERE userID = :id ORDER BY userID, accountID ASC;";
+        $sqlCharacters = "SELECT * FROM characters WHERE userID = :userID ORDER BY userID, accountID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlCharacters);
         $stmt->bindParam(':userID', $userID);
@@ -41,15 +41,19 @@ class CharacterDAO
         $sqlInsert = "INSERT INTO characters VALUES(:accountID, NULL, :charName, NULL, :charClass, :userID);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlInsert);
-        $stmt->bindParam(':userID', $character->getUserID());
-        $stmt->bindParam(':accountID', $character->getAccountID());
-        $stmt->bindParam(':charName', $character->getCharName());
-        $stmt->bindParam(':charClass', $character->getCharClass());
+        $userID = $character->getUserID();
+        $stmt->bindParam(':userID', $userID);
+        $accountID = $character->getAccountID();
+        $stmt->bindParam(':accountID', $accountID);
+        $charName = $character->getCharName();
+        $stmt->bindParam(':charName', $charName);
+        $charClass = $character->getCharClass();
+        $stmt->bindParam(':charClass', $charClass);
         $binds = array(
-            ":userID" => $character->getUserID(),
-            ":accountID" => $character->getAccountID(),
-            ":charName" => $character->getCharName(),
-            ":charClass" => $character->getCharClass()
+            ":userID" => $userID,
+            ":accountID" => $accountID,
+            ":charName" => $charName,
+            ":charClass" => $charClass
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -57,7 +61,7 @@ class CharacterDAO
             return true;
         } else {
             $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to add character to account(' . $character->getAccountID() . ')');
+            throw new Exception('Failed to add character to account(' . $accountID . ')');
         }
     }
 
@@ -93,19 +97,25 @@ class CharacterDAO
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlUpdate);
 
-        $stmt->bindParam(':accountID', $character->getAccountID());
-        $stmt->bindParam(':charName', $character->getCharName());
-        $stmt->bindParam(':cooldown', $character->getCooldown());
-        $stmt->bindParam(':charClass', $character->getCharClass());
-        $stmt->bindParam(':userID', $character->getUserID());
-        $stmt->bindParam(':charID', $character->getCharID());
+        $accountID = $character->getAccountID();
+        $stmt->bindParam(':accountID', $accountID);
+        $charName = $character->getCharName();
+        $stmt->bindParam(':charName', $charName);
+        $cooldown = $character->getCooldown();
+        $stmt->bindParam(':cooldown', $cooldown);
+        $charClass = $character->getCharClass();
+        $stmt->bindParam(':charClass', $charClass);
+        $userID = $character->getUserID();
+        $stmt->bindParam(':userID', $userID);
+        $charID = $character->getCharID();
+        $stmt->bindParam(':charID', $charID);
         $binds = array(
-            ":accountID" => $character->getAccountID(),
-            ":charName" => $character->getCharName(),
-            ":cooldown" => $character->getCooldown(),
-            ":charClass" => $character->getCharClass(),
-            ":userID" => $character->getUserID(),
-            ":charID" => $character->getCharID()
+            ":accountID" => $accountID,
+            ":charName" => $charName,
+            ":cooldown" => $cooldown,
+            ":charClass" => $charClass,
+            ":userID" => $userID,
+            ":charID" => $charID
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -113,7 +123,7 @@ class CharacterDAO
             return true;
         } else {
             $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to add character to account(' . $character->getCharID() . ')');
+            throw new Exception('Failed to add character to account(' . $charID . ')');
         }
     }
 }

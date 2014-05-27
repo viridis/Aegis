@@ -21,7 +21,7 @@
                         }
                     }
                     ?>
-                    <?php if (!$_SESSION["userID"]): ?>
+                    <?php if (!isset($_SESSION["userID"])): ?>
                         <form class="navbar-form navbar-left" action="home.php?action=login" method="post"
                               role="Sign In">
                             <div class="form-group">
