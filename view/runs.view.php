@@ -228,29 +228,17 @@
                         endif ?>
 
                         <?php if (isset($allowedToCloseEvent) && $allowedToCloseEvent):
-                            if ($event->getCompleteDate() == NULL) : ?>
+                            if ($event->getEventState() == 0) : ?>
                                 <td>
-                                    <form action="runs.php?action=closeEvent" method="post">
-                                        <input name="eventID" id="eventID" type="hidden"
-                                               value="<?php print($event->getEventID()); ?>">
-                                        <button id="closeEventButton<?php print($event->getEventID()); ?>" type="submit" class="btn btn-xs btn-warning">Close
-                                            this event
-                                        </button>
-                                    </form>
+                                    <a class="btn btn-xs btn-warning" id="close_event_<?php print $event->getEventID() . '_' .$i?>">Close this event</a>
                                 </td>
                             <?php endif;
-                            if ($event->getCompleteDate() !== NULL) : ?>
+                            if ($event->getEventState() == 1) : ?>
                                 <td>
-                                    <form action="runs.php?action=openEvent" method="post">
-                                        <input name="eventID" id="eventID" type="hidden"
-                                               value="<?php print($event->getEventID()); ?>">
-                                        <button id="openEventButton<?php print($event->getEventID()); ?>" type="submit" class="btn btn-xs btn-warning">Open
-                                            this event
-                                        </button>
-                                    </form>
+                                    <a class="btn btn-xs btn-warning" id="open_event_<?php print $event->getEventID()?>">Open this event</a>
                                 </td>
-                            <?php endif; ?>
-                        <?php endif; ?>
+                            <?php endif ?>
+                        <?php endif ?>
                     </tr>
                 <?php
                 }
@@ -281,17 +269,26 @@
                 $("#recurEdit").hide("fast");
             }
         });
-        $('a[data-confirm]').click(function(ev) {
-            var href = $(this).attr('href');
 
-            if (!$('#dataConfirmModal').length) {
-                $('body').append('<div id="dataConfirmModal" class="modal fade" role="dialog" aria-labelledby="dataConfirmLabel" aria-hidden="true"><div class="modal-dialog modal-sm"><div class ="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button><h3 id="dataConfirmLabel">Please Confirm</h3></div><div class="modal-body"></div><div class="modal-footer"><button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button><a class="btn btn-primary" id="dataConfirmOK">OK</a></div></div></div></div>');
-            }
-            $('#dataConfirmModal').find('.modal-body').text($(this).attr('data-confirm'));
-            $('#dataConfirmOK').attr('href', href);
+        $(".btn-warning").click(function(event){
+            event.preventDefault();
+            var id = event.target.id;
+            var result = id.split('_');
+            $('body').prepend('<div id="dataConfirmModal" class="modal fade">' +
+                '<div class="modal-dialog modal-sm">' +
+                '<div class ="modal-content">' +
+                '<div class="modal-body"> <h3 id="dataConfirmLabel">Confirm ' + result[0] + ' ' + result[1] + ' ' + result[3] + '?</h3></div>' +
+                '<div class="modal-footer">' +
+                '<div class="col-sm-2">' +
+                '<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
+                '</div>' + '<div class="col-sm-10">' +
+                '<form action="runs.php?action=' + result[0] + 'Event" method="post">' +
+                '<input name="eventID" id="eventID" type="hidden" value="' + result[2] + '">' +
+                '<button id="openEventButton' + result[2] + '" type="submit" class="btn">Yes</button>' +
+                '</form>' +
+                '</div></div></div></div>');
             $('#dataConfirmModal').modal({show:true});
-            return false;
-        });
+        })
     });
 
 </script>
