@@ -234,7 +234,7 @@
                             <?php endif;
                             if ($event->getEventState() == 1) : ?>
                                 <td>
-                                    <a class="btn btn-xs btn-warning" id="open_event_<?php print $event->getEventID()?>">Open this event</a>
+                                    <a class="btn btn-xs btn-warning" id="open_event_<?php print $event->getEventID() . '_' .$i?>">Open this event</a>
                                 </td>
                             <?php endif ?>
                         <?php endif ?>
@@ -278,9 +278,9 @@
                 '<div class ="modal-content">' +
                 '<div class="modal-body"> <h3 id="dataConfirmLabel">Confirm ' + result[0] + ' ' + result[1] + ' ' + result[3] + '?</h3></div>' +
                 '<div class="modal-footer">' +
-                '<div class="col-sm-2">' +
-                '<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>' +
-                '</div>' + '<div class="col-sm-10">' +
+                '<div class="col-sm-3">' +
+                '<button class="btn" class="close" data-dismiss="modal" aria-hidden="true">No</button>' +
+                '</div>' + '<div class="col-sm-9">' +
                 '<form action="runs.php?action=' + result[0] + 'Event" method="post">' +
                 '<input name="eventID" id="eventID" type="hidden" value="' + result[2] + '">' +
                 '<button id="openEventButton' + result[2] + '" type="submit" class="btn">Yes</button>' +
