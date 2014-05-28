@@ -6,6 +6,7 @@ require_once("../service/event.service.php");
 require_once("../service/drop.service.php");
 require_once("../service/slot.service.php");
 require_once("../service/item.service.php");
+require_once("../service/eventType.service.php");
 
 class DataService
 {
@@ -43,19 +44,56 @@ class DataService
     {
         /** @var Event $event */
         $event->setEventName($eventName);
-        $this->updateEvent($event);
+        return $this->updateEvent($event);
     }
 
     public function updateEvent($event)
     {
         $eventService = new EventService();
-        $eventService->updateEvent($event);
+        return $eventService->updateEvent($event);
     }
 
     public function deleteEvent($event)
     {
         $eventService = new EventService();
-        $eventService->deleteEvent($event);
+        return $eventService->deleteEvent($event);
+    }
+
+    public function getAllEventTypes()
+    {
+        $eventTypeService = new EventTypeService();
+        $eventTypeResults = $eventTypeService->getAllEventTypes();
+        $completeEventTypes = $this->createEventTypeArray($eventTypeResults);
+        return $completeEventTypes;
+    }
+
+    public function getEventTypeByEventTypeID($eventTypeID)
+    {
+        $eventTypeService = new EventTypeService();
+        $eventTypeResults = $eventTypeService->getEventTypeByEventTypeID($eventTypeID);
+        $completeEventTypes = $this->createEventTypeArray($eventTypeResults);
+        if (isset($completeEventTypes[0])) {
+            return $completeEventTypes[0];
+        }
+        return false;
+    }
+
+    public function updateEventType($eventType)
+    {
+        $eventTypeService = new EventTypeService();
+        return $eventTypeService->updateEventType($eventType);
+    }
+
+    public function createEventType($eventType)
+    {
+        $eventTypeService = new EventTypeService();
+        return $eventTypeService->createEventType($eventType);
+    }
+
+    public function deleteEventType($eventType)
+    {
+        $eventTypeService = new EventTypeService();
+        return $eventTypeService->deleteEventType($eventType);
     }
 
     public function addSlotToEvent($event, $slotClass)
@@ -63,26 +101,26 @@ class DataService
         /** @var Event $event */
         $slot = new Slot($event->getEventID(), NULL, $slotClass, NULL, NULL, NULL);
         $slotService = new SlotService();
-        $slotService->createSlot($slot);
+        return $slotService->createSlot($slot);
     }
 
     public function setSlotClass($slot, $slotClass)
     {
         /** @var Slot $slot */
         $slot->setSlotClass($slotClass);
-        $this->updateSlot($slot);
+        return $this->updateSlot($slot);
     }
 
     public function updateSlot($slot)
     {
         $slotService = new SlotService();
-        $slotService->updateSlot($slot);
+        return $slotService->updateSlot($slot);
     }
 
     public function deleteSlot($slot)
     {
         $slotService = new SlotService();
-        $slotService->deleteSlot($slot);
+        return $slotService->deleteSlot($slot);
     }
 
     public function addDropToEvent($event, $item)
@@ -91,30 +129,30 @@ class DataService
         /** @var Item $item */
         $drop = new Drop($event->getEventID(), NULL, NULL, NULL, NULL, $item->getItemID());
         $dropService = new DropService();
-        $dropService->createDrop($drop);
+        return $dropService->createDrop($drop);
     }
 
     public function sellDrop($drop, $soldPrice)
     {
         /** @var Drop $drop */
-        if (!$drop->isSold())
-        {
+        if (!$drop->isSold()) {
             $drop->setSold(true);
             $drop->setSoldPrice($soldPrice);
-            $this->updateDrop($drop);
+            return $this->updateDrop($drop);
         }
+        return false;
     }
 
     public function updateDrop($drop)
     {
         $dropService = new DropService();
-        $dropService->updateDrop($drop);
+        return $dropService->updateDrop($drop);
     }
 
     public function removeDrop($drop)
     {
         $dropService = new DropService();
-        $dropService->removeDrop($drop);
+        return $dropService->removeDrop($drop);
     }
 
     public function getItemByItemID($itemID)
@@ -150,9 +188,10 @@ class DataService
         $characterService = new CharacterService();
         $completeCharacters = $characterService->getCharactersByUserID($userID);
         $completeUsers = $this->createUserArray($incompleteUsers, $incompleteGameAccounts, $completeCharacters);
-        if (isset($completeUsers[0])){
+        if (isset($completeUsers[0])) {
             return $completeUsers[0];
         }
+        return false;
     }
 
     public function getUserByLoginAndPassword($userLogin, $userPassword)
@@ -167,39 +206,39 @@ class DataService
     {
         /** @var User $user */
         $user->setPayout($payout);
-        $this->updateUser($user);
+        return $this->updateUser($user);
     }
 
     public function setUserMailChar($user, $mailChar)
     {
         /** @var User $user */
         $user->setMailChar($mailChar);
-        $this->updateUser($user);
+        return $this->updateUser($user);
     }
 
     public function setUserPassword($user, $userPassword)
     {
         /** @var User $user */
         $user->setUserPassword($userPassword);
-        $this->updateUser($user);
+        return $this->updateUser($user);
     }
 
     public function updateUser($user)
     {
         $userService = new UserService();
-        $userService->updateUser($user);
+        return $userService->updateUser($user);
     }
 
     public function createUser($user)
     {
         $userService = new UserService();
-        $userService->createUser($user);
+        return $userService->createUser($user);
     }
 
     public function createGameAccount($gameAccount)
     {
         $gameAccountService = new GameAccountService();
-        $gameAccountService->createGameAccount($gameAccount);
+        return $gameAccountService->createGameAccount($gameAccount);
     }
 
     public function getGameAccountByAccountID($accountID)
@@ -215,31 +254,31 @@ class DataService
     public function updateGameAccount($gameAccount)
     {
         $gameAccountService = new GameAccountService();
-        $gameAccountService->updateGameAccount($gameAccount);
+        return $gameAccountService->updateGameAccount($gameAccount);
     }
 
     public function deleteGameAccount($gameAccount)
     {
         $gameAccountService = new GameAccountService();
-        $gameAccountService->deleteGameAccount($gameAccount);
+        return $gameAccountService->deleteGameAccount($gameAccount);
     }
 
     public function createCharacter($character)
     {
         $characterService = new CharacterService();
-        $characterService->createCharacter($character);
+        return $characterService->createCharacter($character);
     }
 
     public function updateCharacter($character)
     {
         $characterService = new CharacterService();
-        $characterService->updateCharacter($character);
+        return $characterService->updateCharacter($character);
     }
 
     public function deleteCharacter($character)
     {
         $characterService = new CharacterService();
-        $characterService->deleteCharacter($character);
+        return $characterService->deleteCharacter($character);
     }
 
     private function createUserArray($userAccountResults, $gameAccountResults, $characterResults)
@@ -289,7 +328,7 @@ class DataService
         $slotPointer = 0;
         foreach ($eventResults as $row) {
             /** @var Event $event */
-            $event = Event::create($row["eventID"], $row["eventType"], $row["startDate"], $row["completeDate"],
+            $event = Event::create($row["eventID"], $row["eventTypeID"], $row["startDate"], $row["completeDate"],
                 $row["eventState"], $row["recurringEvent"], $row["dayOfWeek"], $row["hourOfDay"], $row["eventName"]);
             $dropList = array();
             while (isset($dropResults[$dropPointer]["eventID"]) && $dropResults[$dropPointer]["eventID"] == $row["eventID"]) {
@@ -327,7 +366,7 @@ class DataService
         $result = array();
         $characterPointer = 0;
         foreach ($gameAccountResults as $row) {
-
+            /** @var GameAccount $gameAccount */
             $gameAccount = GameAccount::create($row["userID"], $row["accountID"], $row["cooldown"]);
             $characterList = array();
             while ($characterResults[$characterPointer]["accountID"] <= $row["accountID"] && isset($characterResults[$characterPointer])) {
@@ -340,6 +379,17 @@ class DataService
             }
             $gameAccount->setCharacterList($characterList);
             array_push($result, $gameAccount);
+        }
+        return $result;
+    }
+
+    private function createEventTypeArray($eventTypeResults)
+    {
+        $result = array();
+        foreach ($eventTypeResults as $row) {
+            $eventType = EventType::create($row["eventTypeID"], $row["eventName"], $row["characterCooldown"],
+                $row["accountCooldown"], $row["numSlots"]);
+            array_push($result, $eventType);
         }
         return $result;
     }

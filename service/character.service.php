@@ -36,6 +36,6 @@ class CharacterService
     public function updateCharacter($character)
     {
         $characterDAO = new CharacterDAO();
-        $characterDAO->updateCharacter($character);
+        return $characterDAO->updateCharacter($character);
     }
 }

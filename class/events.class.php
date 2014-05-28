@@ -6,7 +6,7 @@ class Event
 
     private $eventID;
     private $eventName;
-    private $eventType;
+    private $eventTypeID;
     private $startDate;
     private $completeDate;
     private $eventState;
@@ -18,12 +18,12 @@ class Event
     private $slotList; // List of slot objects
     private $dropList; // List of drop objects
 
-    public function __construct($eventID, $eventType, $startDate, $completeDate,
+    public function __construct($eventID, $eventTypeID, $startDate, $completeDate,
                                 $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName)
     {
         $this->eventID = $eventID;
         $this->eventName = $eventName;
-        $this->eventType = $eventType;
+        $this->eventTypeID = $eventTypeID;
         $this->startDate = $startDate;
         $this->completeDate = $completeDate;
         $this->eventState = $eventState;
@@ -32,11 +32,11 @@ class Event
         $this->hourOfDay = $hourOfDay;
     }
 
-    public static function create($eventID, $eventType, $startDate, $completeDate,
+    public static function create($eventID, $eventTypeID, $startDate, $completeDate,
                                   $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName)
     {
         if (!isset(self::$idList[$eventID])) {
-            self::$idList[$eventID] = new Event($eventID, $eventType, $startDate, $completeDate,
+            self::$idList[$eventID] = new Event($eventID, $eventTypeID, $startDate, $completeDate,
                 $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName);
 
         }
@@ -53,9 +53,9 @@ class Event
         return $this->eventName;
     }
 
-    public function getEventType()
+    public function getEventTypeID()
     {
-        return $this->eventType;
+        return $this->eventTypeID;
     }
 
     public function getStartDate()
@@ -113,9 +113,9 @@ class Event
         $this->eventName = $eventName;
     }
 
-    public function setEventType($eventType)
+    public function setEventTypeID($eventTypeID)
     {
-        $this->eventType = $eventType;
+        $this->eventTypeID = $eventTypeID;
     }
 
     public function setStartDate($startDate)

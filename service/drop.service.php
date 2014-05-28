@@ -25,13 +25,13 @@ class DropService
     public function updateDrop($drop)
     {
         $dropDAO = new DropDAO();
-        $dropDAO->updateDrop($drop);
+        return $dropDAO->updateDrop($drop);
     }
 
     public function removeDrop($drop)
     {
         /** @var Drop $drop */
         $dropDAO = new DropDAO();
-        $dropDAO->removeDrop($drop->getDropID());
+        return $dropDAO->removeDrop($drop->getDropID());
     }
 }

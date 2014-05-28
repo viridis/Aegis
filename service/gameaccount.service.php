@@ -31,7 +31,7 @@ class GameAccountService
     public function updateGameAccount($gameAccount)
     {
         $gameAccountDAO = new GameAccountDAO();
-        $gameAccountDAO->updateGameAccount($gameAccount);
+        return $gameAccountDAO->updateGameAccount($gameAccount);
     }
 
     public function getGameAccountByAccountID($accountID)

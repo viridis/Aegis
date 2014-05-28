@@ -76,7 +76,7 @@ class RunService
             $startTime = $this->test_input($_POST["startTime"]);
             $startDate = $startDate . ' ' . $startTime;
             $event->setStartDate($startDate);
-            if (isset($_POST["recurringEvent"])){
+            if (isset($_POST["recurringEvent"])) {
                 $event->setRecurringEvent($this->test_input($_POST["recurringEvent"]));
                 $event->setDayOfWeek($this->test_input($_POST["dayOfWeek"]));
                 $event->setHourOfDay($this->test_input($_POST["hourOfDay"]));
@@ -87,8 +87,7 @@ class RunService
             }
             try {
                 $dataService->updateEvent($event);
-                foreach($event->getSlotList() as $slot)
-                {
+                foreach ($event->getSlotList() as $slot) {
                     /** @var Slot $slot */
                     $slot->setSlotClass($this->test_input($_POST["slotEdit_" . $slot->getSlotID()]));
                     $dataService->updateSlot($slot);
@@ -113,7 +112,7 @@ class RunService
         $event->setEventState(1);
         try {
             $dataService->updateEvent($event);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             echo 'Caught exception' . $e->getMessage();
             return false;
         }
@@ -130,13 +129,12 @@ class RunService
         $event->setEventState(0);
         try {
             $dataService->updateEvent($event);
-        } catch (Exception $e){
+        } catch (Exception $e) {
             echo 'Caught exception' . $e->getMessage();
             return false;
         }
         return true;
     }
-
 
     private function test_input($data)
     {

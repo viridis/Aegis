@@ -1,7 +1,7 @@
 <?php
 session_start();
-ini_set('display_startup_errors',1);
-ini_set('display_errors',1);
+ini_set('display_startup_errors', 1);
+ini_set('display_errors', 1);
 error_reporting(-1);
 require_once("../data/links.DAO.php");
 require_once("../service/data.service.php");
@@ -41,8 +41,7 @@ class PageService
         $dataService = new DataService();
         /** @var User $user */
         $user = $dataService->getUserByUserID($userID);
-        if ($user->getRoleLevel() < $requiredRoleLevel)
-        {
+        if ($user->getRoleLevel() < $requiredRoleLevel) {
             return false;
         }
         return true;

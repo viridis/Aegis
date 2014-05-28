@@ -9,7 +9,7 @@ class EventDAO
         $sqlEvents = "SELECT * FROM events ORDER BY eventID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultSetEvents = $dbh->query($sqlEvents);
-        $eventResults = $resultSetEvents->fetchAll();
+        $eventResults = $resultSetEvents->fetchAll(PDO::FETCH_ASSOC);
         return $eventResults;
     }
 
@@ -20,18 +20,18 @@ class EventDAO
         $stmt = $dbh->prepare($sqlEvents);
         $stmt->bindParam(':eventID', $eventID);
         $stmt->execute();
-        $eventResults = $stmt->fetchAll();
+        $eventResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $eventResults;
     }
 
     public function createEvent($event)
     {
         /** @var EVENT $event */
-        $sql = "INSERT INTO events VALUES(NULL, :eventType, :startDate, NULL, 0, :recurringEvent, :dayOfWeek, :hourOfDay, :eventName);";
+        $sql = "INSERT INTO events VALUES(NULL, :eventTypeID, :startDate, NULL, 0, :recurringEvent, :dayOfWeek, :hourOfDay, :eventName);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
-        $eventType = $event->getEventType();
-        $stmt->bindParam(':eventType', $eventType);
+        $eventTypeID = $event->getEventTypeID();
+        $stmt->bindParam(':eventTypeID', $eventTypeID);
         $startDate = $event->getStartDate();
         $stmt->bindParam(':startDate', $startDate);
         $eventName = $event->getEventName();
@@ -43,7 +43,7 @@ class EventDAO
         $hourOfDay = $event->getHourOfDay();
         $stmt->bindParam(':hourOfDay', $hourOfDay);
         $binds = array(
-            ":eventType" => $eventType,
+            ":eventTypeID" => $eventTypeID,
             ":startDate" => $startDate,
             ":recurringEvent" => $isRecurringEvent,
             ":dayOfWeek" => $dayOfWeek,
@@ -82,7 +82,7 @@ class EventDAO
     public function updateEvent($event)
     {
         /** @var EVENT $event */
-        $sqlUpdate = "UPDATE events SET eventType = :eventType,
+        $sqlUpdate = "UPDATE events SET eventTypeID = :eventTypeID,
                         startDate = :startDate,
                         completeDate = :completeDate,
                         eventState = :eventState,
@@ -93,8 +93,8 @@ class EventDAO
                         WHERE eventID = :eventID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlUpdate);
-        $eventType = $event->getEventType();
-        $stmt->bindParam(':eventType', $eventType);
+        $eventTypeID = $event->getEventTypeID();
+        $stmt->bindParam(':eventTypeID', $eventTypeID);
         $startDate = $event->getStartDate();
         $stmt->bindParam(':startDate', $startDate);
         $completeDate = $event->getCompleteDate();
@@ -112,7 +112,7 @@ class EventDAO
         $eventID = $event->getEventID();
         $stmt->bindParam(':eventID', $eventID);
         $binds = array(
-            ":eventType" => $eventType,
+            ":eventTypeID" => $eventTypeID,
             ":startDate" => $startDate,
             ":completeDate" => $completeDate,
             ":eventState" => $eventState,
