@@ -32,15 +32,13 @@ class EventDAO
     public function createEvent($event)
     {
         /** @var EVENT $event */
-        $sql = "INSERT INTO events VALUES(NULL, :eventTypeID, :startDate, NULL, 0, :recurringEvent, :dayOfWeek, :hourOfDay, :eventName);";
+        $sql = "INSERT INTO events VALUES(NULL, :eventTypeID, :startDate, NULL, 0, :recurringEvent, :dayOfWeek, :hourOfDay);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
         $eventTypeID = $event->getEventTypeID();
         $stmt->bindParam(':eventTypeID', $eventTypeID);
         $startDate = $event->getStartDate();
         $stmt->bindParam(':startDate', $startDate);
-        $eventName = $event->getEventName();
-        $stmt->bindParam(':eventName', $eventName);
         $isRecurringEvent = $event->isRecurringEvent();
         $stmt->bindParam(':recurringEvent', $isRecurringEvent);
         $dayOfWeek = $event->getDayOfWeek();
@@ -53,7 +51,6 @@ class EventDAO
             ":recurringEvent" => $isRecurringEvent,
             ":dayOfWeek" => $dayOfWeek,
             ":hourOfDay" => $hourOfDay,
-            ":eventName" => $eventName
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {

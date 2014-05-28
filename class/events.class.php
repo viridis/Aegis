@@ -21,10 +21,9 @@ class Event
     private $characterCooldown;
 
     public function __construct($eventID, $eventTypeID, $startDate, $completeDate,
-                                $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName)
+                                $eventState, $recurringEvent, $dayOfWeek, $hourOfDay)
     {
         $this->eventID = $eventID;
-        $this->eventName = $eventName;
         $this->eventTypeID = $eventTypeID;
         $this->startDate = $startDate;
         $this->completeDate = $completeDate;
@@ -35,11 +34,11 @@ class Event
     }
 
     public static function create($eventID, $eventTypeID, $startDate, $completeDate,
-                                  $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName)
+                                  $eventState, $recurringEvent, $dayOfWeek, $hourOfDay)
     {
         if (!isset(self::$idList[$eventID])) {
             self::$idList[$eventID] = new Event($eventID, $eventTypeID, $startDate, $completeDate,
-                $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName);
+                $eventState, $recurringEvent, $dayOfWeek, $hourOfDay);
 
         }
         return self::$idList[$eventID];

@@ -77,12 +77,12 @@ if (isset($_GET["editRun"]) && is_numeric($_GET["editRun"])) {
     $eventEditing = $dataService->getEventByEventID($_GET["editRun"]);
 }
 
-if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["eventName"])) {
+if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["eventType"])) {
     if ($runService->createEventFromPostData()) {
         $notification = array(
             'type' => 'success',
             'title' => 'Success',
-            'message' => 'Added event: ' . $_POST["eventName"] . '.',
+            'message' => 'Added event of type: ' . $_POST["eventType"] . '.',
         );
     } else {
         $notification = array(
