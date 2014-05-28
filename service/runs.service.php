@@ -6,19 +6,13 @@ class RunService
 
     public function validEventData()
     {
-        if (empty($_POST["eventName"]) && (isset($_GET["editRun"]))) {
-            return false;
-        }
-        if (empty($_POST["eventType"])) {
+        if (empty($_POST["eventTypeID"])) {
             return false;
         }
         if (empty($_POST["startDate"])) {
             return false;
         }
         if (empty($_POST["startTime"])) {
-            return false;
-        }
-        if (empty($_POST["numSlot"]) && (isset($_GET["addRun"])) && ($_GET["addRun"]) == 1) {
             return false;
         }
         if (!empty($_POST["recurringEvent"])) {
@@ -32,12 +26,15 @@ class RunService
     public function createEventFromPostData()
     {
         $dataService = new DataService();
+
         if ($this->validEventData()) {
-            $eventType = $this->test_input($_POST["eventType"]);
+            $eventTypeID = $this->test_input($_POST["eventTypeID"]);
             $startDate = $this->test_input($_POST["startDate"]);
             $startTime = $this->test_input($_POST["startTime"]);
             $startDate = $startDate . ' ' . $startTime;
-            $numSlot = $this->test_input($_POST["numSlot"]);
+            /** @var EventType $eventType */
+            $eventType = $dataService->getEventTypeByEventTypeID($eventTypeID);
+            $numSlot = $eventType->getNumSlots();
             if (isset($_POST["recurringEvent"])) {
                 $recurringEvent = $this->test_input($_POST["recurringEvent"]);
                 $dayOfWeek = $this->test_input($_POST["dayOfWeek"]);
@@ -48,7 +45,7 @@ class RunService
                 $hourOfDay = 0;
             }
             try {
-                $newEvent = new Event(NULL, $eventType, $startDate, NULL, NULL, $recurringEvent, $dayOfWeek, $hourOfDay);
+                $newEvent = new Event(NULL, $eventTypeID, $startDate, NULL, NULL, $recurringEvent, $dayOfWeek, $hourOfDay);
                 $eventID = $dataService->createEvent($newEvent);
                 $event = $dataService->getEventByEventID($eventID);
                 for ($i = 0; $i < $numSlot; $i++) {
@@ -70,8 +67,7 @@ class RunService
         if ($this->validEventData()) {
             /** @var Event $event */
             $event = $dataService->getEventByEventID($_GET["editRun"]);
-            $event->setEventName($this->test_input($_POST["eventName"]));
-            $event->setEventTypeID($this->test_input($_POST["eventType"]));
+            $event->setEventTypeID($this->test_input($_POST["eventTypeID"]));
             $startDate = $this->test_input($_POST["startDate"]);
             $startTime = $this->test_input($_POST["startTime"]);
             $startDate = $startDate . ' ' . $startTime;

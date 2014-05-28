@@ -56,18 +56,18 @@ if (isset($_GET["action"]) && $_GET["action"] == ("closeEvent")) {
     }
 }
 
-if (isset($_GET["editRun"]) && is_numeric($_GET["editRun"]) && isset($_POST["eventName"])) {
+if (isset($_GET["editRun"]) && is_numeric($_GET["editRun"]) && isset($_POST["eventTypeID"])) {
     if ($runService->updateEventFromPostData()) {
         $notification = array(
             'type' => 'success',
             'title' => 'Success',
-            'message' => 'Successfully updated event: ' . $_POST["eventName"] . '.',
+            'message' => 'Successfully updated event: ' . $_POST["eventTypeID"] . '.',
         );
     } else {
         $notification = array(
             'type' => 'danger',
             'title' => 'Error',
-            'message' => 'Failed to update event ' . $_POST["eventName"] . '.',
+            'message' => 'Failed to update event ' . $_POST["eventTypeID"] . '.',
         );
     }
 }
@@ -77,12 +77,12 @@ if (isset($_GET["editRun"]) && is_numeric($_GET["editRun"])) {
     $eventEditing = $dataService->getEventByEventID($_GET["editRun"]);
 }
 
-if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["eventType"])) {
+if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["eventTypeID"])) {
     if ($runService->createEventFromPostData()) {
         $notification = array(
             'type' => 'success',
             'title' => 'Success',
-            'message' => 'Added event of type: ' . $_POST["eventType"] . '.',
+            'message' => 'Added event of type: ' . $_POST["eventTypeID"] . '.',
         );
     } else {
         $notification = array(
@@ -94,5 +94,6 @@ if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["eventType"])
 }
 
 $eventContainer = $dataService->getAllEventInfo();
+$eventTypeContainer = $dataService->getAllEventTypes();
 
 include("../view/runs.view.php");

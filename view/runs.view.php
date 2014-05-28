@@ -19,17 +19,15 @@
             <form class="form-horizontal" action="runs.php?addRun=1" method="post">
                 <div class="modal-body">
                     <div class="form-group">
-                        <label for="eventName" class="col-sm-4 control-label">Event Name</label>
+                        <label for="eventTypeID" class="col-sm-4 control-label">Event Type</label>
 
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="eventName" name="eventName"
-                                   placeholder="Event Name">
-                        </div>
-                        <label for="eventType" class="col-sm-4 control-label">Event Type</label>
-
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="eventType" name="eventType"
-                                   placeholder="Event Type">
+                            <select class="form-control" id="eventTypeID" name="eventTypeID">
+                                <?php foreach ($eventTypeContainer as $eventType) :
+                                    /** @var EventType $eventType */?>
+                                <option value="<?php print $eventType->getEventTypeID() ?>"><?php print $eventType->getEventName() ?></option>
+                                <?php endforeach ?>
+                            </select>
                         </div>
                         <label for="startDate" class="col-sm-4 control-label">Date (mm/dd/yyyy)</label>
 
@@ -41,11 +39,6 @@
 
                         <div class="col-sm-8">
                             <input type="time" class="form-control" id="startTime" name="startTime">
-                        </div>
-                        <label for="numSlot" class="col-sm-4 control-label">Num Slots</label>
-
-                        <div class="col-sm-8">
-                            <input type="text" class="form-control" id="numSlot" name="numSlot" value="12" readonly>
                         </div>
                         <label for="recurringEvent" class="col-sm-4 control-label">Recurring?</label>
                         <input type="checkbox" id="recurringEvent" name="recurringEvent" value="1">
@@ -102,17 +95,15 @@
             <form class="form-horizontal" action="runs.php?editRun=<?php print $eventEditing->getEventID() ?>"
                   method="post">
                 <div class="form-group">
-                    <label for="eventNameEdit" class="col-sm-4 control-label">Event Name</label>
-
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="eventNameEdit" name="eventName"
-                               placeholder="Event Name" value="<?php print $eventEditing->getEventName() ?>">
-                    </div>
                     <label for="eventTypeEdit" class="col-sm-4 control-label">Event Type</label>
 
                     <div class="col-sm-8">
-                        <input type="text" class="form-control" id="eventTypeEdit" name="eventType"
-                               placeholder="Event Type" value="<?php print $eventEditing->getEventType() ?>">
+                        <select class="form-control" id="eventTypeID" name="eventTypeID">
+                            <?php foreach ($eventTypeContainer as $eventType) :
+                                /** @var EventType $eventType */?>
+                                <option <?php if ($eventEditing->getEventTypeID() == $eventType->getEventTypeID()) print "selected=\"selected\"" ?> value="<?php print $eventType->getEventTypeID() ?>"><?php print $eventType->getEventName() ?></option>
+                            <?php endforeach ?>
+                        </select>
                     </div>
                     <label for="startDateEdit" class="col-sm-4 control-label">Date (mm/dd/yyyy)</label>
 
@@ -194,8 +185,8 @@
                 <thead>
                 <tr>
                     <th>#</th>
-                    <th>Event</th>
-                    <th>Date</th>
+                    <th>Event Type</th>
+                    <th>Date (yyyy/mm/dd hh:mm:ss)</th>
                     <th>Status</th>
                     <?php if (isset($allowedToCloseEvent) && $allowedToCloseEvent): ?>
                         <th>Action</th>
