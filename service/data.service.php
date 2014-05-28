@@ -299,7 +299,7 @@ class DataService
                 while (isset($characterResults[$characterPointer]["accountID"]) && $characterResults[$characterPointer]["accountID"] == $gameAccountResults[$gameAccountPointer]["accountID"]) {
                     $character = Character::create($characterResults[$characterPointer]["accountID"],
                         $characterResults[$characterPointer]["charID"], $characterResults[$characterPointer]["charName"],
-                        $characterResults[$characterPointer]["cooldown"], $characterResults[$characterPointer]["charClass"],
+                        $characterResults[$characterPointer]["cooldown"], $characterResults[$characterPointer]["charClassID"],
                         $characterResults[$characterPointer]["userID"]);
                     array_push($characterList, $character);
                     $characterPointer++;
@@ -357,7 +357,7 @@ class DataService
                     $slotResults[$slotPointer]["slotClassID"], $slotResults[$slotPointer]["taken"],
                     $slotResults[$slotPointer]["takenUserID"], $slotResults[$slotPointer]["takenCharID"]);
                 $slot->setUserLogin($slotResults[$slotPointer]["userLogin"]);
-                $slot->setCharClass($slotResults[$slotPointer]["charClass"]);
+                $slot->setCharClassID($slotResults[$slotPointer]["charClassID"]);
                 $slot->setCharName($slotResults[$slotPointer]["charName"]);
                 array_push($slotList, $slot);
                 $slotPointer++;
@@ -379,7 +379,7 @@ class DataService
             while ($characterResults[$characterPointer]["accountID"] <= $row["accountID"] && isset($characterResults[$characterPointer])) {
                 $character = Character::create($characterResults[$characterPointer]["accountID"],
                     $characterResults[$characterPointer]["charID"], $characterResults[$characterPointer]["charName"],
-                    $characterResults[$characterPointer]["cooldown"], $characterResults[$characterPointer]["charClass"],
+                    $characterResults[$characterPointer]["cooldown"], $characterResults[$characterPointer]["charClassID"],
                     $characterResults[$characterPointer]["userID"]);
                 array_push($characterList, $character);
                 $characterPointer++;

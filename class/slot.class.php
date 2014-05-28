@@ -12,7 +12,7 @@ class Slot
 
     //Associated Fields
     private $userLogin; // From user class
-    private $charClass; // From character class
+    private $charClassID; // From character class
     private $charName; // From character class
 
     public function __construct($eventID, $slotID, $slotClassID, $taken, $takenUserID, $takenCharID){
@@ -59,8 +59,8 @@ class Slot
         return $this->userLogin;
     }
 
-    public function getCharClass(){
-        return $this->charClass;
+    public function getCharClassID(){
+        return $this->charClassID;
     }
 
     public function getCharName(){
@@ -71,8 +71,8 @@ class Slot
         $this->userLogin = $userLogin;
     }
 
-    public function setCharClass($charClass){
-        $this->charClass = $charClass;
+    public function setCharClassID($charClass){
+        $this->charClassID = $charClass;
     }
 
     public function setCharName($charName){

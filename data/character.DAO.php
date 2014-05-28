@@ -38,7 +38,7 @@ class CharacterDAO
     public function createCharacter($character)
     {
         /** @var Character $character */
-        $sqlInsert = "INSERT INTO characters VALUES(:accountID, NULL, :charName, NULL, :charClass, :userID);";
+        $sqlInsert = "INSERT INTO characters VALUES(:accountID, NULL, :charName, NULL, :charClassID, :userID);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlInsert);
         $userID = $character->getUserID();
@@ -47,13 +47,13 @@ class CharacterDAO
         $stmt->bindParam(':accountID', $accountID);
         $charName = $character->getCharName();
         $stmt->bindParam(':charName', $charName);
-        $charClass = $character->getCharClass();
-        $stmt->bindParam(':charClass', $charClass);
+        $charClassID = $character->getCharClassID();
+        $stmt->bindParam(':charClassID', $charClassID);
         $binds = array(
             ":userID" => $userID,
             ":accountID" => $accountID,
             ":charName" => $charName,
-            ":charClass" => $charClass
+            ":charClassID" => $charClassID
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -91,7 +91,7 @@ class CharacterDAO
                         SET accountID = :accountID,
                         charName = :charName,
                         cooldown = NOW() + :cooldown,
-                        charClass = :charClass,
+                        charClass = :charClassID,
                         userID = :userID
                         WHERE charID = :charID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
@@ -103,8 +103,8 @@ class CharacterDAO
         $stmt->bindParam(':charName', $charName);
         $cooldown = $character->getCooldown();
         $stmt->bindParam(':cooldown', $cooldown);
-        $charClass = $character->getCharClass();
-        $stmt->bindParam(':charClass', $charClass);
+        $charClassID = $character->getCharClassID();
+        $stmt->bindParam(':charClassID', $charClassID);
         $userID = $character->getUserID();
         $stmt->bindParam(':userID', $userID);
         $charID = $character->getCharID();
@@ -113,7 +113,7 @@ class CharacterDAO
             ":accountID" => $accountID,
             ":charName" => $charName,
             ":cooldown" => $cooldown,
-            ":charClass" => $charClass,
+            ":charClassID" => $charClassID,
             ":userID" => $userID,
             ":charID" => $charID
         );
