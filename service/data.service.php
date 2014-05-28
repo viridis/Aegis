@@ -96,18 +96,18 @@ class DataService
         return $eventTypeService->deleteEventType($eventType);
     }
 
-    public function addSlotToEvent($event, $slotClass)
+    public function addSlotToEvent($event, $slotClassID)
     {
         /** @var Event $event */
-        $slot = new Slot($event->getEventID(), NULL, $slotClass, NULL, NULL, NULL);
+        $slot = new Slot($event->getEventID(), NULL, $slotClassID, NULL, NULL, NULL);
         $slotService = new SlotService();
         return $slotService->createSlot($slot);
     }
 
-    public function setSlotClass($slot, $slotClass)
+    public function setSlotClassID($slot, $slotClassID)
     {
         /** @var Slot $slot */
-        $slot->setSlotClass($slotClass);
+        $slot->setSlotClassID($slotClassID);
         return $this->updateSlot($slot);
     }
 
@@ -332,7 +332,11 @@ class DataService
                 $row["eventState"], $row["recurringEvent"], $row["dayOfWeek"], $row["hourOfDay"], $row["eventName"]);
             $event->setAccountCooldown($row["accountCooldown"]);
             $event->setCharacterCooldown($row["characterCooldown"]);
-            $event->setEventName($row["eventName"]);
+            $eventName = $row["eventName"];
+            if ($event->isRecurringEvent()) {
+                $eventName = "[Weekly] " . $eventName;
+            }
+            $event->setEventName($eventName);
             $dropList = array();
             while (isset($dropResults[$dropPointer]["eventID"]) && $dropResults[$dropPointer]["eventID"] == $row["eventID"]) {
                 /** @var Drop $drop */
@@ -350,7 +354,7 @@ class DataService
             while (isset($slotResults[$slotPointer]["eventID"]) && $slotResults[$slotPointer]["eventID"] == $row["eventID"]) {
                 /** @var Slot $slot */
                 $slot = Slot::create($slotResults[$slotPointer]["eventID"], $slotResults[$slotPointer]["slotID"],
-                    $slotResults[$slotPointer]["slotClass"], $slotResults[$slotPointer]["taken"],
+                    $slotResults[$slotPointer]["slotClassID"], $slotResults[$slotPointer]["taken"],
                     $slotResults[$slotPointer]["takenUserID"], $slotResults[$slotPointer]["takenCharID"]);
                 $slot->setUserLogin($slotResults[$slotPointer]["userLogin"]);
                 $slot->setCharClass($slotResults[$slotPointer]["charClass"]);

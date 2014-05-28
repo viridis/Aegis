@@ -129,7 +129,7 @@
                         <div class="col-sm-8">
                             <input type="text" class="form-control" id="slotEdit_<?php print $slot->getSlotID() ?>"
                                    name="slotEdit_<?php print $slot->getSlotID() ?>"
-                                   value="<?php print $slot->getSlotClass() ?>">
+                                   value="<?php print $slot->getSlotClassID() ?>">
                         </div>
                     <?php endforeach; ?>
                     <div><h5 style="padding-left: 200px">note: set class to -1 disable/reserve</h5></div>
@@ -180,7 +180,7 @@
 
 <div class="container">
     <div class="row center">
-        <div class="col-sm-6 col-md-offset-3">
+        <div class="col-sm-8 col-md-offset-2">
             <table class="table table-condensed table-hover table-striped table-bordered">
                 <thead>
                 <tr>

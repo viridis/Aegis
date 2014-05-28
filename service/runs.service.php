@@ -85,7 +85,7 @@ class RunService
                 $dataService->updateEvent($event);
                 foreach ($event->getSlotList() as $slot) {
                     /** @var Slot $slot */
-                    $slot->setSlotClass($this->test_input($_POST["slotEdit_" . $slot->getSlotID()]));
+                    $slot->setSlotClassID($this->test_input($_POST["slotEdit_" . $slot->getSlotID()]));
                     $dataService->updateSlot($slot);
                 }
             } catch (Exception $e) {

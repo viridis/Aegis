@@ -21,16 +21,16 @@ class SlotDAO
     public function createSlot($slot)
     {
         /** @var Slot $slot */
-        $sqlInsert = "INSERT INTO slots VALUES(:eventID, NULL, :slotClass, FALSE, NULL, NULL);";
+        $sqlInsert = "INSERT INTO slots VALUES(:eventID, NULL, :slotClassID, FALSE, NULL, NULL);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlInsert);
         $eventID = $slot->getEventID();
         $stmt->bindParam(':eventID', $eventID);
-        $slotClass = $slot->getSlotClass();
-        $stmt->bindParam(':slotClass', $slotClass);
+        $slotClassID = $slot->getSlotClassID();
+        $stmt->bindParam(':slotClassID', $slotClassID);
         $binds = array(
             ":eventID" => $eventID,
-            ":slotClass" => $slotClass
+            ":slotClassID" => $slotClassID
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -82,7 +82,7 @@ class SlotDAO
         /** @var Slot $slot */
         $sqlSlot = "UPDATE slots
                       SET eventID = :eventID,
-                      slotClass = :slotClass,
+                      slotClassID = :slotClassID,
                       taken = :taken,
                       takenUserID = :takenUserID,
                       takenCharID = :takenCharID
@@ -91,8 +91,8 @@ class SlotDAO
         $stmt = $dbh->prepare($sqlSlot);
         $eventID = $slot->getEventID();
         $stmt->bindParam(':eventID', $eventID);
-        $slotClass = $slot->getSlotClass();
-        $stmt->bindParam(':slotClass', $slotClass);
+        $slotClassID = $slot->getSlotClassID();
+        $stmt->bindParam(':slotClassID', $slotClassID);
         $isTaken = $slot->isTaken();
         $stmt->bindParam(':taken', $isTaken);
         $takenUserID = $slot->getTakenUserID();
@@ -103,7 +103,7 @@ class SlotDAO
         $stmt->bindParam(':slotID', $slotID);
         $binds = array(
             ":eventID" => $eventID,
-            ":slotClass" => $slotClass,
+            ":slotClassID" => $slotClassID,
             ":taken" => $isTaken,
             ":takenUserID" => $takenUserID,
             ":takenCharID" => $takenCharID,
