@@ -5,7 +5,6 @@ class Event
     private static $idList = array();
 
     private $eventID;
-    private $eventName;
     private $eventTypeID;
     private $startDate;
     private $completeDate;
@@ -17,6 +16,9 @@ class Event
     //Associated fields
     private $slotList; // List of slot objects
     private $dropList; // List of drop objects
+    private $eventName;
+    private $accountCooldown;
+    private $characterCooldown;
 
     public function __construct($eventID, $eventTypeID, $startDate, $completeDate,
                                 $eventState, $recurringEvent, $dayOfWeek, $hourOfDay, $eventName)
@@ -98,6 +100,16 @@ class Event
         return $this->dropList;
     }
 
+    public function getCharacterCooldown()
+    {
+        return $this->characterCooldown;
+    }
+
+    public function getAccountCooldown()
+    {
+        return $this->accountCooldown;
+    }
+
     public function setSlotList($slotList)
     {
         $this->slotList = $slotList;
@@ -146,5 +158,15 @@ class Event
     public function setHourOfDay($hourOfDay)
     {
         $this->hourOfDay = $hourOfDay;
+    }
+
+    public function setCharacterCooldown($characterCooldown)
+    {
+        $this->characterCooldown = $characterCooldown;
+    }
+
+    public function setAccountCooldown($accountCooldown)
+    {
+        $this->accountCooldown = $accountCooldown;
     }
 }

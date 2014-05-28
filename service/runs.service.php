@@ -71,7 +71,7 @@ class RunService
             /** @var Event $event */
             $event = $dataService->getEventByEventID($_GET["editRun"]);
             $event->setEventName($this->test_input($_POST["eventName"]));
-            $event->setEventType($this->test_input($_POST["eventType"]));
+            $event->setEventTypeID($this->test_input($_POST["eventType"]));
             $startDate = $this->test_input($_POST["startDate"]);
             $startTime = $this->test_input($_POST["startTime"]);
             $startDate = $startDate . ' ' . $startTime;
@@ -107,7 +107,6 @@ class RunService
         $eventID = $this->test_input($_POST["eventID"]);
         /** @var Event $event */
         $event = $dataService->getEventByEventID($eventID);
-        $startDate = $event->getStartDate();
         $event->setCompleteDate(date("Y-m-d H:i:s"));
         $event->setEventState(1);
         try {

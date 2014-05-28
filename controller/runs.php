@@ -33,8 +33,8 @@ if (isset($_GET["action"]) && $_GET["action"] == ("openEvent")) {
         );
     } else {
         $notification = array(
-            'type' => 'success',
-            'title' => 'Success',
+            'type' => 'danger',
+            'title' => 'Error',
             'message' => 'Failed to open eventID: ' . $_POST["eventID"] . '.',
         );
     }
@@ -49,8 +49,8 @@ if (isset($_GET["action"]) && $_GET["action"] == ("closeEvent")) {
         );
     } else {
         $notification = array(
-            'type' => 'success',
-            'title' => 'Success',
+            'type' => 'danger',
+            'title' => 'Error',
             'message' => 'Failed to close eventID: ' . $_POST["eventID"] . '.',
         );
     }

@@ -330,6 +330,8 @@ class DataService
             /** @var Event $event */
             $event = Event::create($row["eventID"], $row["eventTypeID"], $row["startDate"], $row["completeDate"],
                 $row["eventState"], $row["recurringEvent"], $row["dayOfWeek"], $row["hourOfDay"], $row["eventName"]);
+            $event->setAccountCooldown($row["accountCooldown"]);
+            $event->setCharacterCooldown($row["characterCooldown"]);
             $dropList = array();
             while (isset($dropResults[$dropPointer]["eventID"]) && $dropResults[$dropPointer]["eventID"] == $row["eventID"]) {
                 /** @var Drop $drop */

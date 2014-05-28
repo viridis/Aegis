@@ -6,7 +6,9 @@ class EventDAO
 {
     public function getAllEvents()
     {
-        $sqlEvents = "SELECT * FROM events ORDER BY eventID ASC;";
+        $sqlEvents = "SELECT events.*, eventTypes.eventName, eventTypes.accountCooldown, eventTypes.characterCooldown
+                        FROM events LEFT JOIN eventTypes ON events.eventTypeID=eventTypes.eventTypeID
+                        ORDER BY eventID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultSetEvents = $dbh->query($sqlEvents);
         $eventResults = $resultSetEvents->fetchAll(PDO::FETCH_ASSOC);
@@ -15,7 +17,10 @@ class EventDAO
 
     public function getEventByEventID($eventID)
     {
-        $sqlEvents = "SELECT * FROM events WHERE eventID = :eventID;";
+        $sqlEvents = "SELECT events.*, eventTypes.eventName, eventTypes.accountCooldown, eventTypes.characterCooldown
+                        FROM events LEFT JOIN eventTypes ON events.eventTypeID=eventTypes.eventTypeID
+                        WHERE eventID = :eventID
+                        ORDER BY eventID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlEvents);
         $stmt->bindParam(':eventID', $eventID);
@@ -88,8 +93,7 @@ class EventDAO
                         eventState = :eventState,
                         recurringEvent = :recurringEvent,
                         dayOfWeek = :dayOfWeek,
-                        hourOfDay = :hourOfDay,
-                        eventName = :eventName
+                        hourOfDay = :hourOfDay
                         WHERE eventID = :eventID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlUpdate);
@@ -107,8 +111,6 @@ class EventDAO
         $stmt->bindParam(':dayOfWeek', $dayOfWeek);
         $hourOfDay = $event->getHourOfDay();
         $stmt->bindParam(':hourOfDay', $hourOfDay);
-        $eventName = $event->getEventName();
-        $stmt->bindParam(':eventName', $eventName);
         $eventID = $event->getEventID();
         $stmt->bindParam(':eventID', $eventID);
         $binds = array(
@@ -119,7 +121,6 @@ class EventDAO
             ":recurringEvent" => $isRecurringEvent,
             ":dayOfWeek" => $dayOfWeek,
             ":hourOfDay" => $hourOfDay,
-            ":eventName" => $eventName,
             ":eventID" => $eventID,
         );
         $logDAO = new LogDAO();
