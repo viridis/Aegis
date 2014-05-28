@@ -7,7 +7,7 @@ $pageService = new PageService();
 $dataService = new DataService();
 $runService = new RunService();
 
-if (!$pageService->authorizedUser($_SESSION["userID"], 10)) {
+if (!$pageService->authorizedUser(10)) {
     header("location: ./home.php");
 }
 

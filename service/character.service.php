@@ -28,7 +28,8 @@ class CharacterService
         return $characterDAO->deleteCharacter($character->getCharID());
     }
 
-    public function getCharactersByAccountID($accountID){
+    public function getCharactersByAccountID($accountID)
+    {
         $characterDAO = new CharacterDAO();
         return $characterDAO->getCharactersByAccountID($accountID);
     }

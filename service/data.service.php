@@ -7,6 +7,7 @@ require_once("../service/drop.service.php");
 require_once("../service/slot.service.php");
 require_once("../service/item.service.php");
 require_once("../service/eventType.service.php");
+require_once("../service/cooldown.service.php");
 
 class DataService
 {
@@ -281,6 +282,43 @@ class DataService
         return $characterService->deleteCharacter($character);
     }
 
+    public function getAllCooldowns()
+    {
+        $cooldownService = new CooldownService();
+        $cooldownResults = $cooldownService->getAllCooldowns();
+        $completeCooldowns = $this->createCooldownArray($cooldownResults);
+        return $completeCooldowns;
+    }
+
+    public function getCooldownByCooldownID($cooldownID)
+    {
+        $cooldownService = new CooldownService();
+        $cooldownResults = $cooldownService->getCooldownByCooldownID($cooldownID);
+        $completeCooldowns = $this->createCooldownArray($cooldownResults);
+        if (isset($completeCooldowns[0])) {
+            return $completeCooldowns[0];
+        }
+        return false;
+    }
+
+    public function createCooldown($cooldown)
+    {
+        $cooldownService = new CooldownService();
+        return $cooldownService->createCooldown($cooldown);
+    }
+
+    public function updateCooldown($cooldown)
+    {
+        $cooldownService = new CooldownService();
+        return $cooldownService->updateCooldown($cooldown);
+    }
+
+    public function deleteCooldown($cooldown)
+    {
+        $cooldownService = new CooldownService();
+        return $cooldownService->deleteCooldown($cooldown);
+    }
+
     private function createUserArray($userAccountResults, $gameAccountResults, $characterResults)
     {
         $result = array();
@@ -397,6 +435,17 @@ class DataService
             $eventType = EventType::create($row["eventTypeID"], $row["eventName"], $row["characterCooldown"],
                 $row["accountCooldown"], $row["numSlots"]);
             array_push($result, $eventType);
+        }
+        return $result;
+    }
+
+    private function createCooldownArray($cooldownResults)
+    {
+        $result = array();
+        foreach ($cooldownResults as $row) {
+            $cooldown = Cooldown::create($row["cooldownID"], $row["eventID"], $row["accountID"], $row["charID"],
+                $row["endDate"], $row["eventTypeID"]);
+            array_push($result, $cooldown);
         }
         return $result;
     }

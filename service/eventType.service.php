@@ -9,12 +9,14 @@ class EventTypeService
         return $eventTypeDAO->getAllEventTypes();
     }
 
-    public function getEventTypeByEventTypeID($eventTypeID){
+    public function getEventTypeByEventTypeID($eventTypeID)
+    {
         $eventTypeDAO = new EventTypeDAO();
         return $eventTypeDAO->getEventTypeByEventTypeID($eventTypeID);
     }
 
-    public function createEventType($eventType){
+    public function createEventType($eventType)
+    {
         $eventTypeDAO = new EventTypeDAO();
         return $eventTypeDAO->createEventType($eventType);
     }
