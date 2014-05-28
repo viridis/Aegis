@@ -319,6 +319,14 @@ class DataService
         return $cooldownService->deleteCooldown($cooldown);
     }
 
+    public function getCooldownByEvent($event)
+    {
+        $cooldownService = new CooldownService();
+        $cooldownResults = $cooldownService->getCooldownsByEvent($event);
+        $completeCooldowns = $this->createCooldownArray($cooldownResults);
+        return $completeCooldowns;
+    }
+
     private function createUserArray($userAccountResults, $gameAccountResults, $characterResults)
     {
         $result = array();
@@ -397,6 +405,7 @@ class DataService
                 $slot->setUserLogin($slotResults[$slotPointer]["userLogin"]);
                 $slot->setCharClassID($slotResults[$slotPointer]["charClassID"]);
                 $slot->setCharName($slotResults[$slotPointer]["charName"]);
+                $slot->setAccountID($slotResults[$slotPointer]["accountID"]);
                 array_push($slotList, $slot);
                 $slotPointer++;
             }

@@ -107,6 +107,7 @@ class RunService
         $event->setEventState(1);
         try {
             $dataService->updateEvent($event);
+            $this->createCooldownsForEvent($event);
         } catch (Exception $e) {
             echo 'Caught exception' . $e->getMessage();
             return false;
@@ -124,6 +125,7 @@ class RunService
         $event->setEventState(0);
         try {
             $dataService->updateEvent($event);
+            $this->removeCooldownsForEvent($event);
         } catch (Exception $e) {
             echo 'Caught exception' . $e->getMessage();
             return false;
@@ -137,5 +139,52 @@ class RunService
         $data = stripslashes($data);
         $data = htmlspecialchars($data);
         return $data;
+    }
+
+    private function createCooldownsForEvent($event)
+    {
+        $dataService = new DataService();
+        /** @var Event $event */
+        if ($event->getAccountCooldown() > 0) {
+            $this->createCharacterCooldownsForEvent($event, $dataService);
+        }
+        if ($event->getCharacterCooldown() > 0) {
+            $this->createAccountCooldownsForEvent($event, $dataService);
+        }
+    }
+
+    private function createCharacterCooldownsForEvent($event)
+    {
+        $dataService = new DataService();
+        $endDate = date("Y-m-d H:i:s", time() + $event->getAccountCooldown());
+        foreach ($event->getSlotList() as $slot) {
+            /** @var Slot $slot */
+            if ($slot->isTaken()) {
+                $cooldown = new Cooldown(NULL, $event->getEventID(), $slot->getAccountID(), NULL, $endDate, $event->getEventTypeID());
+                $dataService->createCooldown($cooldown);
+            }
+        }
+    }
+
+    private function createAccountCooldownsForEvent($event)
+    {
+        $dataService = new DataService();
+        $endDate = date("Y-m-d H:i:s", time() + $event->getCharacterCooldown());
+        foreach ($event->getSlotList() as $slot) {
+            /** @var Slot $slot */
+            if ($slot->isTaken()) {
+                $cooldown = new Cooldown(NULL, $event->getEventID(), NULL, $slot->getTakenCharID(), $endDate, $event->getEventTypeID());
+                $dataService->createCooldown($cooldown);
+            }
+        }
+    }
+
+    private function removeCooldownsForEvent($event)
+    {
+        $dataService = new DataService();
+        $cooldownContainer = $dataService->getCooldownByEvent($event);
+        foreach ($cooldownContainer as $cooldown) {
+            $dataService->deleteCooldown($cooldown);
+        }
     }
 }

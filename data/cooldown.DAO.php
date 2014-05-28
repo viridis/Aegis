@@ -117,4 +117,15 @@ class CooldownDAO
             throw new Exception('Failed to update cooldown (' . $cooldownID . ')');
         }
     }
+
+    public function getAllCooldownsByEventID($eventID)
+    {
+        $sqlCooldown = "SELECT * FROM cooldowns WHERE eventID = :eventID;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlCooldown);
+        $stmt->bindParam(':eventID', $eventID);
+        $stmt->execute();
+        $cooldownResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $cooldownResults;
+    }
 }

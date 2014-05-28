@@ -7,7 +7,8 @@ class SlotDAO
 {
     public function getAllSlots()
     {
-        $sqlSlots = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName
+        $sqlSlots = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName,
+                        characters.accountID
                         FROM slots
                         LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
                         LEFT JOIN characters ON characters.charID = slots.takenCharID
@@ -63,7 +64,7 @@ class SlotDAO
 
     public function getSlotByEventID($eventID)
     {
-        $sqlSlot = "SELECT slots.*, useraccount.userLogin, characters.charClass, characters.charName
+        $sqlSlot = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName, characters.accountID
                         FROM slots
                         LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
                         LEFT JOIN characters ON characters.charID = slots.takenCharID

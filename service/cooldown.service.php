@@ -33,4 +33,11 @@ class CooldownService
         $cooldownDAO = new CooldownDAO();
         return $cooldownDAO->updateCooldown($cooldown);
     }
+
+    public function getCooldownsByEvent($event)
+    {
+        /** @var Event $event */
+        $cooldownDAO = new CooldownDAO();
+        return $cooldownDAO->getAllCooldownsByEventID($event->getEventID());
+    }
 }
