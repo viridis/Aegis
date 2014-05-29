@@ -3,7 +3,6 @@ require_once("../service/data.service.php");
 
 class RunService
 {
-
     public function validEventData()
     {
         if (empty($_POST["eventTypeID"])) {
@@ -108,6 +107,9 @@ class RunService
         try {
             $dataService->updateEvent($event);
             $this->createCooldownsForEvent($event);
+            if ($event->isRecurringEvent()){
+                $this->duplicateRecurringClosedEvent($event);
+            }
         } catch (Exception $e) {
             echo 'Caught exception' . $e->getMessage();
             return false;
@@ -155,6 +157,7 @@ class RunService
 
     private function createCharacterCooldownsForEvent($event)
     {
+        /** @var Event $event */
         $dataService = new DataService();
         $endDate = date("Y-m-d H:i:s", time() + $event->getAccountCooldown());
         foreach ($event->getSlotList() as $slot) {
@@ -168,6 +171,7 @@ class RunService
 
     private function createAccountCooldownsForEvent($event)
     {
+        /** @var Event $event */
         $dataService = new DataService();
         $endDate = date("Y-m-d H:i:s", time() + $event->getCharacterCooldown());
         foreach ($event->getSlotList() as $slot) {
@@ -186,5 +190,16 @@ class RunService
         foreach ($cooldownContainer as $cooldown) {
             $dataService->deleteCooldown($cooldown);
         }
+    }
+
+    private function duplicateRecurringClosedEvent($event)
+    {
+        /** @var Event $event */
+        $dataService = new DataService();
+        $date = new DateTime($event->getStartDate());
+        $newStartDate = $date->add(new DateInterval('P7D'));
+        $formattedNewStartDate = $newStartDate->format('Y-m-d H:i:s');
+        $newEvent = new Event(NULL, $event->getEventTypeID(), $formattedNewStartDate, NULL, NULL, true, $event->getDayOfWeek(), $event->getHourOfDay());
+        $dataService->createEvent($newEvent);
     }
 }
