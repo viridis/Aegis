@@ -248,6 +248,8 @@ class DataService
         $incompleteGameAccounts = $gameAccountService->getGameAccountByAccountID($accountID);
         $characterService = new CharacterService();
         $completeCharacters = $characterService->getCharactersByAccountID($accountID);
+        $cooldownService = new CooldownService();
+        $completeCooldowns = $cooldownService->getCooldownsByAccountID($accountID);
         $completeGameAccounts = $this->createGameAccountArray($incompleteGameAccounts, $completeCharacters);
         return $completeGameAccounts[0];
     }
@@ -421,7 +423,7 @@ class DataService
         $characterPointer = 0;
         foreach ($gameAccountResults as $row) {
             /** @var GameAccount $gameAccount */
-            $gameAccount = GameAccount::create($row["userID"], $row["accountID"], $row["cooldown"], $row["gameAccountName"]);
+            $gameAccount = GameAccount::create($row["userID"], $row["accountID"], $row["gameAccountName"]);
             $characterList = array();
             while (isset($characterResults[$characterPointer]) && $characterResults[$characterPointer]["accountID"] <= $row["accountID"]) {
                 $character = Character::create($characterResults[$characterPointer]["accountID"],

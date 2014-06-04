@@ -40,4 +40,10 @@ class CooldownService
         $cooldownDAO = new CooldownDAO();
         return $cooldownDAO->getAllCooldownsByEventID($event->getEventID());
     }
+
+    public function getCooldownsByAccountID($accountID)
+    {
+        $cooldownDAO = new CooldownDAO();
+        return $cooldownDAO->getCooldownByAccountID($accountID);
+    }
 }

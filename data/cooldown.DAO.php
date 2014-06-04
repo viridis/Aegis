@@ -7,7 +7,7 @@ class CooldownDAO
 {
     public function getAllCooldowns()
     {
-        $sqlCooldown = "SELECT * FROM cooldowns;";
+        $sqlCooldown = "SELECT * FROM cooldowns AND endDate >  now();";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultSetCooldowns = $dbh->query($sqlCooldown);
         $cooldownResults = $resultSetCooldowns->fetchAll(PDO::FETCH_ASSOC);
@@ -120,10 +120,21 @@ class CooldownDAO
 
     public function getAllCooldownsByEventID($eventID)
     {
-        $sqlCooldown = "SELECT * FROM cooldowns WHERE eventID = :eventID;";
+        $sqlCooldown = "SELECT * FROM cooldowns WHERE eventID = :eventID AND endDate > now();";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlCooldown);
         $stmt->bindParam(':eventID', $eventID);
+        $stmt->execute();
+        $cooldownResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $cooldownResults;
+    }
+
+    public function getCooldownByAccountID($accountID)
+    {
+        $sqlCooldown = "SELECT * FROM cooldowns WHERE accountID = :accountID AND endDate > now();";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlCooldown);
+        $stmt->bindParam(':accountID', $accountID);
         $stmt->execute();
         $cooldownResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $cooldownResults;

@@ -73,22 +73,18 @@ class GameAccountDAO
         /** @var GameAccount $gameAccount */
         $sqlUpdate = "UPDATE gameaccounts
                         SET userID = :userID,
-                        cooldown = NOW()+:cooldown,
                         gameAccountName = :gameAccountName
                         WHERE accountID = :accountID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlUpdate);
         $userID = $gameAccount->getUserID();
         $stmt->bindParam(':userID', $userID);
-        $cooldown = $gameAccount->getCooldown();
-        $stmt->bindParam(':cooldown', $cooldown);
         $accountID = $gameAccount->getAccountID();
         $stmt->bindParam(':accountID', $accountID);
         $gameAccountName = $gameAccount->getGameAccountName();
         $stmt->bindParam(':gameAccountName', $gameAccountName);
         $binds = array(
             ":userID" => $userID,
-            ":cooldown" => $cooldown,
             ":accountID" => $accountID,
             ":gameAccountName" => $gameAccountName,
         );
