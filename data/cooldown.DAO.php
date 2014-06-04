@@ -28,7 +28,7 @@ class CooldownDAO
     public function createCooldown($cooldown)
     {
         /** @var Cooldown $cooldown */
-        $sqlInsert = "INSERT INTO cooldowns VALUES(NULL, :eventID, :accountID, :charID, :endDate, :eventTypeID, :cooldownType);";
+        $sqlInsert = "INSERT INTO cooldowns VALUES(NULL, :eventID, :accountID, :charID, :endDate, :eventTypeID, :cooldownType, :userID);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlInsert);
         $eventID = $cooldown->getEventID();
@@ -43,13 +43,16 @@ class CooldownDAO
         $stmt->bindParam(':eventTypeID', $eventTypeID);
         $cooldownType = $cooldown->getCooldownType();
         $stmt->bindParam(':cooldownType', $cooldownType);
+        $userID = $cooldown->getUserID();
+        $stmt->bindParam(':userID', $userID);
         $binds = array(
             ":eventID" => $eventID,
             ":accountID" => $accountID,
             ":charID" => $charID,
             ":endDate" => $endDate,
             ":eventTypeID" => $eventTypeID,
-            ":cooldownType" => $cooldownType
+            ":cooldownType" => $cooldownType,
+            ":userID" => $userID
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -88,7 +91,8 @@ class CooldownDAO
                         charID = :charID,
                         endDate = :endDate,
                         eventTypeID = :eventTypeID,
-                        cooldownType = :cooldownType
+                        cooldownType = :cooldownType,
+                        userID = :userID
                         WHERE cooldownID = :cooldownID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlUpdate);
@@ -106,6 +110,8 @@ class CooldownDAO
         $stmt->bindParam(':cooldownID', $cooldownID);
         $cooldownType = $cooldown->getCooldownType();
         $stmt->bindParam(':cooldownType', $cooldownType);
+        $userID = $cooldown->getUserID();
+        $stmt->bindParam(':userID', $userID);
         $binds = array(
             ":eventID" => $eventID,
             ":accountID" => $accountID,
@@ -113,7 +119,8 @@ class CooldownDAO
             ":endDate" => $endDate,
             ":eventTypeID" => $eventTypeID,
             ":cooldownID" => $cooldownID,
-            ":cooldownType" => $cooldownType
+            ":cooldownType" => $cooldownType,
+            ":userID" => $userID
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -125,7 +132,7 @@ class CooldownDAO
         }
     }
 
-    public function getAllCooldownsByEventID($eventID)
+    public function getAllCooldownByEventID($eventID)
     {
         $sqlCooldown = "SELECT * FROM cooldowns WHERE eventID = :eventID AND endDate > now();";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
@@ -138,10 +145,21 @@ class CooldownDAO
 
     public function getCooldownByAccountID($accountID)
     {
-        $sqlCooldown = "SELECT * FROM cooldowns WHERE accountID = :accountID AND endDate > now();";
+        $sqlCooldown = "SELECT * FROM cooldowns WHERE accountID = :accountID AND endDate > now() ORDER BY userID, accountID, charID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlCooldown);
         $stmt->bindParam(':accountID', $accountID);
+        $stmt->execute();
+        $cooldownResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $cooldownResults;
+    }
+
+    public function getCooldownByUserID($userID)
+    {
+        $sqlCooldown = "SELECT * FROM cooldowns WHERE userID = :userID AND endDate > now() ORDER BY userID, accountID, charID ASC;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlCooldown);
+        $stmt->bindParam(':userID', $userID);
         $stmt->execute();
         $cooldownResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $cooldownResults;

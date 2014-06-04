@@ -14,25 +14,31 @@ class DataService
     public function getAllEventInfo()
     {
         $eventService = new EventService();
-        $incompleteEvents = $eventService->getAllEvents();
+        $eventResults = $eventService->getAllEvents();
+        $eventArray = $this->createEventArray($eventResults);
         $dropService = new DropService();
-        $completeDrops = $dropService->getAllDrops();
+        $dropResults = $dropService->getAllDrops();
+        $dropArray = $this->createDropArray($dropResults);
         $slotService = new SlotService();
-        $completeSlots = $slotService->getAllSlots();
-        $completeEvents = $this->createEventArray($incompleteEvents, $completeDrops, $completeSlots);
+        $slotResults = $slotService->getAllSlots();
+        $slotArray = $this->createSlotArray($slotResults);
+        $completeEvents = $this->createCompleteEventArray($eventArray, $dropArray, $slotArray);
         return $completeEvents;
     }
 
     public function getEventByEventID($eventID)
     {
         $eventService = new EventService();
-        $incompleteEvents = $eventService->getEventByEventID($eventID);
+        $eventResults = $eventService->getEventByEventID($eventID);
+        $eventArray = $this->createEventArray($eventResults);
         $dropService = new DropService();
-        $completeDrops = $dropService->getDropByEventID($eventID);
+        $dropResults = $dropService->getDropByEventID($eventID);
+        $dropArray = $this->createDropArray($dropResults);
         $slotService = new SlotService();
-        $completeSlots = $slotService->getSlotByEventID($eventID);
-        $completeEvents = $this->createEventArray($incompleteEvents, $completeDrops, $completeSlots);
-        return $completeEvents[0];
+        $slotResults = $slotService->getSlotByEventID($eventID);
+        $slotArray = $this->createSlotArray($slotResults);
+        $completeEvents = $this->createCompleteEventArray($eventArray, $dropArray, $slotArray);
+        return current($completeEvents);
     }
 
     public function createEvent($event)
@@ -73,10 +79,7 @@ class DataService
         $eventTypeService = new EventTypeService();
         $eventTypeResults = $eventTypeService->getEventTypeByEventTypeID($eventTypeID);
         $completeEventTypes = $this->createEventTypeArray($eventTypeResults);
-        if (isset($completeEventTypes[0])) {
-            return $completeEventTypes[0];
-        }
-        return false;
+        return current($completeEventTypes);
     }
 
     public function updateEventType($eventType)
@@ -171,28 +174,37 @@ class DataService
     public function getAllUserInfo()
     {
         $userService = new UserService();
-        $incompleteUsers = $userService->getAllUsers();
+        $userResults = $userService->getAllUsers();
+        $userArray = $this->createUserArray($userResults);
         $gameAccountService = new GameAccountService();
-        $incompleteGameAccounts = $gameAccountService->getAllGameAccounts();
+        $gameAccountResults = $gameAccountService->getAllGameAccounts();
+        $gameAccountArray = $this->createGameAccountArray($gameAccountResults);
         $characterService = new CharacterService();
-        $completeCharacters = $characterService->getAllCharacters();
-        $completeUsers = $this->createUserArray($incompleteUsers, $incompleteGameAccounts, $completeCharacters);
+        $characterResults = $characterService->getAllCharacters();
+        $characterArray = $this->createCharacterArray($characterResults);
+        $cooldownService = new CooldownService();
+        $cooldownResults = $cooldownService->getAllCooldowns();
+        $cooldownArray = $this->createCooldownArray($cooldownResults);
+        $completeUsers = $this->createCompleteUserArray($userArray, $gameAccountArray, $characterArray, $cooldownArray);
         return $completeUsers;
     }
 
     public function getUserByUserID($userID)
     {
         $userService = new UserService();
-        $incompleteUsers = $userService->getUserByUserID($userID);
+        $userResults = $userService->getUserByUserID($userID);
+        $userArray = $this->createUserArray($userResults);
         $gameAccountService = new GameAccountService();
-        $incompleteGameAccounts = $gameAccountService->getGameAccountByUserID($userID);
+        $gameAccountResults = $gameAccountService->getGameAccountByUserID($userID);
+        $gameAccountArray = $this->createGameAccountArray($gameAccountResults);
         $characterService = new CharacterService();
-        $completeCharacters = $characterService->getCharactersByUserID($userID);
-        $completeUsers = $this->createUserArray($incompleteUsers, $incompleteGameAccounts, $completeCharacters);
-        if (isset($completeUsers[0])) {
-            return $completeUsers[0];
-        }
-        return false;
+        $characterResults = $characterService->getCharactersByUserID($userID);
+        $characterArray = $this->createCharacterArray($characterResults);
+        $cooldownService = new CooldownService();
+        $cooldownResults = $cooldownService->getCooldownsByUserID($userID);
+        $cooldownArray = $this->createCooldownArray($cooldownResults);
+        $completeUsers = $this->createCompleteUserArray($userArray, $gameAccountArray, $characterArray, $cooldownArray);
+        return current($completeUsers);
     }
 
     public function getUserByLoginAndPassword($userLogin, $userPassword)
@@ -245,13 +257,16 @@ class DataService
     public function getGameAccountByAccountID($accountID)
     {
         $gameAccountService = new GameAccountService();
-        $incompleteGameAccounts = $gameAccountService->getGameAccountByAccountID($accountID);
+        $gameAccountResults = $gameAccountService->getGameAccountByAccountID($accountID);
+        $gameAccountArray = $this->createGameAccountArray($gameAccountResults);
         $characterService = new CharacterService();
-        $completeCharacters = $characterService->getCharactersByAccountID($accountID);
+        $characterResults = $characterService->getCharactersByAccountID($accountID);
+        $characterArray = $this->createCharacterArray($characterResults);
         $cooldownService = new CooldownService();
-        $completeCooldowns = $cooldownService->getCooldownsByAccountID($accountID);
-        $completeGameAccounts = $this->createGameAccountArray($incompleteGameAccounts, $completeCharacters);
-        return $completeGameAccounts[0];
+        $cooldownResults = $cooldownService->getCooldownsByAccountID($accountID);
+        $cooldownArray = $this->createCooldownArray($cooldownResults);
+        $completeGameAccounts = $this->createCompleteGameAccountArray($gameAccountArray, $characterArray, $cooldownArray);
+        return current($completeGameAccounts[0]);
     }
 
     public function updateGameAccount($gameAccount)
@@ -297,10 +312,7 @@ class DataService
         $cooldownService = new CooldownService();
         $cooldownResults = $cooldownService->getCooldownByCooldownID($cooldownID);
         $completeCooldowns = $this->createCooldownArray($cooldownResults);
-        if (isset($completeCooldowns[0])) {
-            return $completeCooldowns[0];
-        }
-        return false;
+        return current($completeCooldowns);
     }
 
     public function createCooldown($cooldown)
@@ -324,117 +336,100 @@ class DataService
     public function getCooldownByEvent($event)
     {
         $cooldownService = new CooldownService();
-        $cooldownResults = $cooldownService->getCooldownsByEvent($event);
+        $cooldownResults = $cooldownService->getCooldownByEvent($event);
         $completeCooldowns = $this->createCooldownArray($cooldownResults);
         return $completeCooldowns;
     }
 
-    private function createUserArray($userAccountResults, $gameAccountResults, $characterResults)
+    private function createCompleteUserArray($userAccountResults, $gameAccountResults, $characterResults, $cooldownResults)
     {
         $result = array();
-        $gameAccountPointer = 0;
-        $characterPointer = 0;
-        foreach ($userAccountResults as $row) {
-            /** @var User $user */
-            $user = User::create($row['userID'], $row['userLogin'], $row['email'], $row['mailChar'],
-                $row['userPassword'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
-            $gameAccountList = array();
-            while (isset($gameAccountResults[$gameAccountPointer]) && $gameAccountResults[$gameAccountPointer]["userID"] <= $row["userID"]) {
-                /** @var GameAccount $gameAccount */
-                $gameAccount = GameAccount::create($gameAccountResults[$gameAccountPointer]["userID"],
-                    $gameAccountResults[$gameAccountPointer]["accountID"], $gameAccountResults[$gameAccountPointer]["cooldown"], $gameAccountResults[$gameAccountPointer]["gameAccountName"]);
-                $characterList = array();
-                while (isset($characterResults[$characterPointer]["accountID"]) && $characterResults[$characterPointer]["accountID"] == $gameAccountResults[$gameAccountPointer]["accountID"]) {
-                    $character = Character::create($characterResults[$characterPointer]["accountID"],
-                        $characterResults[$characterPointer]["charID"], $characterResults[$characterPointer]["charName"],
-                        $characterResults[$characterPointer]["cooldown"], $characterResults[$characterPointer]["charClassID"],
-                        $characterResults[$characterPointer]["userID"]);
-                    array_push($characterList, $character);
-                    $characterPointer++;
-                }
-                $gameAccount->setCharacterList($characterList);
-                array_push($gameAccountList, $gameAccount);
-                $gameAccountPointer++;
-            }
-            $user->setGameAccountContainer($gameAccountList);
-            array_push($result, $user);
-        }
         return $result;
     }
 
-    /**
-     * This method creates an array of Event objects given results from sql queries
-     * @param $eventResults
-     * @param $dropResults
-     * @param $slotResults
-     * @return Event array
-     */
-    private function createEventArray($eventResults, $dropResults, $slotResults)
+    private function createCompleteEventArray($eventArray, $dropArray, $slotArray)
+    {
+        foreach ($dropArray as $drop) {
+            /** @var Drop $drop */
+            $eventID = $drop->getEventID();
+            /** @var Event $event */
+            $event = $eventArray[$eventID];
+            $dropContainer = $event->getDropList();
+            array_push($dropContainer, $drop);
+            $event->setDropList($dropContainer);
+        }
+        foreach ($slotArray as $slot) {
+            /** @var Slot $slot */
+            $eventID = $slot->getEventID();
+            /** @var Event $event */
+            $event = $eventArray[$eventID];
+            $slotContainer = $event->getSlotList();
+            array_push($slotContainer, $slot);
+            $event->setSlotList($slotContainer);
+        }
+        return $eventArray;
+    }
+
+    private function createCompleteGameAccountArray($gameAccountResults, $characterResults, $cooldownResults)
     {
         $result = array();
-        $dropPointer = 0;
-        $slotPointer = 0;
+
+        return $result;
+    }
+
+    private function createEventArray($eventResults)
+    {
+        $result = array();
         foreach ($eventResults as $row) {
             /** @var Event $event */
             $event = Event::create($row["eventID"], $row["eventTypeID"], $row["startDate"], $row["completeDate"],
                 $row["eventState"], $row["recurringEvent"], $row["dayOfWeek"], $row["hourOfDay"], $row["eventName"]);
             $event->setAccountCooldown($row["accountCooldown"]);
             $event->setCharacterCooldown($row["characterCooldown"]);
+            $event->setDropList(array());
+            $event->setSlotList(array());
             $eventName = $row["eventName"];
             if ($event->isRecurringEvent()) {
                 $eventName = "[Weekly] " . $eventName;
             }
             $event->setEventName($eventName);
-            $dropList = array();
-            while (isset($dropResults[$dropPointer]["eventID"]) && $dropResults[$dropPointer]["eventID"] == $row["eventID"]) {
-                /** @var Drop $drop */
-                $drop = Drop::create($dropResults[$dropPointer]["eventID"], $dropResults[$dropPointer]["dropID"],
-                    $dropResults[$dropPointer]["holdingUserID"], $dropResults[$dropPointer]["sold"],
-                    $dropResults[$dropPointer]["soldPrice"], $dropResults[$dropPointer]["itemID"]);
-                $drop->setItemName($dropResults[$dropPointer]["name"]);
-                $drop->setAegisName($dropResults[$dropPointer]["aegisName"]);
-                array_push($dropList, $drop);
-                $dropPointer++;
-            }
-            $event->setDropList($dropList);
-
-            $slotList = array();
-            while (isset($slotResults[$slotPointer]["eventID"]) && $slotResults[$slotPointer]["eventID"] == $row["eventID"]) {
-                /** @var Slot $slot */
-                $slot = Slot::create($slotResults[$slotPointer]["eventID"], $slotResults[$slotPointer]["slotID"],
-                    $slotResults[$slotPointer]["slotClassID"], $slotResults[$slotPointer]["taken"],
-                    $slotResults[$slotPointer]["takenUserID"], $slotResults[$slotPointer]["takenCharID"]);
-                $slot->setUserLogin($slotResults[$slotPointer]["userLogin"]);
-                $slot->setCharClassID($slotResults[$slotPointer]["charClassID"]);
-                $slot->setCharName($slotResults[$slotPointer]["charName"]);
-                $slot->setAccountID($slotResults[$slotPointer]["accountID"]);
-                array_push($slotList, $slot);
-                $slotPointer++;
-            }
-            $event->setSlotList($slotList);
-            array_push($result, $event);
+            $result[$row["eventID"]] = $event;
         }
         return $result;
     }
 
-    private function createGameAccountArray($gameAccountResults, $characterResults)
+    private function createUserArray($userAccountResults)
     {
         $result = array();
-        $characterPointer = 0;
+        foreach ($userAccountResults as $row) {
+            /** @var User $user */
+            $user = User::create($row['userID'], $row['userLogin'], $row['email'], $row['mailChar'],
+                $row['userPassword'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
+            $user->setGameAccountContainer(array());
+            $result[$row["userID"]] = $user;
+        }
+        return $result;
+    }
+
+    private function createGameAccountArray($gameAccountResults)
+    {
+        $result = array();
         foreach ($gameAccountResults as $row) {
             /** @var GameAccount $gameAccount */
             $gameAccount = GameAccount::create($row["userID"], $row["accountID"], $row["gameAccountName"]);
-            $characterList = array();
-            while (isset($characterResults[$characterPointer]) && $characterResults[$characterPointer]["accountID"] <= $row["accountID"]) {
-                $character = Character::create($characterResults[$characterPointer]["accountID"],
-                    $characterResults[$characterPointer]["charID"], $characterResults[$characterPointer]["charName"],
-                    $characterResults[$characterPointer]["cooldown"], $characterResults[$characterPointer]["charClassID"],
-                    $characterResults[$characterPointer]["userID"]);
-                array_push($characterList, $character);
-                $characterPointer++;
-            }
-            $gameAccount->setCharacterList($characterList);
-            array_push($result, $gameAccount);
+            $result[$row["accountID"]] = $gameAccount;
+        }
+        return $result;
+    }
+
+    private function createCharacterArray($characterResults)
+    {
+        $result = array();
+        foreach ($characterResults as $row) {
+            /** @var GameAccount $gameAccount */
+            $character = Character::create($row["accountID"], $row["charID"], $row["charName"],
+                $row["cooldown"], $row["charClassID"], $row["userID"]);
+            $result[$row["charID"]] = $character;
         }
         return $result;
     }
@@ -445,7 +440,7 @@ class DataService
         foreach ($eventTypeResults as $row) {
             $eventType = EventType::create($row["eventTypeID"], $row["eventName"], $row["characterCooldown"],
                 $row["accountCooldown"], $row["numSlots"]);
-            array_push($result, $eventType);
+            $result[$row["eventTypeID"]] = $eventType;
         }
         return $result;
     }
@@ -455,8 +450,40 @@ class DataService
         $result = array();
         foreach ($cooldownResults as $row) {
             $cooldown = Cooldown::create($row["cooldownID"], $row["eventID"], $row["accountID"], $row["charID"],
-                $row["endDate"], $row["eventTypeID"], $row["cooldownType"]);
-            array_push($result, $cooldown);
+                $row["endDate"], $row["eventTypeID"], $row["cooldownType"], $row["userID"]);
+            $result[$row["cooldownID"]] = $cooldown;
+        }
+        return $result;
+    }
+
+    private function createDropArray($dropResults)
+    {
+        $result = array();
+        foreach ($dropResults as $row) {
+            /** @var Drop $drop */
+            $drop = Drop::create($row["eventID"], $row["dropID"],
+                $row["holdingUserID"], $row["sold"],
+                $row["soldPrice"], $row["itemID"]);
+            $drop->setItemName($row["name"]);
+            $drop->setAegisName($row["aegisName"]);
+            $result[$row["dropID"]] = $drop;
+        }
+        return $result;
+    }
+
+    private function createSlotArray($slotResults)
+    {
+        $result = array();
+        foreach ($slotResults as $row) {
+            /** @var Slot $slot */
+            $slot = Slot::create($row["eventID"], $row["slotID"],
+                $row["slotClassID"], $row["taken"],
+                $row["takenUserID"], $row["takenCharID"]);
+            $slot->setUserLogin($row["userLogin"]);
+            $slot->setCharClassID($row["charClassID"]);
+            $slot->setCharName($row["charName"]);
+            $slot->setAccountID($row["accountID"]);
+            $result[$row["slotID"]] = $slot;
         }
         return $result;
     }
