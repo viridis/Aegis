@@ -63,4 +63,9 @@ class Character
     {
         $this->$cooldown = $cooldown;
     }
+
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
+    }
 }

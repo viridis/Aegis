@@ -5,6 +5,7 @@ require_once("../service/profile.service.php");
 
 $pageService = new PageService();
 $dataService = new DataService();
+$profileService = new ProfileService();
 
 if (!$pageService->authorizedUser(1)) {
     header("location: ./home.php");
@@ -24,9 +25,7 @@ $currentUser = $dataService->getUserByUserID($_SESSION["userID"]);
 
 
 if (isset($_POST["gameAccountID"])){
-    echo '<pre>';
-    print_r($_POST);
-    echo '</pre>';
+    $profileService->getJSONGameAccount();
     exit();
 }
 

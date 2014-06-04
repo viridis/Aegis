@@ -423,7 +423,7 @@ class DataService
             /** @var GameAccount $gameAccount */
             $gameAccount = GameAccount::create($row["userID"], $row["accountID"], $row["cooldown"]);
             $characterList = array();
-            while ($characterResults[$characterPointer]["accountID"] <= $row["accountID"] && isset($characterResults[$characterPointer])) {
+            while (isset($characterResults[$characterPointer]) && $characterResults[$characterPointer]["accountID"] <= $row["accountID"]) {
                 $character = Character::create($characterResults[$characterPointer]["accountID"],
                     $characterResults[$characterPointer]["charID"], $characterResults[$characterPointer]["charName"],
                     $characterResults[$characterPointer]["cooldown"], $characterResults[$characterPointer]["charClassID"],
