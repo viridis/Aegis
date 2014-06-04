@@ -6,6 +6,33 @@
 </head>
 <body role="document">
 <?php include('partials/navbar.partial.view.php') ?>
+
+
+<div class="modal fade" id="addGameAccount">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Create Game Account</h4>
+            </div>
+            <form class="form-horizontal" action="profile.php?addGameAccount=1" method="post">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="accountName" class="col-sm-4 control-label">Account Name</label>
+
+                        <div class="col-sm-8">
+                            <input type="text" class="form-control" id="accountName" name="accountName"
+                                   placeholder="Account Name">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <input type="submit" class="btn btn-primary" value="Create Game Account">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <div class="container" role="main">
     <h3>Profile Management</h3>
 
@@ -19,18 +46,24 @@
         <div class="tab-pane active" id="main">
             <div style="height: 20px;"></div>
             <div class="container" style="padding-left:0px">
-                <label for="viewGameAccount">Select game account: </label>
-                <select id="viewGameAccount">
-                    <option value="" disabled selected>Select game account</option>
-                    <?php /** @var User $currentUser */
-                    foreach ($currentUser->getGameAccountContainer() as $gameAccount):
-                        /** @var GameAccount $gameAccount */
-                        ?>
-                        <option
-                            value="<?php print $gameAccount->getAccountID() ?>"><?php print $gameAccount->getAccountID() ?></option>
-                    <?php endforeach ?>
-                </select>
-
+                <div class="row col-sm-8">
+                    <label for="viewGameAccount">Select game account: </label>
+                    <select id="viewGameAccount">
+                        <option value="" disabled selected>Select game account</option>
+                        <?php /** @var User $currentUser */
+                        foreach ($currentUser->getGameAccountContainer() as $gameAccount):
+                            /** @var GameAccount $gameAccount */
+                            ?>
+                            <option
+                                value="<?php print $gameAccount->getAccountID() ?>"><?php print $gameAccount->getAccountID() ?></option>
+                        <?php endforeach ?>
+                    </select>
+                </div>
+                <div class="row col-sm-4">
+                    <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#addGameAccount">
+                        Create Game Account
+                    </button>
+                </div>
                 <br/><br/>
 
                 <div class="container" id="gameAccount" style="padding-left:0px">
