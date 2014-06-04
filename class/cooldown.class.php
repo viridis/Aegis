@@ -10,8 +10,9 @@ class Cooldown
     private $charID;
     private $endDate;
     private $eventTypeID;
+    private $cooldownType;
 
-    public function __construct($cooldownID, $eventID, $accountID, $charID, $endDate, $eventTypeID)
+    public function __construct($cooldownID, $eventID, $accountID, $charID, $endDate, $eventTypeID, $cooldownType)
     {
         $this->cooldownID = $cooldownID;
         $this->eventID = $eventID;
@@ -19,12 +20,13 @@ class Cooldown
         $this->charID = $charID;
         $this->endDate = $endDate;
         $this->eventTypeID = $eventTypeID;
+        $this->cooldownType = $cooldownType;
     }
 
-    public static function create($cooldownID, $eventID, $accountID, $charID, $endDate, $eventTypeID)
+    public static function create($cooldownID, $eventID, $accountID, $charID, $endDate, $eventTypeID, $cooldownType)
     {
         if (!isset(self::$idList[$cooldownID])) {
-            self::$idList[$cooldownID] = new Cooldown($cooldownID, $eventID, $accountID, $charID, $endDate, $eventTypeID);
+            self::$idList[$cooldownID] = new Cooldown($cooldownID, $eventID, $accountID, $charID, $endDate, $eventTypeID, $cooldownType);
         }
         return self::$idList[$cooldownID];
     }
@@ -54,6 +56,11 @@ class Cooldown
         return $this->endDate;
     }
 
+    public function getCooldownType()
+    {
+        return $this->cooldownType;
+    }
+
     public function getEventTypeID()
     {
         return $this->eventTypeID;
@@ -62,6 +69,11 @@ class Cooldown
     public function setEndDate($endDate)
     {
         $this->endDate = $endDate;
+    }
+
+    public function setCooldownType($cooldownType)
+    {
+        $this->cooldownType = $cooldownType;
     }
 
 }

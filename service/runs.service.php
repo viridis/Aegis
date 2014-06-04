@@ -163,7 +163,7 @@ class RunService
         foreach ($event->getSlotList() as $slot) {
             /** @var Slot $slot */
             if ($slot->isTaken()) {
-                $cooldown = new Cooldown(NULL, $event->getEventID(), $slot->getAccountID(), NULL, $endDate, $event->getEventTypeID());
+                $cooldown = new Cooldown(NULL, $event->getEventID(), $slot->getAccountID(), $slot->getTakenCharID(), $endDate, $event->getEventTypeID(), 1);
                 $dataService->createCooldown($cooldown);
             }
         }
@@ -177,7 +177,7 @@ class RunService
         foreach ($event->getSlotList() as $slot) {
             /** @var Slot $slot */
             if ($slot->isTaken()) {
-                $cooldown = new Cooldown(NULL, $event->getEventID(), NULL, $slot->getTakenCharID(), $endDate, $event->getEventTypeID());
+                $cooldown = new Cooldown(NULL, $event->getEventID(), $slot->getAccountID(), $slot->getTakenCharID(), $endDate, $event->getEventTypeID(), 2);
                 $dataService->createCooldown($cooldown);
             }
         }

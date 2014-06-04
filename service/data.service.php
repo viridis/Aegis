@@ -455,7 +455,7 @@ class DataService
         $result = array();
         foreach ($cooldownResults as $row) {
             $cooldown = Cooldown::create($row["cooldownID"], $row["eventID"], $row["accountID"], $row["charID"],
-                $row["endDate"], $row["eventTypeID"]);
+                $row["endDate"], $row["eventTypeID"], $row["cooldownType"]);
             array_push($result, $cooldown);
         }
         return $result;

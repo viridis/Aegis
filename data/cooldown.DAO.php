@@ -28,7 +28,7 @@ class CooldownDAO
     public function createCooldown($cooldown)
     {
         /** @var Cooldown $cooldown */
-        $sqlInsert = "INSERT INTO cooldowns VALUES(NULL, :eventID, :accountID, :charID, :endDate, :eventTypeID);";
+        $sqlInsert = "INSERT INTO cooldowns VALUES(NULL, :eventID, :accountID, :charID, :endDate, :eventTypeID, :cooldownType);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlInsert);
         $eventID = $cooldown->getEventID();
@@ -41,12 +41,15 @@ class CooldownDAO
         $stmt->bindParam(':endDate', $endDate);
         $eventTypeID = $cooldown->getEventTypeID();
         $stmt->bindParam(':eventTypeID', $eventTypeID);
+        $cooldownType = $cooldown->getCooldownType();
+        $stmt->bindParam(':cooldownType', $cooldownType);
         $binds = array(
             ":eventID" => $eventID,
             ":accountID" => $accountID,
             ":charID" => $charID,
             ":endDate" => $endDate,
-            ":eventTypeID" => $eventTypeID
+            ":eventTypeID" => $eventTypeID,
+            ":cooldownType" => $cooldownType
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -84,7 +87,8 @@ class CooldownDAO
                         accountID = :accountID,
                         charID = :charID,
                         endDate = :endDate,
-                        eventTypeID = :eventTypeID
+                        eventTypeID = :eventTypeID,
+                        cooldownType = :cooldownType
                         WHERE cooldownID = :cooldownID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlUpdate);
@@ -96,17 +100,20 @@ class CooldownDAO
         $stmt->bindParam(':charID', $charID);
         $endDate = $cooldown->getEndDate();
         $stmt->bindParam(':endDate', $endDate);
-        $eventTypeID = $cooldown->getCooldownID();
+        $eventTypeID = $cooldown->getEventTypeID();
         $stmt->bindParam(':eventTypeID', $eventTypeID);
         $cooldownID = $cooldown->getCooldownID();
         $stmt->bindParam(':cooldownID', $cooldownID);
+        $cooldownType = $cooldown->getCooldownType();
+        $stmt->bindParam(':cooldownType', $cooldownType);
         $binds = array(
             ":eventID" => $eventID,
             ":accountID" => $accountID,
             ":charID" => $charID,
             ":endDate" => $endDate,
             ":eventTypeID" => $eventTypeID,
-            ":cooldownID" => $cooldownID
+            ":cooldownID" => $cooldownID,
+            ":cooldownType" => $cooldownType
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
