@@ -28,12 +28,16 @@ class GameAccountDAO
     public function createGameAccount($gameAccount)
     {
         /** @var GameAccount $gameAccount */
-        $sqlInsert = "INSERT INTO gameaccounts VALUES(NULL, :userID, NULL);";
+        $sqlInsert = "INSERT INTO gameaccounts VALUES(NULL, :userID, NULL, :gameAccountName);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlInsert);
-        $stmt->bindParam(':userID', $gameAccount->getUserID());
+        $userID = $gameAccount->getUserID();
+        $stmt->bindParam(':userID', $userID);
+        $gameAccountName = $gameAccount->getGameAccountName();
+        $stmt->bindParam(':gameAccountName', $gameAccountName);
         $binds = array(
-            ":userID" => $gameAccount->getUserID()
+            ":userID" => $userID,
+            ":gameAccountName" => $gameAccountName
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {
@@ -69,7 +73,8 @@ class GameAccountDAO
         /** @var GameAccount $gameAccount */
         $sqlUpdate = "UPDATE gameaccounts
                         SET userID = :userID,
-                        cooldown = NOW()+:cooldown
+                        cooldown = NOW()+:cooldown,
+                        gameAccountName = :gameAccountName
                         WHERE accountID = :accountID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlUpdate);
@@ -79,10 +84,13 @@ class GameAccountDAO
         $stmt->bindParam(':cooldown', $cooldown);
         $accountID = $gameAccount->getAccountID();
         $stmt->bindParam(':accountID', $accountID);
+        $gameAccountName = $gameAccount->getGameAccountName();
+        $stmt->bindParam(':gameAccountName', $gameAccountName);
         $binds = array(
             ":userID" => $userID,
             ":cooldown" => $cooldown,
             ":accountID" => $accountID,
+            ":gameAccountName" => $gameAccountName,
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) {

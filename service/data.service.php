@@ -340,7 +340,7 @@ class DataService
             while (isset($gameAccountResults[$gameAccountPointer]) && $gameAccountResults[$gameAccountPointer]["userID"] <= $row["userID"]) {
                 /** @var GameAccount $gameAccount */
                 $gameAccount = GameAccount::create($gameAccountResults[$gameAccountPointer]["userID"],
-                    $gameAccountResults[$gameAccountPointer]["accountID"], $gameAccountResults[$gameAccountPointer]["cooldown"]);
+                    $gameAccountResults[$gameAccountPointer]["accountID"], $gameAccountResults[$gameAccountPointer]["cooldown"], $gameAccountResults[$gameAccountPointer]["gameAccountName"]);
                 $characterList = array();
                 while (isset($characterResults[$characterPointer]["accountID"]) && $characterResults[$characterPointer]["accountID"] == $gameAccountResults[$gameAccountPointer]["accountID"]) {
                     $character = Character::create($characterResults[$characterPointer]["accountID"],
@@ -421,7 +421,7 @@ class DataService
         $characterPointer = 0;
         foreach ($gameAccountResults as $row) {
             /** @var GameAccount $gameAccount */
-            $gameAccount = GameAccount::create($row["userID"], $row["accountID"], $row["cooldown"]);
+            $gameAccount = GameAccount::create($row["userID"], $row["accountID"], $row["cooldown"], $row["gameAccountName"]);
             $characterList = array();
             while (isset($characterResults[$characterPointer]) && $characterResults[$characterPointer]["accountID"] <= $row["accountID"]) {
                 $character = Character::create($characterResults[$characterPointer]["accountID"],

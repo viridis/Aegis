@@ -55,7 +55,7 @@
                             /** @var GameAccount $gameAccount */
                             ?>
                             <option
-                                value="<?php print $gameAccount->getAccountID() ?>"><?php print $gameAccount->getAccountID() ?></option>
+                                value="<?php print $gameAccount->getAccountID() ?>"><?php print $gameAccount->getGameAccountName() ?></option>
                         <?php endforeach ?>
                     </select>
                 </div>
