@@ -61,7 +61,7 @@ class Character
 
     public function setCooldownContainer($cooldownContainer)
     {
-        $this->$cooldownContainer = $cooldownContainer;
+        $this->cooldownContainer = $cooldownContainer;
     }
 
     public function jsonSerialize()

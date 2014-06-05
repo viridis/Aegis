@@ -148,10 +148,10 @@ class RunService
         $dataService = new DataService();
         /** @var Event $event */
         if ($event->getAccountCooldown() > 0) {
-            $this->createCharacterCooldownsForEvent($event, $dataService);
+            $this->createAccountCooldownsForEvent($event, $dataService);
         }
         if ($event->getCharacterCooldown() > 0) {
-            $this->createAccountCooldownsForEvent($event, $dataService);
+            $this->createCharacterCooldownsForEvent($event, $dataService);
         }
     }
 
@@ -159,7 +159,7 @@ class RunService
     {
         /** @var Event $event */
         $dataService = new DataService();
-        $endDate = date("Y-m-d H:i:s", time() + $event->getAccountCooldown());
+        $endDate = date("Y-m-d H:i:s", time() + $event->getCharacterCooldown());
         foreach ($event->getSlotList() as $slot) {
             /** @var Slot $slot */
             if ($slot->isTaken()) {
@@ -173,7 +173,7 @@ class RunService
     {
         /** @var Event $event */
         $dataService = new DataService();
-        $endDate = date("Y-m-d H:i:s", time() + $event->getCharacterCooldown());
+        $endDate = date("Y-m-d H:i:s", time() + $event->getAccountCooldown());
         foreach ($event->getSlotList() as $slot) {
             /** @var Slot $slot */
             if ($slot->isTaken()) {
@@ -187,6 +187,7 @@ class RunService
     {
         $dataService = new DataService();
         $cooldownContainer = $dataService->getCooldownByEvent($event);
+        var_dump($cooldownContainer);
         foreach ($cooldownContainer as $cooldown) {
             $dataService->deleteCooldown($cooldown);
         }
