@@ -7,24 +7,24 @@ class Character
     private $accountID;
     private $charID;
     private $charName;
-    private $cooldown;
     private $charClassID;
     private $userID;
 
-    public function __construct($accountID, $charID, $charName, $cooldown, $charClassID, $userID)
+    private $cooldownContainer;
+
+    public function __construct($accountID, $charID, $charName, $charClassID, $userID)
     {
         $this->accountID = $accountID;
         $this->charID = $charID;
         $this->charName = $charName;
-        $this->cooldown = $cooldown;
         $this->charClassID = $charClassID;
         $this->userID = $userID;
     }
 
-    public static function create($accountID, $charID, $charName, $cooldown, $charClassID, $userID)
+    public static function create($accountID, $charID, $charName, $charClassID, $userID)
     {
         if (!isset(self::$idList[$charID])) {
-            self::$idList[$charID] = new Character($accountID, $charID, $charName, $cooldown, $charClassID, $userID);
+            self::$idList[$charID] = new Character($accountID, $charID, $charName, $charClassID, $userID);
         }
         return self::$idList[$charID];
     }
@@ -44,9 +44,9 @@ class Character
         return $this->charName;
     }
 
-    public function getCooldown()
+    public function getCooldownContainer()
     {
-        return $this->cooldown;
+        return $this->cooldownContainer;
     }
 
     public function getCharClassID()
@@ -59,9 +59,9 @@ class Character
         return $this->userID;
     }
 
-    public function setCooldown($cooldown)
+    public function setCooldownContainer($cooldownContainer)
     {
-        $this->$cooldown = $cooldown;
+        $this->$cooldownContainer = $cooldownContainer;
     }
 
     public function jsonSerialize()

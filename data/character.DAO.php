@@ -38,7 +38,7 @@ class CharacterDAO
     public function createCharacter($character)
     {
         /** @var Character $character */
-        $sqlInsert = "INSERT INTO characters VALUES(:accountID, NULL, :charName, NULL, :charClassID, :userID);";
+        $sqlInsert = "INSERT INTO characters VALUES(:accountID, NULL, :charName, :charClassID, :userID);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlInsert);
         $userID = $character->getUserID();
@@ -90,7 +90,6 @@ class CharacterDAO
         $sqlUpdate = "UPDATE characters
                         SET accountID = :accountID,
                         charName = :charName,
-                        cooldown = NOW() + :cooldown,
                         charClass = :charClassID,
                         userID = :userID
                         WHERE charID = :charID;";
@@ -101,8 +100,6 @@ class CharacterDAO
         $stmt->bindParam(':accountID', $accountID);
         $charName = $character->getCharName();
         $stmt->bindParam(':charName', $charName);
-        $cooldown = $character->getCooldown();
-        $stmt->bindParam(':cooldown', $cooldown);
         $charClassID = $character->getCharClassID();
         $stmt->bindParam(':charClassID', $charClassID);
         $userID = $character->getUserID();
@@ -112,7 +109,6 @@ class CharacterDAO
         $binds = array(
             ":accountID" => $accountID,
             ":charName" => $charName,
-            ":cooldown" => $cooldown,
             ":charClassID" => $charClassID,
             ":userID" => $userID,
             ":charID" => $charID

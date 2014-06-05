@@ -341,10 +341,22 @@ class DataService
         return $completeCooldowns;
     }
 
-    private function createCompleteUserArray($userAccountResults, $gameAccountResults, $characterResults, $cooldownResults)
+    private function createCompleteUserArray($userAccountArray, $gameAccountArray, $characterArray, $cooldownArray)
     {
-        $result = array();
-        return $result;
+        $completeGameAccountArray = $this->createCompleteGameAccountArray($gameAccountArray, $characterArray, $cooldownArray);
+        foreach ($completeGameAccountArray as $gameAccount)
+        {
+            /** @var GameAccount $gameAccount */
+            $userID = $gameAccount->getUserID();
+            /** @var User $user */
+            $user = $userAccountArray[$userID];
+
+            $gameAccountContainer = $user->getGameAccountContainer();
+            $gameAccountContainer[$gameAccount->getAccountID()] = $gameAccount;
+            $user->setGameAccountContainer($gameAccountContainer);
+        }
+        return $userAccountArray;
+
     }
 
     private function createCompleteEventArray($eventArray, $dropArray, $slotArray)
@@ -355,7 +367,7 @@ class DataService
             /** @var Event $event */
             $event = $eventArray[$eventID];
             $dropContainer = $event->getDropList();
-            array_push($dropContainer, $drop);
+            $dropContainer[$drop->getDropID()] = $drop;
             $event->setDropList($dropContainer);
         }
         foreach ($slotArray as $slot) {
@@ -364,17 +376,42 @@ class DataService
             /** @var Event $event */
             $event = $eventArray[$eventID];
             $slotContainer = $event->getSlotList();
-            array_push($slotContainer, $slot);
+            $slotContainer[$slot->getSlotID()] = $slot;
             $event->setSlotList($slotContainer);
         }
         return $eventArray;
     }
 
-    private function createCompleteGameAccountArray($gameAccountResults, $characterResults, $cooldownResults)
+    private function createCompleteGameAccountArray($gameAccountArray, $characterArray, $cooldownArray)
     {
-        $result = array();
+        foreach ($cooldownArray as $cooldown){
+            /** @var Cooldown $cooldown */
+            if ($cooldown->getCooldownType() == 1){
+                $gameAccountID = $cooldown->getAccountID();
+                /** @var GameAccount $gameAccount */
+                $gameAccount = $gameAccountArray[$gameAccountID];
+                $cooldownContainer = $gameAccount->getCooldownContainer();
+                $cooldownContainer[$cooldown->getCooldownID()] = $cooldown;
+                $gameAccount->setCooldownContainer($cooldownContainer);
+            } else if ($cooldown->getCooldownType() == 2){
+                $charID = $cooldown->getCharID();
+                /** @var Character $character */
+                $character = $characterArray[$charID];
+                $cooldownContainer = $character->getCooldownContainer();
+                $cooldownContainer[$cooldown->getCooldownID()] = $cooldown;
+                $character->setCooldownContainer($cooldownContainer);
+            }
+        }
 
-        return $result;
+        foreach ($characterArray as $character){
+            /** @var Character $character */
+            $gameAccountID = $character->getAccountID();
+            $gameAccount = $gameAccountArray[$gameAccountID];
+            $characterContainer = $gameAccount->getCharacterList();
+            $characterContainer[$character->getCharID()] = $character;
+            $gameAccount->setCharacterList($characterContainer);
+        }
+        return $gameAccountArray;
     }
 
     private function createEventArray($eventResults)
@@ -428,7 +465,7 @@ class DataService
         foreach ($characterResults as $row) {
             /** @var GameAccount $gameAccount */
             $character = Character::create($row["accountID"], $row["charID"], $row["charName"],
-                $row["cooldown"], $row["charClassID"], $row["userID"]);
+                $row["charClassID"], $row["userID"]);
             $result[$row["charID"]] = $character;
         }
         return $result;

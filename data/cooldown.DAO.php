@@ -7,7 +7,7 @@ class CooldownDAO
 {
     public function getAllCooldowns()
     {
-        $sqlCooldown = "SELECT * FROM cooldowns AND endDate >  now();";
+        $sqlCooldown = "SELECT * FROM cooldowns WHERE endDate >  now();";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultSetCooldowns = $dbh->query($sqlCooldown);
         $cooldownResults = $resultSetCooldowns->fetchAll(PDO::FETCH_ASSOC);
