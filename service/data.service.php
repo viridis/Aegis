@@ -266,7 +266,7 @@ class DataService
         $cooldownResults = $cooldownService->getCooldownsByAccountID($accountID);
         $cooldownArray = $this->createCooldownArray($cooldownResults);
         $completeGameAccounts = $this->createCompleteGameAccountArray($gameAccountArray, $characterArray, $cooldownArray);
-        return current($completeGameAccounts[0]);
+        return current($completeGameAccounts);
     }
 
     public function updateGameAccount($gameAccount)
