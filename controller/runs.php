@@ -17,8 +17,6 @@ if (isset($_SESSION["userID"])) {
 } else {
     $navbarlinks = $pageservice->generateNavLinksForUser();
 }
-$usefulllinks = $pageservice->generateUsefulLinks(5);
-$featuredlinks = $pageservice->generateFeaturedLinks(5);
 
 $runservice = new runservice();
 

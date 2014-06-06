@@ -64,8 +64,5 @@ if(isset($_POST) && isset($_GET['action']) && $_GET['action'] == 'password'){
     }
 }
 
-$usefulllinks = $pageservice->generateUsefulLinks(5);
-$featuredlinks = $pageservice->generateFeaturedLinks(5);
-
 $user = $userservice->getUserByID($_SESSION["userID"]);
 include("../view/settings.view.php");

@@ -10,8 +10,6 @@ if ($_SESSION["userID"]) {
 } else {
     $navbarlinks = $pageservice->generateNavLinksForUser();
 }
-$usefulllinks = $pageservice->generateUsefulLinks(5);
-$featuredlinks = $pageservice->generateFeaturedLinks(5);
 
 $eventservice = new eventservice();
 

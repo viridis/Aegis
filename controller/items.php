@@ -15,8 +15,6 @@ if (isset($_SESSION["userID"])) {
 } else {
     $navbarlinks = $pageservice->generateNavLinksForUser();
 }
-$usefulllinks = $pageservice->generateUsefulLinks(5);
-$featuredlinks = $pageservice->generateFeaturedLinks(5);
 
 $itemservice = new itemservice();
 $runservice = new runservice();
@@ -106,4 +104,3 @@ if (!empty($_POST["itemAmount"]) && !empty($_POST["itemName"]) && !empty($_POST[
 }
 
 include("../view/items.view.php");
-?>

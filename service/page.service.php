@@ -1,5 +1,6 @@
 <?php
 session_start();
+error_reporting(E_ALL);
 require_once("../data/links.DAO.php");
 require_once("../data/user.DAO.php");
 
@@ -32,5 +33,3 @@ class PAGESERVICE
         return $user;
     }
 }
-
-?>

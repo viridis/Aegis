@@ -2,6 +2,7 @@
 require_once("../data/dbconfig.DAO.php");
 require_once("../data/log.DAO.php");
 require_once("../class/user.class.php");
+require_once("../exceptions/noUserFoundException.php");
 
 class USERDAO{
 	public function getAllUsers(){
@@ -17,7 +18,6 @@ class USERDAO{
 	}
 	
 	public function getUserById($id){
-		$result = array();
 		$sql = "SELECT * FROM users WHERE id = :id;";
 		$dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -34,7 +34,27 @@ class USERDAO{
                 return $user;
             }
         } else {
-            throw new Exception('No user found. (' . $id . ')');
+            throw new noUserFoundException('No user found. (' . $id . ')');
+        }
+    }
+
+    public function getUserByName($name){
+        $sql = 'SELECT * FROM users WHERE name = :name LIMIT 1';
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sql);
+        $stmt->bindParam(':name', $name);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            /** @var User $user */
+            $user = USER::create($result["id"], $result["name"], $result["mailname"], $result["permissions"]);
+            $user->setEmail($result["email"]);
+            $user->setPassword($result["password"]);
+            $user->setForumName($result["forumname"]);
+            $user->clearUser();
+            return $user;
+        } else {
+            throw new noUserFoundException('No user found. (' . $name . ')');
         }
     }
 

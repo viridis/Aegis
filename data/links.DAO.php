@@ -66,5 +66,3 @@ class NAVBARLINKSDAO
         return $result;
     }
 }
-
-?>

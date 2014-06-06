@@ -16,8 +16,6 @@ if (isset($_SESSION["userID"])) {
 } else {
     $navbarlinks = $pageservice->generateNavLinksForUser();
 }
-$usefulllinks = $pageservice->generateUsefulLinks(5);
-$featuredlinks = $pageservice->generateFeaturedLinks(5);
 
 $eventservice = new eventservice();
 $payoutservice = new payoutservice();
@@ -49,5 +47,3 @@ $eventlist = $eventservice->listAllEvents();
 $payoutList = $payoutservice->listAllPayouts($eventlist);
 
 include("../view/payout.view.php");
-
-?>

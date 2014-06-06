@@ -21,15 +21,7 @@
                         }
                     }
                     ?>
-                    <?php if (!$_SESSION["userID"]): ?>
-                        <form class="navbar-form navbar-left" action="home.php?action=login" method="post" role="Sign In">
-                        <div class="form-group">
-                            <input name="name" id="name" type="text" class="form-control" placeholder="Username">
-                            <input name="password" id="password" type="password" class="form-control" placeholder="Password">
-                        </div>
-                        <button type="submit" class="btn btn-success">Sign In</button>
-                    </form>
-                    <?php else: ?>
+                    <?php if (!empty($_SESSION['userID'])) : ?>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <span class="glyphicon glyphicon-cog"></span><b class="caret"></b>
@@ -41,6 +33,18 @@
                     </li>
                     <?php endif; ?>
                 </ul>
+                <?php if (empty($_SESSION["userID"])) : ?>
+                <form class="navbar-form navbar-left" action="home.php?action=login" method="post" role="Sign In">
+                    <div class="form-group">
+                        <input name="name" id="name" type="text" class="form-control" placeholder="Username">
+                        <input name="password" id="password" type="password" class="form-control" placeholder="Password">
+                    </div>
+                    <button type="submit" class="btn btn-success">Sign In</button>
+                </form>
+                <form class="navbar-form navbar-left" action="register.php" method="post" role="Sign Up">
+                    <button type="submit" class="btn btn-primary">Sign Up</button>
+                </form>
+                <?php endif; ?>
             </div><!--/.nav-collapse -->
         </div>
     </div>
