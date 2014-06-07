@@ -44,7 +44,7 @@
             <form class="form-horizontal" action="profile.php?addCharacter=1" method="post">
                 <div class="modal-body">
                     <div class="form-group">
-                        <input type="hidden" id="accountID" name="accountID" value="" />
+                        <input type="hidden" id="accountID" name="accountID" value=""/>
                         <label for="charName" class="col-sm-4 control-label">Character Name</label>
 
                         <div class="col-sm-8">
@@ -54,8 +54,14 @@
                         <label for="charClassID" class="col-sm-4 control-label">Character Class</label>
 
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="charClassID" name="charClassID"
-                                   placeholder="Character Class">
+                            <select class="form-control" id="charClassID" name="charClassID">
+                                <?php foreach ($charClassContainer as $charClass) :
+                                    /** @var CharClass $charClass */
+                                    ?>
+                                    <option
+                                        value="<?php print $charClass->getCharClassID() ?>"><?php print $charClass->getCharClassName() ?></option>
+                                <?php endforeach ?>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -161,7 +167,7 @@
         $("#characterTable").find("tr:gt(0)").remove();
         for (var i = 1; i < gameAccount.length; i++) {
             var character = jQuery.parseJSON(gameAccount[i]);
-            $('#characterTable tr:last').after('<tr><td>' + character.charID + '</td><td>' + character.charName + '</td><td>' + character.charClassID + '</tr>');
+            $('#characterTable tr:last').after('<tr><td>' + character.charID + '</td><td>' + character.charName + '</td><td>' + character.charClassName + '</tr>');
         }
         $("#accountID").val(accountObject.accountID + '');
 

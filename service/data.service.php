@@ -8,6 +8,7 @@ require_once("../service/slot.service.php");
 require_once("../service/item.service.php");
 require_once("../service/eventType.service.php");
 require_once("../service/cooldown.service.php");
+require_once("../service/charClass.service.php");
 
 class DataService
 {
@@ -341,11 +342,27 @@ class DataService
         return $completeCooldowns;
     }
 
+    public function getAllCharClass()
+    {
+        $charClassService = new charClassService();
+        $charClassResults = $charClassService->getAllCharClass();
+        $completeCharClass = $this->createCharClassArray($charClassResults);
+        return $completeCharClass;
+    }
+
+    private function createCharClassArray($charClassResults){
+        $result = array();
+        foreach ($charClassResults as $row){
+            $charClass = new CharClass($row["charClassID"], $row["charClassName"]);
+            $result[$row["charClassID"]] = $charClass;
+        }
+        return $result;
+    }
+
     private function createCompleteUserArray($userAccountArray, $gameAccountArray, $characterArray, $cooldownArray)
     {
         $completeGameAccountArray = $this->createCompleteGameAccountArray($gameAccountArray, $characterArray, $cooldownArray);
-        foreach ($completeGameAccountArray as $gameAccount)
-        {
+        foreach ($completeGameAccountArray as $gameAccount) {
             /** @var GameAccount $gameAccount */
             $userID = $gameAccount->getUserID();
             /** @var User $user */
@@ -384,16 +401,16 @@ class DataService
 
     private function createCompleteGameAccountArray($gameAccountArray, $characterArray, $cooldownArray)
     {
-        foreach ($cooldownArray as $cooldown){
+        foreach ($cooldownArray as $cooldown) {
             /** @var Cooldown $cooldown */
-            if ($cooldown->getCooldownType() == 1){
+            if ($cooldown->getCooldownType() == 1) {
                 $gameAccountID = $cooldown->getAccountID();
                 /** @var GameAccount $gameAccount */
                 $gameAccount = $gameAccountArray[$gameAccountID];
                 $cooldownContainer = $gameAccount->getCooldownContainer();
                 $cooldownContainer[$cooldown->getCooldownID()] = $cooldown;
                 $gameAccount->setCooldownContainer($cooldownContainer);
-            } else if ($cooldown->getCooldownType() == 2){
+            } else if ($cooldown->getCooldownType() == 2) {
                 $charID = $cooldown->getCharID();
                 /** @var Character $character */
                 $character = $characterArray[$charID];
@@ -403,7 +420,7 @@ class DataService
             }
         }
 
-        foreach ($characterArray as $character){
+        foreach ($characterArray as $character) {
             /** @var Character $character */
             $gameAccountID = $character->getAccountID();
             $gameAccount = $gameAccountArray[$gameAccountID];
@@ -454,8 +471,8 @@ class DataService
         foreach ($gameAccountResults as $row) {
             /** @var GameAccount $gameAccount */
             $gameAccount = GameAccount::create($row["userID"], $row["accountID"], $row["gameAccountName"]);
-            $result[$row["accountID"]] = $gameAccount;
             $gameAccount->setCharacterList(array());
+            $result[$row["accountID"]] = $gameAccount;
         }
         return $result;
     }
@@ -464,9 +481,10 @@ class DataService
     {
         $result = array();
         foreach ($characterResults as $row) {
-            /** @var GameAccount $gameAccount */
+            /** @var Character $character */
             $character = Character::create($row["accountID"], $row["charID"], $row["charName"],
                 $row["charClassID"], $row["userID"]);
+            $character->setCharClassName($row["charClassName"]);
             $result[$row["charID"]] = $character;
         }
         return $result;

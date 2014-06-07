@@ -6,7 +6,7 @@ class CharacterDAO
 {
     public function getAllCharacters()
     {
-        $sqlCharacters = "SELECT * FROM characters ORDER BY userID, accountID ASC;";
+        $sqlCharacters = "SELECT * FROM characters LEFT JOIN charClasses ON characters.charClassID=charClasses.charClassID ORDER BY userID, accountID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultSetCharacter = $dbh->query($sqlCharacters);
         $characterResults = $resultSetCharacter->fetchAll(PDO::FETCH_ASSOC);
@@ -15,7 +15,7 @@ class CharacterDAO
 
     public function getCharactersByUserID($userID)
     {
-        $sqlCharacters = "SELECT * FROM characters WHERE userID = :userID ORDER BY userID, accountID ASC;";
+        $sqlCharacters = "SELECT * FROM characters LEFT JOIN charClasses ON characters.charClassID=charClasses.charClassID WHERE userID = :userID ORDER BY userID, accountID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlCharacters);
         $stmt->bindParam(':userID', $userID);
@@ -26,7 +26,7 @@ class CharacterDAO
 
     public function getCharactersByAccountID($accountID)
     {
-        $sqlCharacters = "SELECT * FROM characters WHERE accountID = :accountID ORDER BY charID ASC;";
+        $sqlCharacters = "SELECT * FROM characters LEFT JOIN charClasses ON characters.charClassID=charClasses.charClassID WHERE accountID = :accountID ORDER BY userID, accountID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlCharacters);
         $stmt->bindParam(':accountID', $accountID);

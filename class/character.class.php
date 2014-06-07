@@ -11,6 +11,7 @@ class Character
     private $userID;
 
     private $cooldownContainer;
+    private $charClassName;
 
     public function __construct($accountID, $charID, $charName, $charClassID, $userID)
     {
@@ -62,6 +63,10 @@ class Character
     public function setCooldownContainer($cooldownContainer)
     {
         $this->cooldownContainer = $cooldownContainer;
+    }
+
+    public function setCharClassName($charClassName){
+        $this->charClassName = $charClassName;
     }
 
     public function jsonSerialize()
