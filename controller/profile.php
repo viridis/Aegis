@@ -23,6 +23,10 @@ $featuredLinks = $pageService->generateFeaturedLinks(5);
 
 $currentUser = $dataService->getUserByUserID($_SESSION["userID"]);
 
+if (isset($_GET["addGameAccount"]) && isset($_POST["accountName"])){
+    $profileService->addGameAccountToUser();
+}
+
 
 if (isset($_POST["gameAccountID"])){
     $profileService->getJSONGameAccount();

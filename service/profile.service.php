@@ -15,4 +15,10 @@ class ProfileService
             print("|");
         }
     }
+
+    public function addGameAccountToUser(){
+        $dataService =  new DataService();
+        $gameAccount = new GameAccount($_SESSION["userID"], NULL, $_POST["accountName"]);
+        return $dataService->createGameAccount($gameAccount);
+    }
 }
