@@ -455,6 +455,7 @@ class DataService
             /** @var GameAccount $gameAccount */
             $gameAccount = GameAccount::create($row["userID"], $row["accountID"], $row["gameAccountName"]);
             $result[$row["accountID"]] = $gameAccount;
+            $gameAccount->setCharacterList(array());
         }
         return $result;
     }
