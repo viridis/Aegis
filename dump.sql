@@ -16,6 +16,20 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `charClasses`
+--
+
+DROP TABLE IF EXISTS `charClasses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `charClasses` (
+  `charClassID` int(11) NOT NULL AUTO_INCREMENT,
+  `charClassName` varchar(50) NOT NULL,
+  PRIMARY KEY (`charClassID`)
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `characters`
 --
 
@@ -25,16 +39,17 @@ DROP TABLE IF EXISTS `characters`;
 CREATE TABLE `characters` (
   `accountID` int(11) DEFAULT NULL,
   `charID` int(11) NOT NULL AUTO_INCREMENT,
-  `charName` varchar(30) DEFAULT NULL,
-  `cooldown` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `charClassID` int(11) DEFAULT NULL,
-  `userID` int(11) DEFAULT NULL,
+  `charName` varchar(50) NOT NULL,
+  `charClassID` int(11) NOT NULL,
+  `userID` int(11) NOT NULL,
   PRIMARY KEY (`charID`),
   KEY `accountID` (`accountID`),
   KEY `userID` (`userID`),
+  KEY `charClassID` (`charClassID`),
   CONSTRAINT `characters_ibfk_1` FOREIGN KEY (`accountID`) REFERENCES `gameaccounts` (`accountID`),
-  CONSTRAINT `characters_ibfk_2` FOREIGN KEY (`userID`) REFERENCES `useraccount` (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+  CONSTRAINT `characters_ibfk_2` FOREIGN KEY (`userID`) REFERENCES `useraccount` (`userID`),
+  CONSTRAINT `characters_ibfk_3` FOREIGN KEY (`charClassID`) REFERENCES `charClasses` (`charClassID`)
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -51,17 +66,19 @@ CREATE TABLE `cooldowns` (
   `charID` int(11) DEFAULT NULL,
   `endDate` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `eventTypeID` int(11) NOT NULL,
+  `cooldownType` int(11) NOT NULL,
+  `userID` int(11) NOT NULL,
   PRIMARY KEY (`cooldownID`),
   KEY `eventID` (`eventID`),
   KEY `accountID` (`accountID`),
   KEY `charID` (`charID`),
   KEY `eventTypeID` (`eventTypeID`),
-  CONSTRAINT `cooldowns_ibfk_5` FOREIGN KEY (`eventTypeID`) REFERENCES `eventTypes` (`eventTypeID`),
   CONSTRAINT `cooldowns_ibfk_1` FOREIGN KEY (`eventID`) REFERENCES `events` (`eventID`),
   CONSTRAINT `cooldowns_ibfk_2` FOREIGN KEY (`accountID`) REFERENCES `gameaccounts` (`accountID`),
   CONSTRAINT `cooldowns_ibfk_3` FOREIGN KEY (`charID`) REFERENCES `characters` (`charID`),
-  CONSTRAINT `cooldowns_ibfk_4` FOREIGN KEY (`eventTypeID`) REFERENCES `eventTypes` (`eventTypeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
+  CONSTRAINT `cooldowns_ibfk_4` FOREIGN KEY (`eventTypeID`) REFERENCES `eventTypes` (`eventTypeID`),
+  CONSTRAINT `cooldowns_ibfk_5` FOREIGN KEY (`eventTypeID`) REFERENCES `eventTypes` (`eventTypeID`)
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -124,7 +141,7 @@ CREATE TABLE `events` (
   PRIMARY KEY (`eventID`),
   KEY `eventTypeID` (`eventTypeID`),
   CONSTRAINT `events_ibfk_1` FOREIGN KEY (`eventTypeID`) REFERENCES `eventTypes` (`eventTypeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -154,10 +171,11 @@ CREATE TABLE `gameaccounts` (
   `accountID` int(11) NOT NULL AUTO_INCREMENT,
   `userID` int(11) NOT NULL,
   `cooldown` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `gameAccountName` varchar(50) NOT NULL,
   PRIMARY KEY (`accountID`),
   KEY `userID` (`userID`),
   CONSTRAINT `gameaccounts_ibfk_1` FOREIGN KEY (`userID`) REFERENCES `useraccount` (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -190,7 +208,7 @@ CREATE TABLE `logs` (
   `result` varchar(10) NOT NULL,
   `timestamp` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5063 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5409 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -207,7 +225,7 @@ CREATE TABLE `navbarlinks` (
   `visibility` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -248,7 +266,7 @@ CREATE TABLE `slots` (
   CONSTRAINT `slots_ibfk_1` FOREIGN KEY (`eventID`) REFERENCES `events` (`eventID`),
   CONSTRAINT `slots_ibfk_2` FOREIGN KEY (`takenUserID`) REFERENCES `useraccount` (`userID`),
   CONSTRAINT `slots_ibfk_3` FOREIGN KEY (`takenCharID`) REFERENCES `characters` (`charID`)
-) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -317,4 +335,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-05-28 10:24:07
+-- Dump completed on 2014-06-07 15:03:36
