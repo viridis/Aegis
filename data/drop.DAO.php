@@ -17,6 +17,25 @@ class DropDAO
         return $dropResults;
     }
 
+    public function getDropByAttribute($attribute, $attributeValue)
+    {
+        $sqlDrops = "SELECT drops.*, items.name, items.aegisName
+                        FROM drops
+                        LEFT JOIN items ON items.itemID = drops.itemID
+                        WHERE " . $attribute . " = '" . $attributeValue[0] . "'";
+        if (count($attributeValue) > 1) {
+            array_shift($attributeValue);
+            foreach ($attributeValue as $value) {
+                $sqlDrops .= "OR " . $attribute . " = '" . $value . "'";
+            }
+        }
+        $sqlDrops .= ";";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $resultSetDrops = $dbh->query($sqlDrops);
+        $dropResults = $resultSetDrops->fetchAll(PDO::FETCH_ASSOC);
+        return $dropResults;
+    }
+
     public function createDrop($drop)
     {
         /** @var Drop $drop */
@@ -97,7 +116,7 @@ class DropDAO
         }
     }
 
-    public function removeDrop ($dropID)
+    public function removeDrop($dropID)
     {
         $sqlDelete = "DELETE FROM drops WHERE dropID = :dropID;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);

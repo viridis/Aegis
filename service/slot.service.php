@@ -34,4 +34,9 @@ class SlotService
         $slotDAO = new SlotDAO();
         return $slotDAO->updateSlot($slot);
     }
+
+    public function getSlotByAttribute($attribute, $attributeValue){
+        $slotDAO = new SlotDAO();
+        return $slotDAO->getSlotByAttribute($attribute, $attributeValue);
+    }
 }

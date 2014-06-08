@@ -34,4 +34,10 @@ class DropService
         $dropDAO = new DropDAO();
         return $dropDAO->removeDrop($drop->getDropID());
     }
+
+    public function getDropByAttribute($attribute, $attributeValue)
+    {
+        $dropDAO = new DropDAO();
+        return $dropDAO->getDropByAttribute($attribute, $attributeValue);
+    }
 }

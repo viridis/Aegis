@@ -15,6 +15,25 @@ class EventDAO
         return $eventResults;
     }
 
+    public function getEventByAttribute($attribute, $attributeValue)
+    {
+        $sqlEvents = "SELECT events.*, eventTypes.eventName, eventTypes.accountCooldown, eventTypes.characterCooldown
+                        FROM events LEFT JOIN eventTypes ON events.eventTypeID=eventTypes.eventTypeID
+                        WHERE " . $attribute . " = '" . $attributeValue[0] . "'";
+        if (count($attributeValue) > 1) {
+            array_shift($attributeValue);
+            foreach ($attributeValue as $value) {
+                $sqlEvents .= "OR " . $attribute . " = '" . $value . "'";
+            }
+        }
+        $sqlEvents .= "ORDER BY eventID ASC;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlEvents);
+        $stmt->execute();
+        $eventResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $eventResults;
+    }
+
     public function getEventByEventID($eventID)
     {
         $sqlEvents = "SELECT events.*, eventTypes.eventName, eventTypes.accountCooldown, eventTypes.characterCooldown

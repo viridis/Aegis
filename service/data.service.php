@@ -42,6 +42,26 @@ class DataService
         return current($completeEvents);
     }
 
+    public function getEventByAttribute($attribute, $attributeValue)
+    {
+        $eventService = new EventService();
+        $eventResults = $eventService->getEventByAttribute($attribute, $attributeValue);
+        $eventArray = $this->createEventArray($eventResults);
+        $eventIDArray = array();
+        foreach($eventArray as $event){
+            /** @var Event $event */
+            array_push($eventIDArray, $event->getEventID());
+        }
+        $dropService = new DropService();
+        $dropResults = $dropService->getDropByAttribute("eventID", $eventIDArray);
+        $dropArray = $this->createDropArray($dropResults);
+        $slotService = new SlotService();
+        $slotResults = $slotService->getSlotByAttribute("eventID", $eventIDArray);
+        $slotArray = $this->createSlotArray($slotResults);
+        $completeEvents = $this->createCompleteEventArray($eventArray, $dropArray, $slotArray);
+        return $completeEvents;
+    }
+
     public function createEvent($event)
     {
         $eventService = new EventService();

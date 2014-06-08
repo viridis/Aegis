@@ -33,4 +33,10 @@ class EventService
         $eventDAO = new EventDAO();
         return $eventDAO->updateEvent($event);
     }
+
+    public function getEventByAttribute($attribute, $attributeValue)
+    {
+        $eventDAO = new EventDAO();
+        return $eventDAO->getEventByAttribute($attribute, $attributeValue);
+    }
 }

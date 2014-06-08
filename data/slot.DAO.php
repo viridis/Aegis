@@ -19,6 +19,27 @@ class SlotDAO
         return $slotResults;
     }
 
+    public function getSlotByAttribute($attribute, $attributeValue)
+    {
+        $sqlSlot = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName, characters.accountID
+                        FROM slots
+                        LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
+                        LEFT JOIN characters ON characters.charID = slots.takenCharID
+                       WHERE " . $attribute . " = '" . $attributeValue[0] . "'";
+        if (count($attributeValue) > 1) {
+            array_shift($attributeValue);
+            foreach ($attributeValue as $value) {
+                $sqlSlot .= "OR " . $attribute . " = '" . $value . "'";
+            }
+        }
+        $sqlSlot .= "ORDER BY eventID ASC;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $resultSetSlots = $dbh->query($sqlSlot);
+        $slotResults = $resultSetSlots->fetchAll(PDO::FETCH_ASSOC);
+        return $slotResults;
+    }
+
+
     public function createSlot($slot)
     {
         /** @var Slot $slot */
