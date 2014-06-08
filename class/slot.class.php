@@ -12,6 +12,7 @@ class Slot
     private $takenCharID;
 
     //Associated Fields
+    private $slotClassName;
     private $userLogin; // From user class
     private $charClassID; // From character class
     private $charName; // From character class
@@ -85,6 +86,11 @@ class Slot
         return $this->accountID;
     }
 
+    public function getSlotClassName()
+    {
+        return $this->slotClassName;
+    }
+
     public function setUserLogin($userLogin)
     {
         $this->userLogin = $userLogin;
@@ -108,5 +114,10 @@ class Slot
     public function setAccountID($accountID)
     {
         $this->accountID = $accountID;
+    }
+
+    public function setSlotClassName($slotClassName)
+    {
+        $this->slotClassName = $slotClassName;
     }
 }

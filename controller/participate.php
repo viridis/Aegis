@@ -21,4 +21,6 @@ $usefulLinks = $pageService->generateUsefulLinks(5);
 $featuredLinks = $pageService->generateFeaturedLinks(5);
 
 $eventContainer = $participateService->getAllOpenEvents();
+$validCharactersForSlotTypes = $participateService->getValidCharactersForSlotClassID();
+$currentUser = $dataService->getUserByUserID($_SESSION["userID"]);
 include("../view/participate.view.php");

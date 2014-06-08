@@ -42,4 +42,5 @@ if (isset($_SESSION["userID"])) {
 }
 $usefulLinks = $pageService->generateUsefulLinks(5);
 $featuredLinks = $pageService->generateFeaturedLinks(5);
+
 include("../view/home.view.php");

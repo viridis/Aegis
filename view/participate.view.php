@@ -41,28 +41,33 @@
                 </div>
                 <div id="event<?php print $event->getEventID(); ?>" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <form class="form-horizontal" action="participate.php?joinEvent=<?php print $event->getEventID() ?>" method="post">
-                        <?php
-                        $slotNum = 0;
-                        foreach ($event->getSlotList() as $slot) :
-                            $slotNum++;?>
-                            <p>
-                                <?php
-                                print $slotNum . ". ";
-                                print $slot->getSlotClassID();
-                                if ($slot->isTaken()) : ?>
-                                    <input type="text" value="<?php print $slot->getCharName(); ?>" readonly>
-                                <?php else : ?>
-                                    
-                                <? endif ; ?>
-                            </p>
-                        <?php endforeach; ?>
+                        <form class="form-horizontal"
+                              action="participate.php?joinEvent=<?php print $event->getEventID() ?>"
+                              method="post">
+                            <?php
+                            $slotNum = 0;
+                            foreach ($event->getSlotList() as $slot) :
+                                $slotNum++;?>
+                                <p>
+                                    <?php
+                                    print $slotNum . ". ";
+                                    print $slot->getSlotClassName();
+                                    if ($slot->isTaken()) : ?>
+                                        <input type="text" value="<?php print $slot->getCharName(); ?>"
+                                               name="slot_<?php print $slot->getSlotID(); ?>" readonly>
+                                    <?php else : ?>
+                                        <Select name="slot_<?php $slot->getSlotID(); ?>">
+                                            <option selected value="">Choose character!</option>
+                                        </Select>
+                                    <?php endif; ?>
+                                </p>
+                            <?php endforeach; ?>
                         </form>
                     </div>
                 </div>
             </div>
 
-        <?php endforeach ?>
+        <?php endforeach; ?>
     </div>
 
 

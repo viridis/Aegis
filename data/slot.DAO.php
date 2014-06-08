@@ -8,10 +8,11 @@ class SlotDAO
     public function getAllSlots()
     {
         $sqlSlots = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName,
-                        characters.accountID
+                        characters.accountID, slotClasses.slotClassName
                         FROM slots
                         LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
                         LEFT JOIN characters ON characters.charID = slots.takenCharID
+                        LEFT JOIN slotClasses ON slotClasses.slotClassID = slots.slotClassID
                         ORDER BY eventID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultSetSlots = $dbh->query($sqlSlots);
@@ -21,10 +22,11 @@ class SlotDAO
 
     public function getSlotByAttribute($attribute, $attributeValue)
     {
-        $sqlSlot = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName, characters.accountID
+        $sqlSlot = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName, characters.accountID, slotClasses.slotClassName
                         FROM slots
                         LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
                         LEFT JOIN characters ON characters.charID = slots.takenCharID
+                        LEFT JOIN slotClasses ON slotClasses.slotClassID = slots.slotClassID
                        WHERE " . $attribute . " = '" . $attributeValue[0] . "'";
         if (count($attributeValue) > 1) {
             array_shift($attributeValue);
@@ -85,10 +87,11 @@ class SlotDAO
 
     public function getSlotByEventID($eventID)
     {
-        $sqlSlot = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName, characters.accountID
+        $sqlSlot = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName, characters.accountID, slotClasses.slotClassName
                         FROM slots
                         LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
                         LEFT JOIN characters ON characters.charID = slots.takenCharID
+                        LEFT JOIN slotClasses ON slotClasses.slotClassID = slots.slotClassID
                         WHERE eventID = :eventID
                         ORDER BY eventID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);

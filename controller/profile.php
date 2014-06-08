@@ -60,6 +60,6 @@ if (isset($_POST["gameAccountID"])) {
 }
 
 $currentUser = $dataService->getUserByUserID($_SESSION["userID"]);
-$charClassContainer = $dataService->getAllCharClass();
+$charClassContainer = $dataService->getAllCharClasses();
 
 include("../view/profile.view.php");

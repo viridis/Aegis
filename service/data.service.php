@@ -9,6 +9,7 @@ require_once("../service/item.service.php");
 require_once("../service/eventType.service.php");
 require_once("../service/cooldown.service.php");
 require_once("../service/charClass.service.php");
+require_once("../service/slotClass.service.php");
 
 class DataService
 {
@@ -48,7 +49,7 @@ class DataService
         $eventResults = $eventService->getEventByAttribute($attribute, $attributeValue);
         $eventArray = $this->createEventArray($eventResults);
         $eventIDArray = array();
-        foreach($eventArray as $event){
+        foreach ($eventArray as $event) {
             /** @var Event $event */
             array_push($eventIDArray, $event->getEventID());
         }
@@ -362,17 +363,45 @@ class DataService
         return $completeCooldowns;
     }
 
-    public function getAllCharClass()
+    public function getAllCharClasses()
     {
         $charClassService = new charClassService();
-        $charClassResults = $charClassService->getAllCharClass();
+        $charClassResults = $charClassService->getAllCharClasses();
         $completeCharClass = $this->createCharClassArray($charClassResults);
         return $completeCharClass;
     }
 
-    private function createCharClassArray($charClassResults){
+    public function getAllSlotClasses()
+    {
+        $slotClassService = new SlotClassService();
+        $slotClassResults = $slotClassService->getAllSlotClasses();
+        $slotClassRulesResults = $slotClassService->getAllSlotClassRules();
+        $completeSlotClasses = $this->createSlotClassArray($slotClassResults, $slotClassRulesResults);
+        return $completeSlotClasses;
+    }
+
+    private function createSlotClassArray($slotClassResults, $slotClassRulesResults)
+    {
         $result = array();
-        foreach ($charClassResults as $row){
+        foreach ($slotClassResults as $row) {
+            $slotClass = new SlotClass($row["slotClassID"], $row["slotClassName"]);
+            $result[$row["slotClassID"]] = $slotClass;
+        }
+
+        foreach ($slotClassRulesResults as $row) {
+            /** @var SlotClass $slotClass */
+            $slotClass = $result[$row["slotClassID"]];
+            $allowedCharClassArray = $slotClass->getAllowedCharClassArray();
+            $allowedCharClassArray[$row["charClassID"]] = $row["charClassID"];
+            $slotClass->setAllowedCharClassArray($allowedCharClassArray);
+        }
+        return $result;
+    }
+
+    private function createCharClassArray($charClassResults)
+    {
+        $result = array();
+        foreach ($charClassResults as $row) {
             $charClass = new CharClass($row["charClassID"], $row["charClassName"]);
             $result[$row["charClassID"]] = $charClass;
         }
@@ -559,6 +588,7 @@ class DataService
             $slot->setCharClassID($row["charClassID"]);
             $slot->setCharName($row["charName"]);
             $slot->setAccountID($row["accountID"]);
+            $slot->setSlotClassName($row["slotClassName"]);
             $result[$row["slotID"]] = $slot;
         }
         return $result;
