@@ -11,9 +11,28 @@ class ParticipateService
 
     public function getValidCharactersForSlotClassID()
     {
+        $result = array();
         $dataService = new DataService();
         $slotClasses = $dataService->getAllSlotClasses();
-        return $slotClasses;
+        $eventTypes = $dataService->getAllEventTypes();
+        /** @var User $currentUser */
+        $currentUser = $dataService->getUserByUserID($_SESSION["userID"]);
+        foreach ($eventTypes as $eventType) {
+            /** @var EventType $eventType */
+            foreach ($slotClasses as $slotClass) {
+                /** @var SlotClass $slotClass */
+                $result[$eventType->getEventTypeID()][$slotClass->getSlotClassID()] = array();
+                foreach ($currentUser->getGameAccountContainer() as $gameAccount) {
+                    /** @var GameAccount $gameAccount */
+                    foreach ($gameAccount->getCharacterList() as $character) {
+                        /** @var Character $character */
+                        if (isset($slotClass->getAllowedCharClassArray()[$character->getCharClassID()])) {
+                            array_push($result[$eventType->getEventTypeID()][$slotClass->getSlotClassID()], $character);
+                        }
+                    }
+                }
+            }
+        }
+        return $result;
     }
-
 }
