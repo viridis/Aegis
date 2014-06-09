@@ -452,21 +452,38 @@ class DataService
     {
         foreach ($cooldownArray as $cooldown) {
             /** @var Cooldown $cooldown */
+
             if ($cooldown->getCooldownType() == 1) {
                 $gameAccountID = $cooldown->getAccountID();
                 /** @var GameAccount $gameAccount */
                 $gameAccount = $gameAccountArray[$gameAccountID];
                 $cooldownContainer = $gameAccount->getCooldownContainer();
-                $cooldownContainer[$cooldown->getCooldownID()] = $cooldown;
+                if (isset($cooldownContainer[$cooldown->getEventTypeID()])) {
+                    $prevEndDate = strtotime($cooldownContainer[$cooldown->getEventTypeID()]->getEndDate());
+                    $newEndDate = strtotime($cooldown->getEndDate());
+                    if ($newEndDate > $prevEndDate) {
+                        $cooldownContainer[$cooldown->getEventTypeID()] = $cooldown;
+                    }
+                } else {
+                    $cooldownContainer[$cooldown->getEventTypeID()] = $cooldown;
+                }
                 $gameAccount->setCooldownContainer($cooldownContainer);
-            } else if ($cooldown->getCooldownType() == 2) {
-                $charID = $cooldown->getCharID();
-                /** @var Character $character */
-                $character = $characterArray[$charID];
-                $cooldownContainer = $character->getCooldownContainer();
-                $cooldownContainer[$cooldown->getCooldownID()] = $cooldown;
-                $character->setCooldownContainer($cooldownContainer);
+            } //else if ($cooldown->getCooldownType() == 2) {
+            $charID = $cooldown->getCharID();
+            /** @var Character $character */
+            $character = $characterArray[$charID];
+            $cooldownContainer = $character->getCooldownContainer();
+            if (isset($cooldownContainer[$cooldown->getEventTypeID()])) {
+                $prevEndDate = strtotime($cooldownContainer[$cooldown->getEventTypeID()]->getEndDate());
+                $newEndDate = strtotime($cooldown->getEndDate());
+                if ($newEndDate > $prevEndDate) {
+                    $cooldownContainer[$cooldown->getEventTypeID()] = $cooldown;
+                }
+            } else {
+                $cooldownContainer[$cooldown->getEventTypeID()] = $cooldown;
             }
+            $character->setCooldownContainer($cooldownContainer);
+            //}
         }
 
         foreach ($characterArray as $character) {
@@ -521,6 +538,7 @@ class DataService
             /** @var GameAccount $gameAccount */
             $gameAccount = GameAccount::create($row["userID"], $row["accountID"], $row["gameAccountName"]);
             $gameAccount->setCharacterList(array());
+            $gameAccount->setCooldownContainer(array());
             $result[$row["accountID"]] = $gameAccount;
         }
         return $result;

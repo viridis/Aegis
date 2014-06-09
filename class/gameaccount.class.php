@@ -8,8 +8,8 @@ class GameAccount
     private $gameAccountName;
 
     // Associated fields
-    private $cooldownContainer;
-    private $characterList;
+    private $cooldownContainer = array();
+    private $characterList = array();
 
     public function __construct($userID, $accountID, $gameAccountName)
     {

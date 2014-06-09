@@ -24,15 +24,36 @@ class ParticipateService
                 $result[$eventType->getEventTypeID()][$slotClass->getSlotClassID()] = array();
                 foreach ($currentUser->getGameAccountContainer() as $gameAccount) {
                     /** @var GameAccount $gameAccount */
-                    foreach ($gameAccount->getCharacterList() as $character) {
-                        /** @var Character $character */
-                        if (isset($slotClass->getAllowedCharClassArray()[$character->getCharClassID()])) {
-                            array_push($result[$eventType->getEventTypeID()][$slotClass->getSlotClassID()], $character);
+                    $onCooldown = false;
+                    foreach ($gameAccount->getCooldownContainer() as $cooldown) {
+                        /** @var Cooldown $cooldown */
+                        if ($cooldown->getEventTypeID() == $eventType->getEventTypeID()) {
+                            $onCooldown = true;
+                        }
+                    }
+                    if (!$onCooldown) {
+                        foreach ($gameAccount->getCharacterList() as $character) {
+                            /** @var Character $character */
+                            $charOnCooldown = false;
+                            foreach ($character->getCooldownContainer() as $cooldown) {
+                                /** @var Cooldown $cooldown */
+                                if ($cooldown->getEventTypeID() == $eventType->getEventTypeID()) {
+                                    $charOnCooldown = true;
+                                }
+                            }
+                            if (!$charOnCooldown) {
+                                if (isset($slotClass->getAllowedCharClassArray()[$character->getCharClassID()])) {
+                                    array_push($result[$eventType->getEventTypeID()][$slotClass->getSlotClassID()], $character);
+                                }
+                            }
                         }
                     }
                 }
             }
         }
+
+
         return $result;
     }
+
 }

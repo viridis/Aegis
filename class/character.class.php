@@ -10,7 +10,7 @@ class Character
     private $charClassID;
     private $userID;
 
-    private $cooldownContainer;
+    private $cooldownContainer = array();
     private $charClassName;
 
     public function __construct($accountID, $charID, $charName, $charClassID, $userID)
@@ -58,6 +58,11 @@ class Character
     public function getUserID()
     {
         return $this->userID;
+    }
+
+    public function getCharClassName()
+    {
+        return $this->charClassName;
     }
 
     public function setCooldownContainer($cooldownContainer)

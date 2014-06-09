@@ -58,12 +58,22 @@
                                     <?php else : ?>
                                         <Select name="slot_<?php $slot->getSlotID(); ?>">
                                             <option selected value="">Choose character!</option>
+                                            <?php foreach ($validCharactersForSlotTypes[$event->getEventTypeID()][$slot->getSlotClassID()] as $validChar) :
+                                                /** @var Character $validChar */
+                                                $eventDate = strtotime($event->getStartDate());
+                                                $cooldownDate = strtotime($validChar->getCooldownContainer()[$event->getEventTypeID()]);
+                                                if ($eventDate > $cooldownDate) : ?>
+                                                    <option
+                                                        value="<?php print $validChar->getCharID(); ?>"><?php print $validChar->getCharName() . " (" . $validChar->getCharClassName() . ")" ?></option>
+                                                <?php endif; ?>
+                                            <?php endforeach; ?>
                                         </Select>
                                     <?php endif; ?>
                                 </p>
                             <?php endforeach; ?>
                         </form>
                     </div>
+                    -
                 </div>
             </div>
 
@@ -72,9 +82,6 @@
 
 
 </div>
-<script>
-
-</script>
 <?php include('partials/footer.partial.view.php') ?>
 </body>
 </html>

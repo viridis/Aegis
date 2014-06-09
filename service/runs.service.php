@@ -187,7 +187,6 @@ class RunService
     {
         $dataService = new DataService();
         $cooldownContainer = $dataService->getCooldownByEvent($event);
-        var_dump($cooldownContainer);
         foreach ($cooldownContainer as $cooldown) {
             $dataService->deleteCooldown($cooldown);
         }

@@ -14,7 +14,7 @@ class User
     private $payout;
 
     // Associated fields
-    private $gameAccountContainer;
+    private $gameAccountContainer = array();
 
     public function __construct($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout)
     {
