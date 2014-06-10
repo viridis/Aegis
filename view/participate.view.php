@@ -12,71 +12,81 @@
 
     <div class="panel-group" id="eventPanels">
         <?php foreach ($eventContainer as $event) :
-            /** @var Event $event */
-            ?>
-            <div class="panel panel-default">
-                <div class="panel-heading">
-                    <h3 class="panel-title">
-                        <a data-toggle="collapse" data-parent="#eventPanels"
-                           href="#event<?php print $event->getEventID(); ?>" class="collapsed">
-                            <?php print $event->getEventID() . ". " . $event->getEventName() . " - " . $event->getStartDate(); ?>
+        /** @var Event $event */
+        ?>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">
+                    <a data-toggle="collapse" data-parent="#eventPanels"
+                       href="#event<?php print $event->getEventID(); ?>" class="collapsed">
+                        <?php print $event->getEventID() . ". " . $event->getEventName() . " - " . $event->getStartDate(); ?>
 
-                        </a>
-                        <a data-toggle="collapse" data-parent="#eventPanels"
-                           href="#event<?php print $event->getEventID(); ?>" class="collapsed" style="float:right;">
-                            <?php
-                            $totalSlot = 0;
-                            $filledSlot = 0;
-                            foreach ($event->getSlotList() as $slot) :
-                                /** @var Slot $slot */
-                                $totalSlot++;
-                                if ($slot->isTaken()) :
-                                    $filledSlot++;
-                                endif;
-                            endforeach;
-                            print "Occupancy: " . $filledSlot . "/" . $totalSlot;
-                            ?>
-                        </a>
-                    </h3>
-                </div>
-                <div id="event<?php print $event->getEventID(); ?>" class="panel-collapse collapse">
-                    <div class="panel-body">
+                    </a>
+                    <a data-toggle="collapse" data-parent="#eventPanels"
+                       href="#event<?php print $event->getEventID(); ?>" class="collapsed" style="float:right;">
+                        <?php
+                        $totalSlot = 0;
+                        $filledSlot = 0;
+                        foreach ($event->getSlotList() as $slot) :
+                            /** @var Slot $slot */
+                            $totalSlot++;
+                            if ($slot->isTaken()) :
+                                $filledSlot++;
+                            endif;
+                        endforeach;
+                        print "Occupancy: " . $filledSlot . "/" . $totalSlot;
+                        ?>
+                    </a>
+                </h3>
+            </div>
+            <div id="event<?php print $event->getEventID(); ?>" class="panel-collapse collapse">
+                <div class="panel-body">
+                    <table class="table table-condensed table-hover table-striped table-bordered">
+
+                        <?php
+                        $slotNum = 0;
+                        foreach ($event->getSlotList() as $slot) :
+                        $slotNum++;?>
+                        <tr>
                         <form class="form-horizontal"
-                              action="participate.php?joinEvent=<?php print $event->getEventID() ?>"
+                              action="participate.php?joinSlot=<?php print $slot->getSlotID(); ?>"
                               method="post">
-                            <?php
-                            $slotNum = 0;
-                            foreach ($event->getSlotList() as $slot) :
-                                $slotNum++;?>
-                                <p>
-                                    <?php
-                                    print $slotNum . ". ";
-                                    print $slot->getSlotClassName();
-                                    if ($slot->isTaken()) : ?>
-                                        <input type="text" value="<?php print $slot->getCharName(); ?>"
-                                               name="slot_<?php print $slot->getSlotID(); ?>" readonly>
-                                    <?php else : ?>
-                                        <Select name="slot_<?php $slot->getSlotID(); ?>">
-                                            <option selected value="">Choose character!</option>
-                                            <?php foreach ($validCharactersForSlotTypes[$event->getEventTypeID()][$slot->getSlotClassID()] as $validChar) :
-                                                /** @var Character $validChar */
-                                                $eventDate = strtotime($event->getStartDate());
-                                                $cooldownDate = strtotime($validChar->getCooldownContainer()[$event->getEventTypeID()]);
-                                                if ($eventDate > $cooldownDate) : ?>
-                                                    <option
-                                                        value="<?php print $validChar->getCharID(); ?>"><?php print $validChar->getCharName() . " (" . $validChar->getCharClassName() . ")" ?></option>
-                                                <?php endif; ?>
-                                            <?php endforeach; ?>
-                                        </Select>
-                                    <?php endif; ?>
-                                </p>
+                            <td><?php print $slotNum . ". "; ?></td>
+                            <td> <?php print $slot->getSlotClassName(); ?></td>
+                            <?php if (($slot->isTaken()) && ($slot->getTakenUserID() != $_SESSION["userID"])): ?>
+                                <td><input type="text" value="<?php print $slot->getCharName(); ?>" readonly></td>
+                            <?php else : ?>
+
+                            <td>
+                                <Select name="slot_<?php $slot->getSlotID(); ?>">
+                                    <?php $slot->isTaken() ? print"<option value=\"\">Abandon slot!</option>" :print "<option selected value=\"\">Choose character!</option>" ?>
+                                    <?php foreach ($validCharactersForSlotTypes[$event->getEventTypeID()][$slot->getSlotClassID()] as $validChar) :
+                                        /** @var Character $validChar */
+                                        $eventDate = strtotime($event->getStartDate());
+                                        $cooldownDate = 0;
+                                        if (isset($validChar->getCooldownContainer()[$event->getEventTypeID()])) :
+                                            $cooldownDate = strtotime($validChar->getCooldownContainer()[$event->getEventTypeID()]);
+                                        endif;
+
+                                        if ($eventDate > $cooldownDate) : ?>
+                                            <option <?php if ($slot->isTaken() && ($validChar->getCharID() == $slot->getTakenCharID())) print "selected" ?>
+                                                value="<?php print $validChar->getCharID(); ?>"><?php print $validChar->getCharName() . " (" . $validChar->getCharClassName() . ")" ?></option>
+                                        <?php endif; ?>
+                                    <?php endforeach; ?>
+                                </Select>
+
+                                <input type="submit" class="btn btn-xs btn-primary"
+                                       value="<?php ($slot->isTaken()) ? print "Change character!" : print "Join!"; ?>">
+                                </td>
+                                </form>
+                                </tr>
+                            <?php endif; ?>
+
                             <?php endforeach; ?>
-                        </form>
+                        </table>
                     </div>
-                    -
                 </div>
             </div>
-
         <?php endforeach; ?>
     </div>
 
