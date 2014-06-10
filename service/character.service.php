@@ -39,4 +39,10 @@ class CharacterService
         $characterDAO = new CharacterDAO();
         return $characterDAO->updateCharacter($character);
     }
+
+    public function getCharactersByAttributeValuesArray($attribute, $attributeValue)
+    {
+        $characterDAO = new CharacterDAO();
+        return $characterDAO->getCharactersByAttributeValuesArray($attribute, $attributeValue);
+    }
 }

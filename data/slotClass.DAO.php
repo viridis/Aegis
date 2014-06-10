@@ -22,4 +22,40 @@ class SlotClassDAO
         $slotClassRulesResults = $resultSetSlotClassRules->fetchAll(PDO::FETCH_ASSOC);
         return $slotClassRulesResults;
     }
+
+    public function getSlotClassByAttributeValuesArray($attribute, $attributeValue)
+    {
+        $sqlSlotClass = "SELECT *
+                                FROM slotClasses
+                                WHERE " . $attribute . " = '" . $attributeValue[0] . "'";
+        if (count($attributeValue) > 1) {
+            array_shift($attributeValue);
+            foreach ($attributeValue as $value) {
+                $sqlSlotClass .= "OR " . $attribute . " = '" . $value . "'";
+            }
+        }
+        $sqlSlotClass .= ";";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $resultSetSlotClasses = $dbh->query($sqlSlotClass);
+        $slotClassResults = $resultSetSlotClasses->fetchAll(PDO::FETCH_ASSOC);
+        return $slotClassResults;
+    }
+
+    public function getSlotClassRulesByAttributeValuesArray($attribute, $attributeValue)
+    {
+        $sqlSlotClassRules = "SELECT *
+                                FROM slotClassRules
+                                WHERE " . $attribute . " = '" . $attributeValue[0] . "'";
+        if (count($attributeValue) > 1) {
+            array_shift($attributeValue);
+            foreach ($attributeValue as $value) {
+                $sqlSlotClassRules .= "OR " . $attribute . " = '" . $value . "'";
+            }
+        }
+        $sqlSlotClassRules .= "ORDER BY slotClassID ASC;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $resultSetSlotClasses = $dbh->query($sqlSlotClassRules);
+        $slotClassResults = $resultSetSlotClasses->fetchAll(PDO::FETCH_ASSOC);
+        return $slotClassResults;
+    }
 }

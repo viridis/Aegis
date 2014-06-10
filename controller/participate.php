@@ -20,6 +20,21 @@ if (isset($_SESSION["userID"])) {
 $usefulLinks = $pageService->generateUsefulLinks(5);
 $featuredLinks = $pageService->generateFeaturedLinks(5);
 
+if (isset($_GET["updateSlot"]) && isset($_POST["join_slot_" . $_GET["updateSlot"]]))
+{
+    if ($participateService->setSlotTaken()){
+        echo "Success";
+    } else {
+        echo "Failed";
+    }
+}
+
+if (isset($_GET["updateSlot"]) && isset($_POST["change_slot_" . $_GET["updateSlot"]]))
+{
+    print 2;
+}
+
+
 $eventContainer = $participateService->getAllOpenEvents();
 $validCharactersForSlotTypes = $participateService->getValidCharactersForSlotClassID();
 $currentUser = $dataService->getUserByUserID($_SESSION["userID"]);

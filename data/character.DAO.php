@@ -122,4 +122,23 @@ class CharacterDAO
             throw new Exception('Failed to add character to account(' . $charID . ')');
         }
     }
+
+    public function getCharactersByAttributeValuesArray($attribute, $attributeValue)
+    {
+        $sqlCharacter = "SELECT *
+                        FROM characters
+                        LEFT JOIN charClasses ON characters.charClassID=charClasses.charClassID
+                       WHERE " . $attribute . " = '" . $attributeValue[0] . "'";
+        if (count($attributeValue) > 1) {
+            array_shift($attributeValue);
+            foreach ($attributeValue as $value) {
+                $sqlCharacter .= "OR " . $attribute . " = '" . $value . "'";
+            }
+        }
+        $sqlCharacter .= "ORDER BY userID, accountID ASC;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $resultSetCharacters = $dbh->query($sqlCharacter);
+        $characterResults = $resultSetCharacters->fetchAll(PDO::FETCH_ASSOC);
+        return $characterResults;
+    }
 }

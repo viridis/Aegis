@@ -43,10 +43,10 @@ class DataService
         return current($completeEvents);
     }
 
-    public function getEventByAttribute($attribute, $attributeValue)
+    public function getEventByAttributeValuesArray($attribute, $attributeValueArray)
     {
         $eventService = new EventService();
-        $eventResults = $eventService->getEventByAttribute($attribute, $attributeValue);
+        $eventResults = $eventService->getEventByAttributeValuesArray($attribute, $attributeValueArray);
         $eventArray = $this->createEventArray($eventResults);
         $eventIDArray = array();
         foreach ($eventArray as $event) {
@@ -54,10 +54,10 @@ class DataService
             array_push($eventIDArray, $event->getEventID());
         }
         $dropService = new DropService();
-        $dropResults = $dropService->getDropByAttribute("eventID", $eventIDArray);
+        $dropResults = $dropService->getDropByAttributeValuesArray("eventID", $eventIDArray);
         $dropArray = $this->createDropArray($dropResults);
         $slotService = new SlotService();
-        $slotResults = $slotService->getSlotByAttribute("eventID", $eventIDArray);
+        $slotResults = $slotService->getSlotByAttributeValuesArray("eventID", $eventIDArray);
         $slotArray = $this->createSlotArray($slotResults);
         $completeEvents = $this->createCompleteEventArray($eventArray, $dropArray, $slotArray);
         return $completeEvents;
@@ -128,6 +128,14 @@ class DataService
         $slot = new Slot($event->getEventID(), NULL, $slotClassID, NULL, NULL, NULL);
         $slotService = new SlotService();
         return $slotService->createSlot($slot);
+    }
+
+    public function getSlotBySlotID($slotID)
+    {
+        $slotService = new SlotService();
+        $slotResults = $slotService->getSlotByAttributeValuesArray("slotID", array($slotID));
+        $completeSlot = $this->createSlotArray($slotResults);
+        return current($completeSlot);
     }
 
     public function setSlotClassID($slot, $slotClassID)
@@ -321,6 +329,14 @@ class DataService
         return $characterService->deleteCharacter($character);
     }
 
+    public function getCharacterByCharID($charID)
+    {
+        $characterService = new CharacterService();
+        $characterResults = $characterService->getCharactersByAttributeValuesArray("charID", array($charID));
+        $completeCharacter = $this->createCharacterArray($characterResults);
+        return current($completeCharacter);
+    }
+
     public function getAllCooldowns()
     {
         $cooldownService = new CooldownService();
@@ -378,6 +394,15 @@ class DataService
         $slotClassRulesResults = $slotClassService->getAllSlotClassRules();
         $completeSlotClasses = $this->createSlotClassArray($slotClassResults, $slotClassRulesResults);
         return $completeSlotClasses;
+    }
+
+    public function getSlotClassBySlotClassID($slotClassID)
+    {
+        $slotClassService = new SlotClassService();
+        $slotClassResults = $slotClassService->getSlotClassByAttributeValuesArray("slotClassID", array($slotClassID));
+        $slotClassRulesResults = $slotClassService->getSlotClassRulesByAttributeValuesArray("slotClassID", array($slotClassID));
+        $completeSlotClasses = $this->createSlotClassArray($slotClassResults, $slotClassRulesResults);
+        return current($completeSlotClasses);
     }
 
     private function createSlotClassArray($slotClassResults, $slotClassRulesResults)

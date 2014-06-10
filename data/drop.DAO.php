@@ -17,7 +17,7 @@ class DropDAO
         return $dropResults;
     }
 
-    public function getDropByAttribute($attribute, $attributeValue)
+    public function getDropByAttributeValuesArray($attribute, $attributeValue)
     {
         $sqlDrops = "SELECT drops.*, items.name, items.aegisName
                         FROM drops

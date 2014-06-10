@@ -20,14 +20,14 @@ class SlotDAO
         return $slotResults;
     }
 
-    public function getSlotByAttribute($attribute, $attributeValue)
+    public function getSlotByAttributeValuesArray($attribute, $attributeValue)
     {
         $sqlSlot = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName, characters.accountID, slotClasses.slotClassName
                         FROM slots
                         LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
                         LEFT JOIN characters ON characters.charID = slots.takenCharID
                         LEFT JOIN slotClasses ON slotClasses.slotClassID = slots.slotClassID
-                       WHERE " . $attribute . " = '" . $attributeValue[0] . "'";
+                       WHERE " . $attribute . " = '" . $attributeValue[0] . "' ";
         if (count($attributeValue) > 1) {
             array_shift($attributeValue);
             foreach ($attributeValue as $value) {

@@ -15,7 +15,7 @@ class EventDAO
         return $eventResults;
     }
 
-    public function getEventByAttribute($attribute, $attributeValue)
+    public function getEventByAttributeValuesArray($attribute, $attributeValue)
     {
         $sqlEvents = "SELECT events.*, eventTypes.eventName, eventTypes.accountCooldown, eventTypes.characterCooldown
                         FROM events LEFT JOIN eventTypes ON events.eventTypeID=eventTypes.eventTypeID

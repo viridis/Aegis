@@ -91,6 +91,21 @@ class Slot
         return $this->slotClassName;
     }
 
+    public function setTaken($taken)
+    {
+        $this->taken = $taken;
+    }
+
+    public function setTakenUserID($takenUserID)
+    {
+        $this->takenUserID = $takenUserID;
+    }
+
+    public function setTakenCharID($takenCharID)
+    {
+        $this->takenCharID = $takenCharID;
+    }
+
     public function setUserLogin($userLogin)
     {
         $this->userLogin = $userLogin;
