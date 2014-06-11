@@ -13,7 +13,7 @@
             <p><strong><?php print($notification['title']); ?></strong> - <?php print($notification['message']); ?></p>
         </div>
     <?php endif; ?>
-    <h3>Participate in Events</h3>
+    <h3>Manage Drops from Events</h3>
 
     <?php if ($canAdmin) : ?>
     <form action="participate.php" method="get">
@@ -29,7 +29,7 @@
             /** @var Event $event */
             $eventDate = strtotime($event->getStartDate());
             $displayEventDate = date('d M gA', $eventDate+($currentUser->getGMT()*3600));
-            $hoursToEvent = round(($eventDate-time())/60,1);
+            $hoursToEvent = round(($eventDate-time())/3600,1);
             ?>
             <div class="panel panel-default">
                 <div class="panel-heading">

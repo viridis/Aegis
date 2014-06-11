@@ -21,4 +21,7 @@ if (isset($_SESSION["userID"])) {
 $usefulLinks = $pageService->generateUsefulLinks(5);
 $featuredLinks = $pageService->generateFeaturedLinks(5);
 
+$eventContainer = $dropsPageService->getAllClosedEvents();
+/** @var User $currentUser */
+$currentUser = $dataService->getUserByUserID($_SESSION["userID"]);
 include("../view/drops.view.php");
