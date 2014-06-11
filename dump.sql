@@ -78,7 +78,7 @@ CREATE TABLE `cooldowns` (
   CONSTRAINT `cooldowns_ibfk_3` FOREIGN KEY (`charID`) REFERENCES `characters` (`charID`),
   CONSTRAINT `cooldowns_ibfk_4` FOREIGN KEY (`eventTypeID`) REFERENCES `eventTypes` (`eventTypeID`),
   CONSTRAINT `cooldowns_ibfk_5` FOREIGN KEY (`eventTypeID`) REFERENCES `eventTypes` (`eventTypeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -141,7 +141,7 @@ CREATE TABLE `events` (
   PRIMARY KEY (`eventID`),
   KEY `eventTypeID` (`eventTypeID`),
   CONSTRAINT `events_ibfk_1` FOREIGN KEY (`eventTypeID`) REFERENCES `eventTypes` (`eventTypeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=50 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=51 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,7 +208,7 @@ CREATE TABLE `logs` (
   `result` varchar(10) NOT NULL,
   `timestamp` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5409 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5536 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -225,7 +225,7 @@ CREATE TABLE `navbarlinks` (
   `visibility` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -246,6 +246,39 @@ CREATE TABLE `participants` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `slotClassRules`
+--
+
+DROP TABLE IF EXISTS `slotClassRules`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `slotClassRules` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `slotClassID` int(11) NOT NULL,
+  `charClassID` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `slotClassID` (`slotClassID`),
+  KEY `charClassID` (`charClassID`),
+  CONSTRAINT `slotClassRules_ibfk_2` FOREIGN KEY (`charClassID`) REFERENCES `charClasses` (`charClassID`),
+  CONSTRAINT `slotClassRules_ibfk_1` FOREIGN KEY (`slotClassID`) REFERENCES `slotClasses` (`slotClassID`)
+) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `slotClasses`
+--
+
+DROP TABLE IF EXISTS `slotClasses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `slotClasses` (
+  `slotClassID` int(11) NOT NULL AUTO_INCREMENT,
+  `slotClassName` varchar(50) NOT NULL,
+  PRIMARY KEY (`slotClassID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `slots`
 --
 
@@ -259,13 +292,16 @@ CREATE TABLE `slots` (
   `taken` tinyint(1) NOT NULL DEFAULT '0',
   `takenUserID` int(11) DEFAULT NULL,
   `takenCharID` int(11) DEFAULT NULL,
+  `takenCharClassID` int(11) DEFAULT NULL,
   PRIMARY KEY (`slotID`),
   KEY `eventID` (`eventID`),
   KEY `takenUserID` (`takenUserID`),
   KEY `takenCharID` (`takenCharID`),
+  KEY `slotClassID` (`slotClassID`),
   CONSTRAINT `slots_ibfk_1` FOREIGN KEY (`eventID`) REFERENCES `events` (`eventID`),
   CONSTRAINT `slots_ibfk_2` FOREIGN KEY (`takenUserID`) REFERENCES `useraccount` (`userID`),
-  CONSTRAINT `slots_ibfk_3` FOREIGN KEY (`takenCharID`) REFERENCES `characters` (`charID`)
+  CONSTRAINT `slots_ibfk_3` FOREIGN KEY (`takenCharID`) REFERENCES `characters` (`charID`),
+  CONSTRAINT `slots_ibfk_4` FOREIGN KEY (`slotClassID`) REFERENCES `slotClasses` (`slotClassID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=143 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -302,6 +338,7 @@ CREATE TABLE `useraccount` (
   `mailChar` varchar(50) DEFAULT NULL,
   `forumAccount` varchar(50) NOT NULL,
   `payout` int(11) DEFAULT '0',
+  `gmt` int(11) DEFAULT '0',
   PRIMARY KEY (`userID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -335,4 +372,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-06-07 15:03:36
+-- Dump completed on 2014-06-11 11:07:53
