@@ -58,8 +58,8 @@ class ParticipateService
 
     public function setSlotTaken()
     {
-        $takenCharID = $_POST["join_slot_" . $_GET["updateSlot"]];
         $slotID = $_GET["updateSlot"];
+        $takenCharID = $_POST["join_slot_" . $slotID];
         $dataService = new DataService();
         /** @var Character $character */
         $character = $dataService->getCharacterByCharID($takenCharID);
@@ -74,9 +74,105 @@ class ParticipateService
         try {
             $dataService->updateSlot($slot);
         } catch (Exception $e) {
+            print $e->getMessage();
             return false;
         }
         return true;
+    }
+
+    public function updateCharacterInSlot()
+    {
+        $slotID = $_GET["updateSlot"];
+        $newTakenCharID = $_POST["change_slot_" . $slotID];
+        $dataService = new DataService();
+        $newTakenChar = $dataService->getCharacterByCharID($newTakenCharID);
+        /** @var Slot $slot */
+        $slot = $dataService->getSlotBySlotID($slotID);
+        if (!$this->isValidChangeCharacterInSlot($newTakenChar, $slot)) {
+            return false;
+        }
+        return $this->changeCharacterInSlot($newTakenChar, $slot);
+    }
+
+    public function vacateCharacterFromSlot()
+    {
+        $slotID = $_GET["updateSlot"];
+        $dataService = new DataService();
+        $slot = $dataService->getSlotBySlotID($slotID);
+        if ($this->sessionUserOwnsSlot($slot) || $this->sessionUserHasPrivileges()) {
+            return $this->vacateSlot($slot);
+        }
+        return false;
+    }
+
+    private function changeCharacterInSlot($newTakenChar, $slot)
+    {
+        /** @var Slot $slot */
+        /** @var Character $newTakenChar */
+        $slot->setTakenCharID($newTakenChar->getCharID());
+        $slot->setTakenUserID($newTakenChar->getUserID());
+        $dataService = new DataService();
+        try {
+            $dataService->updateSlot($slot);
+        } catch (Exception $e) {
+            print $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
+    private function vacateSlot($slot)
+    {
+        /** @var Slot $slot */
+        $dataService = new DataService();
+
+        $slot->setTaken(false);
+        $slot->setTakenCharID(NULL);
+        $slot->setTakenUserID(NULL);
+        try {
+            $dataService->updateSlot($slot);
+        } catch (Exception $e) {
+            print $e->getMessage();
+            return false;
+        }
+        return true;
+    }
+
+    private function isValidChangeCharacterInSlot($newTakenChar, $slot)
+    {
+        /** @var Slot $slot */
+        if (!$this->sessionUserOwnsSlot($slot) && !$this->sessionUserHasPrivileges()) {
+            return false;
+        }
+
+        if (!$this->sessionUserHasRightsToCharacter($newTakenChar)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private function sessionUserOwnsSlot($slot)
+    {
+        /** @var Slot $slot */
+        if ($_SESSION["userID"] == $slot->getTakenUserID()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private function sessionUserHasPrivileges()
+    {
+        $dataService = new DataService();
+        $userID = $_SESSION["userID"];
+        /** @var User $user */
+        $user = $dataService->getUserByUserID($userID);
+        if ($user->getRoleLevel() == 10) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private function isValidSignUp($character, $slot)
@@ -86,19 +182,19 @@ class ParticipateService
         $dataService = new DataService();
         /** @var Event $event */
         $event = $dataService->getEventByEventID($slot->getEventID());
-        if (!$this->userHasRightsToCharacter($character)){
+        if (!$this->sessionUserHasRightsToCharacter($character)) {
             return false;
         }
-        if ($this->characterOnCooldownForEvent($character, $event)){
+        if ($this->characterOnCooldownForEvent($character, $event)) {
             return false;
         }
-        if (!$this->characterCanFitSlot($character, $slot, $dataService)){
+        if (!$this->characterCanFitSlot($character, $slot, $dataService)) {
             return false;
         }
         return true;
     }
 
-    private function userHasRightsToCharacter($character)
+    private function sessionUserHasRightsToCharacter($character)
     {
         /** @var Character $character */
         $dataService = new DataService();
@@ -106,7 +202,7 @@ class ParticipateService
         $charUser = $dataService->getUserByUserID($character->getUserID());
         /** @var User $sessionUser */
         $sessionUser = $dataService->getUserByUserID($_SESSION["userID"]);
-        if (($charUser->getUserID() != $sessionUser->getUserID()) && ($sessionUser->getRoleLevel() < 10)) {
+        if (($charUser->getUserID() != $sessionUser->getUserID()) && !$this->sessionUserHasPrivileges()) {
             return false;
         } else {
             return true;

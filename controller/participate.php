@@ -23,16 +23,54 @@ $featuredLinks = $pageService->generateFeaturedLinks(5);
 if (isset($_GET["updateSlot"]) && isset($_POST["join_slot_" . $_GET["updateSlot"]]))
 {
     if ($participateService->setSlotTaken()){
-        echo "Success";
+        $notification = array(
+            'type' => 'success',
+            'title' => 'Success',
+            'message' => 'Successfully joined event.',
+        );
     } else {
-        echo "Failed";
+        $notification = array(
+            'type' => 'danger',
+            'title' => 'Error',
+            'message' => 'Failed to join event.',
+        );
     }
 }
 
 if (isset($_GET["updateSlot"]) && isset($_POST["change_slot_" . $_GET["updateSlot"]]))
 {
-    print 2;
+    if ($participateService->updateCharacterInSlot()){
+        $notification = array(
+            'type' => 'success',
+            'title' => 'Success',
+            'message' => 'Successfully updated character in slot.',
+        );
+    } else {
+        $notification = array(
+            'type' => 'danger',
+            'title' => 'Error',
+            'message' => 'Failed to update character in slot.',
+        );
+    }
 }
+
+if (isset($_GET["updateSlot"]) && isset($_POST["vacate_slot_" . $_GET["updateSlot"]]))
+{
+    if ($participateService->vacateCharacterFromSlot()){
+        $notification = array(
+            'type' => 'success',
+            'title' => 'Success',
+            'message' => 'Successfully vacated slot.',
+        );
+    } else {
+        $notification = array(
+            'type' => 'danger',
+            'title' => 'Error',
+            'message' => 'Failed to vacate slot.',
+        );
+    }
+}
+var_dump($_POST);
 
 
 $eventContainer = $participateService->getAllOpenEvents();
