@@ -70,7 +70,6 @@ if (isset($_GET["updateSlot"]) && isset($_POST["vacate_slot_" . $_GET["updateSlo
         );
     }
 }
-var_dump($_POST);
 
 
 $eventContainer = $participateService->getAllOpenEvents();

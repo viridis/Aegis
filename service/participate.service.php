@@ -65,7 +65,7 @@ class ParticipateService
         $character = $dataService->getCharacterByCharID($takenCharID);
         /** @var Slot $slot */
         $slot = $dataService->getSlotBySlotID($slotID);
-        if (!$this->isValidSignUp($character, $slot)) {
+        if (!$this->isValidJoinEvent($character, $slot)) {
             return false;
         }
         $slot->setTaken(true);
@@ -175,7 +175,7 @@ class ParticipateService
         }
     }
 
-    private function isValidSignUp($character, $slot)
+    private function isValidJoinEvent($character, $slot)
     {
         /** @var Slot $slot */
         /** @var Character $character */

@@ -48,8 +48,7 @@
                 </div>
                 <div id="event<?php print $event->getEventID(); ?>" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <table class="table table-condensed table-hover table-striped table-bordered">
-
+                        <table class="table table-hover">
                             <?php
                             $slotNum = 0;
                             foreach ($event->getSlotList() as $slot) :
