@@ -15,6 +15,15 @@
     <?php endif; ?>
     <h3>Participate in Events</h3>
 
+    <?php if ($canAdmin) : ?>
+    <form action="participate.php" method="get">
+        <div>
+            <input type="hidden" name="admin" value="true">
+            <button type="submit">Admin View</button>
+        </div>
+    </form>
+    <?php endif; ?>
+
     <div class="panel-group" id="eventPanels">
         <?php foreach ($eventContainer as $event) :
             /** @var Event $event */
@@ -64,7 +73,7 @@
 
                                 <td>
                                     <form class="form-horizontal"
-                                          action="participate.php?updateSlot=<?php print $slot->getSlotID(); ?>"
+                                          action="participate.php?<?php $isAdmin ? print "admin&" : print "" ?>updateSlot=<?php print $slot->getSlotID(); ?>"
                                           method="post">
                                         <?php if ($slot->isTaken()) : ?>
                                         <Select name="change_slot_<?php print $slot->getSlotID(); ?>">
@@ -94,7 +103,7 @@
                                 <?php if ($slot->isTaken()) : ?>
                                     <td>
                                         <form class="form-horizontal"
-                                              action="participate.php?updateSlot=<?php print $slot->getSlotID(); ?>"
+                                              action="participate.php?<?php $isAdmin ? print "admin&" : print "" ?>updateSlot=<?php print $slot->getSlotID(); ?>"
                                               method="post">
                                             <input type="hidden" name="vacate_slot_<?php print $slot->getSlotID(); ?>"
                                                    value="<?php print $slot->getSlotID(); ?>">

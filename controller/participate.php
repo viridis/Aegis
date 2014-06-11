@@ -20,9 +20,8 @@ if (isset($_SESSION["userID"])) {
 $usefulLinks = $pageService->generateUsefulLinks(5);
 $featuredLinks = $pageService->generateFeaturedLinks(5);
 
-if (isset($_GET["updateSlot"]) && isset($_POST["join_slot_" . $_GET["updateSlot"]]))
-{
-    if ($participateService->setSlotTaken()){
+if (isset($_GET["updateSlot"]) && isset($_POST["join_slot_" . $_GET["updateSlot"]])) {
+    if ($participateService->setSlotTaken()) {
         $notification = array(
             'type' => 'success',
             'title' => 'Success',
@@ -37,9 +36,8 @@ if (isset($_GET["updateSlot"]) && isset($_POST["join_slot_" . $_GET["updateSlot"
     }
 }
 
-if (isset($_GET["updateSlot"]) && isset($_POST["change_slot_" . $_GET["updateSlot"]]))
-{
-    if ($participateService->updateCharacterInSlot()){
+if (isset($_GET["updateSlot"]) && isset($_POST["change_slot_" . $_GET["updateSlot"]])) {
+    if ($participateService->updateCharacterInSlot()) {
         $notification = array(
             'type' => 'success',
             'title' => 'Success',
@@ -54,9 +52,8 @@ if (isset($_GET["updateSlot"]) && isset($_POST["change_slot_" . $_GET["updateSlo
     }
 }
 
-if (isset($_GET["updateSlot"]) && isset($_POST["vacate_slot_" . $_GET["updateSlot"]]))
-{
-    if ($participateService->vacateCharacterFromSlot()){
+if (isset($_GET["updateSlot"]) && isset($_POST["vacate_slot_" . $_GET["updateSlot"]])) {
+    if ($participateService->vacateCharacterFromSlot()) {
         $notification = array(
             'type' => 'success',
             'title' => 'Success',
@@ -75,9 +72,13 @@ if (isset($_GET["updateSlot"]) && isset($_POST["vacate_slot_" . $_GET["updateSlo
 $eventContainer = $participateService->getAllOpenEvents();
 $validCharactersForSlotTypes = $participateService->getValidCharactersForSlotClassID();
 $isAdmin = false;
+$canAdmin = true;
 /** @var User $currentUser */
 $currentUser = $dataService->getUserByUserID($_SESSION["userID"]);
-if (isset($_GET["admin"]) && $currentUser->getRoleLevel() == 10){
+if ($currentUser->getRoleLevel() == 10) {
+    $canAdmin = true;
+}
+if (isset($_GET["admin"]) && $currentUser->getRoleLevel() == 10) {
     $isAdmin = true;
     $validCharactersForSlotTypes = $participateService->getAllValidCharactersForSlotClassID();
 }
