@@ -549,7 +549,7 @@ class DataService
         foreach ($userAccountResults as $row) {
             /** @var User $user */
             $user = User::create($row['userID'], $row['userLogin'], $row['email'], $row['mailChar'],
-                $row['userPassword'], $row['roleLevel'], $row['forumAccount'], $row['payout']);
+                $row['userPassword'], $row['roleLevel'], $row['forumAccount'], $row['payout'], $row['gmt']);
             $user->setGameAccountContainer(array());
             $result[$row["userID"]] = $user;
         }

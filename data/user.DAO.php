@@ -30,7 +30,7 @@ class UserDAO
     public function createUser($user)
     {
         /** @var USER $user */
-        $sql = "INSERT INTO useraccount VALUES (NULL, :userLogin, :userPassword, :roleLevel, :email, :mailChar, :forumAccount, 0);";
+        $sql = "INSERT INTO useraccount VALUES (NULL, :userLogin, :userPassword, :roleLevel, :email, :mailChar, :forumAccount, 0, :gmt);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
         $userLogin = $user->getUserLogin();
@@ -45,6 +45,8 @@ class UserDAO
         $stmt->bindParam(':mailChar', $mailChar);
         $forumAccount = $user->getForumAccount();
         $stmt->bindParam(':forumAccount', $forumAccount);
+        $gmt = $user->getGMT();
+        $stmt->bindParam(':gmt', $gmt);
         $binds = array(
             ":userLogin" => $userLogin,
             ":userPassword" => $userPassword,
@@ -52,6 +54,7 @@ class UserDAO
             ":email" => $email,
             ":mailChar" => $mailChar,
             ":forumAccount" => $forumAccount,
+            ":gmt" => $gmt
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
@@ -72,7 +75,8 @@ class UserDAO
                      email = :email,
                      mailChar = :mailChar,
                      forumAccount = :forumAccount,
-                     payout = :payout
+                     payout = :payout,
+                     gmt = :gmt
                     WHERE userID = :userID;';
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sql);
@@ -92,6 +96,8 @@ class UserDAO
         $stmt->bindParam(':payout', $payout);
         $userID = $user->getUserID();
         $stmt->bindParam(':userID', $userID);
+        $gmt = $user->getGMT();
+        $stmt->bindParam(':gmt', $gmt);
         $binds = array(
             ":userLogin" => $userLogin,
             ":userPassword" => $userPassword,
@@ -101,6 +107,7 @@ class UserDAO
             ":forumAccount" => $forumAccount,
             ":payout" => $payout,
             ":userID" => $userID,
+            ":gmt" => $gmt
         );
         $logDAO = new LogDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail

@@ -12,11 +12,12 @@ class User
     private $roleLevel;
     private $forumAccount;
     private $payout;
+    private $gmt;
 
     // Associated fields
     private $gameAccountContainer = array();
 
-    public function __construct($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout)
+    public function __construct($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout, $gmt)
     {
         $this->userID = $userID;
         $this->userLogin = $userLogin;
@@ -26,12 +27,13 @@ class User
         $this->forumAccount = $forumAccount;
         $this->payout = $payout;
         $this->password = $password;
+        $this->gmt = $gmt;
     }
 
-    public static function create($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout)
+    public static function create($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout, $gmt)
     {
         if (!isset(self::$idList[$userID])) {
-            self::$idList[$userID] = new User($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout);
+            self::$idList[$userID] = new User($userID, $userLogin, $email, $mailChar, $password, $roleLevel, $forumAccount, $payout, $gmt);
         }
         return self::$idList[$userID];
     }
@@ -86,6 +88,11 @@ class User
         return $this->gameAccountContainer;
     }
 
+    public function getGMT()
+    {
+        return $this->gmt;
+    }
+
     public function setGameAccountContainer($gameAccountContainer)
     {
         $this->gameAccountContainer = $gameAccountContainer;
@@ -104,6 +111,11 @@ class User
     public function setUserPassword($userPassword)
     {
         $this->password = $userPassword;
+    }
+
+    public function setGMT($gmt)
+    {
+        $this->gmt = $gmt;
     }
 
 }

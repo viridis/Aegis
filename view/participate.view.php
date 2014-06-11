@@ -6,28 +6,28 @@
 </head>
 <body role="document">
 <?php include('partials/navbar.partial.view.php') ?>
-
-<?php if (isset($notification)): ?>
-    <div class="alert alert-<?php print($notification['type']); ?> alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <p><strong><?php print($notification['title']); ?></strong> - <?php print($notification['message']); ?></p>
-    </div>
-<?php endif; ?>
-
 <div class="container" role="main">
+    <?php if (isset($notification)): ?>
+        <div class="alert alert-<?php print($notification['type']); ?> alert-dismissable">
+            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+            <p><strong><?php print($notification['title']); ?></strong> - <?php print($notification['message']); ?></p>
+        </div>
+    <?php endif; ?>
     <h3>Participate in Events</h3>
 
     <div class="panel-group" id="eventPanels">
         <?php foreach ($eventContainer as $event) :
             /** @var Event $event */
+            $eventDate = strtotime($event->getStartDate());
+            $displayEventDate = date('d M gA', $eventDate+($currentUser->getGMT()*3600));
+            $hoursToEvent = round(($eventDate-time())/60,1);
             ?>
             <div class="panel panel-default">
                 <div class="panel-heading">
                     <h3 class="panel-title">
                         <a data-toggle="collapse" data-parent="#eventPanels"
                            href="#event<?php print $event->getEventID(); ?>" class="collapsed">
-                            <?php print $event->getEventID() . ". " . $event->getEventName() . " - " . $event->getStartDate(); ?>
-
+                            <?php print $event->getEventID() . ". " . $event->getEventName() . " , " . $displayEventDate . " , " . $hoursToEvent . " hour(s) later" ?>
                         </a>
                         <a data-toggle="collapse" data-parent="#eventPanels"
                            href="#event<?php print $event->getEventID(); ?>" class="collapsed" style="float:right;">
@@ -74,7 +74,7 @@
                                                 <?php endif; ?>
                                                 <?php foreach ($validCharactersForSlotTypes[$event->getEventTypeID()][$slot->getSlotClassID()] as $validChar) :
                                                     /** @var Character $validChar */
-                                                    $eventDate = strtotime($event->getStartDate());
+
                                                     $cooldownDate = 0;
                                                     if (isset($validChar->getCooldownContainer()[$event->getEventTypeID()])) :
                                                         $cooldownDate = strtotime($validChar->getCooldownContainer()[$event->getEventTypeID()]);
