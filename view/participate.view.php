@@ -48,7 +48,7 @@
                 </div>
                 <div id="event<?php print $event->getEventID(); ?>" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <table class="table table-hover">
+                        <table class="table">
                             <?php
                             $slotNum = 0;
                             foreach ($event->getSlotList() as $slot) :
@@ -58,8 +58,8 @@
 
                                 <td><?php print $slotNum . ". "; ?></td>
                                 <td> <?php print $slot->getSlotClassName(); ?></td>
-                                <?php if (($slot->isTaken()) && ($slot->getTakenUserID() != $_SESSION["userID"])): ?>
-                                <td><input type="text" value="<?php print $slot->getCharName(); ?>" readonly></td>
+                                <?php if (($slot->isTaken()) && ($slot->getTakenUserID() != $_SESSION["userID"]) && !$isAdmin): ?>
+                                <td><?php print $slot->getCharName() . " (" . $slot->getTakenCharClassName() . ")"    ; ?></td>
                             <?php else : ?>
 
                                 <td>

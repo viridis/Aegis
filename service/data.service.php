@@ -626,12 +626,13 @@ class DataService
             /** @var Slot $slot */
             $slot = Slot::create($row["eventID"], $row["slotID"],
                 $row["slotClassID"], $row["taken"],
-                $row["takenUserID"], $row["takenCharID"]);
+                $row["takenUserID"], $row["takenCharID"], $row["takenCharClassID"]);
             $slot->setUserLogin($row["userLogin"]);
-            $slot->setCharClassID($row["charClassID"]);
+            $slot->setTakenCharClassID($row["charClassID"]);
             $slot->setCharName($row["charName"]);
             $slot->setAccountID($row["accountID"]);
             $slot->setSlotClassName($row["slotClassName"]);
+            $slot->setTakenCharClassName($row["charClassName"]);
             $result[$row["slotID"]] = $slot;
         }
         return $result;

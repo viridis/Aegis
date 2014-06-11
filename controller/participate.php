@@ -74,5 +74,11 @@ if (isset($_GET["updateSlot"]) && isset($_POST["vacate_slot_" . $_GET["updateSlo
 
 $eventContainer = $participateService->getAllOpenEvents();
 $validCharactersForSlotTypes = $participateService->getValidCharactersForSlotClassID();
+$isAdmin = false;
+/** @var User $currentUser */
 $currentUser = $dataService->getUserByUserID($_SESSION["userID"]);
+if (isset($_GET["admin"]) && $currentUser->getRoleLevel() == 10){
+    $isAdmin = true;
+    $validCharactersForSlotTypes = $participateService->getAllValidCharactersForSlotClassID();
+}
 include("../view/participate.view.php");

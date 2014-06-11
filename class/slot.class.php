@@ -10,15 +10,16 @@ class Slot
     private $taken;
     private $takenUserID;
     private $takenCharID;
+    private $takenCharClassID;
 
     //Associated Fields
     private $slotClassName;
     private $userLogin; // From user class
-    private $charClassID; // From character class
     private $charName; // From character class
     private $accountID; // From character class
+    private $takenCharClassName;
 
-    public function __construct($eventID, $slotID, $slotClassID, $taken, $takenUserID, $takenCharID)
+    public function __construct($eventID, $slotID, $slotClassID, $taken, $takenUserID, $takenCharID, $takenCharClassID)
     {
         $this->eventID = $eventID;
         $this->slotID = $slotID;
@@ -26,12 +27,13 @@ class Slot
         $this->taken = $taken;
         $this->takenUserID = $takenUserID;
         $this->takenCharID = $takenCharID;
+        $this->takenCharClassID = $takenCharClassID;
     }
 
-    public static function create($eventID, $slotID, $slotClassID, $taken, $takenUserID, $takenCharID)
+    public static function create($eventID, $slotID, $slotClassID, $taken, $takenUserID, $takenCharID, $takenCharClassID)
     {
         if (!isset(self::$idList[$slotID])) {
-            self::$idList[$slotID] = new Slot($eventID, $slotID, $slotClassID, $taken, $takenUserID, $takenCharID);
+            self::$idList[$slotID] = new Slot($eventID, $slotID, $slotClassID, $taken, $takenUserID, $takenCharID, $takenCharClassID);
         }
         return self::$idList[$slotID];
     }
@@ -71,9 +73,9 @@ class Slot
         return $this->userLogin;
     }
 
-    public function getCharClassID()
+    public function getTakenCharClassID()
     {
-        return $this->charClassID;
+        return $this->takenCharClassID;
     }
 
     public function getCharName()
@@ -89,6 +91,11 @@ class Slot
     public function getSlotClassName()
     {
         return $this->slotClassName;
+    }
+
+    public function getTakenCharClassName()
+    {
+        return $this->takenCharClassName;
     }
 
     public function setTaken($taken)
@@ -111,9 +118,9 @@ class Slot
         $this->userLogin = $userLogin;
     }
 
-    public function setCharClassID($charClass)
+    public function setTakenCharClassID($charClass)
     {
-        $this->charClassID = $charClass;
+        $this->takenCharClassID = $charClass;
     }
 
     public function setCharName($charName)
@@ -134,5 +141,10 @@ class Slot
     public function setSlotClassName($slotClassName)
     {
         $this->slotClassName = $slotClassName;
+    }
+
+    public function setTakenCharClassName($charClassName)
+    {
+        $this->takenCharClassName = $charClassName;
     }
 }

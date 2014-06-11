@@ -8,11 +8,12 @@ class SlotDAO
     public function getAllSlots()
     {
         $sqlSlots = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName,
-                        characters.accountID, slotClasses.slotClassName
+                        characters.accountID, slotClasses.slotClassName, charClasses.charClassName
                         FROM slots
                         LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
                         LEFT JOIN characters ON characters.charID = slots.takenCharID
                         LEFT JOIN slotClasses ON slotClasses.slotClassID = slots.slotClassID
+                        LEFT JOIN charClasses ON charClasses.charClassID = slots.takenCharClassID
                         ORDER BY eventID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultSetSlots = $dbh->query($sqlSlots);
@@ -22,11 +23,12 @@ class SlotDAO
 
     public function getSlotByAttributeValuesArray($attribute, $attributeValue)
     {
-        $sqlSlot = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName, characters.accountID, slotClasses.slotClassName
+        $sqlSlot = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName, characters.accountID, slotClasses.slotClassName, charClasses.charClassName
                         FROM slots
                         LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
                         LEFT JOIN characters ON characters.charID = slots.takenCharID
                         LEFT JOIN slotClasses ON slotClasses.slotClassID = slots.slotClassID
+                        LEFT JOIN charClasses ON charClasses.charClassID = slots.takenCharClassID
                        WHERE " . $attribute . " = '" . $attributeValue[0] . "' ";
         if (count($attributeValue) > 1) {
             array_shift($attributeValue);
@@ -87,11 +89,12 @@ class SlotDAO
 
     public function getSlotByEventID($eventID)
     {
-        $sqlSlot = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName, characters.accountID, slotClasses.slotClassName
+        $sqlSlot = "SELECT slots.*, useraccount.userLogin, characters.charClassID, characters.charName, characters.accountID, slotClasses.slotClassName, charClasses.charClassName
                         FROM slots
                         LEFT JOIN useraccount ON useraccount.UserID = slots.takenUserID
                         LEFT JOIN characters ON characters.charID = slots.takenCharID
                         LEFT JOIN slotClasses ON slotClasses.slotClassID = slots.slotClassID
+                        LEFT JOIN charClasses ON charClasses.charClassID = slots.takenCharClassID
                         WHERE eventID = :eventID
                         ORDER BY eventID ASC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
@@ -110,7 +113,8 @@ class SlotDAO
                       slotClassID = :slotClassID,
                       taken = :taken,
                       takenUserID = :takenUserID,
-                      takenCharID = :takenCharID
+                      takenCharID = :takenCharID,
+                      takenCharClassID = :takenCharClassID
                       WHERE slotID = :slotID";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlSlot);
@@ -124,6 +128,8 @@ class SlotDAO
         $stmt->bindParam(':takenUserID', $takenUserID);
         $takenCharID = $slot->getTakenCharID();
         $stmt->bindParam(':takenCharID', $takenCharID);
+        $takenCharClassID = $slot->getTakenCharClassID();
+        $stmt->bindParam(':takenCharClassID', $takenCharClassID);
         $slotID = $slot->getSlotID();
         $stmt->bindParam(':slotID', $slotID);
         $binds = array(
@@ -132,6 +138,7 @@ class SlotDAO
             ":taken" => $isTaken,
             ":takenUserID" => $takenUserID,
             ":takenCharID" => $takenCharID,
+            ":takenCharClassID" => $takenCharClassID,
             ":slotID" => $slotID
         );
         $logDAO = new LogDAO();

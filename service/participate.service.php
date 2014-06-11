@@ -51,8 +51,54 @@ class ParticipateService
                 }
             }
         }
+        return $result;
+    }
 
-
+    public function getAllValidCharactersForSlotClassID()
+    {
+        $result = array();
+        $dataService = new DataService();
+        $slotClasses = $dataService->getAllSlotClasses();
+        $eventTypes = $dataService->getAllEventTypes();
+        $usersContainer = $dataService->getAllUserInfo();
+        /** @var User $currentUser */
+        $currentUser = $dataService->getUserByUserID($_SESSION["userID"]);
+        foreach ($eventTypes as $eventType) {
+            /** @var EventType $eventType */
+            foreach ($slotClasses as $slotClass) {
+                /** @var SlotClass $slotClass */
+                $result[$eventType->getEventTypeID()][$slotClass->getSlotClassID()] = array();
+                foreach ($usersContainer as $currentUser) {
+                    foreach ($currentUser->getGameAccountContainer() as $gameAccount) {
+                        /** @var GameAccount $gameAccount */
+                        $onCooldown = false;
+                        foreach ($gameAccount->getCooldownContainer() as $cooldown) {
+                            /** @var Cooldown $cooldown */
+                            if ($cooldown->getEventTypeID() == $eventType->getEventTypeID()) {
+                                $onCooldown = true;
+                            }
+                        }
+                        if (!$onCooldown) {
+                            foreach ($gameAccount->getCharacterList() as $character) {
+                                /** @var Character $character */
+                                $charOnCooldown = false;
+                                foreach ($character->getCooldownContainer() as $cooldown) {
+                                    /** @var Cooldown $cooldown */
+                                    if ($cooldown->getEventTypeID() == $eventType->getEventTypeID()) {
+                                        $charOnCooldown = true;
+                                    }
+                                }
+                                if (!$charOnCooldown) {
+                                    if (isset($slotClass->getAllowedCharClassArray()[$character->getCharClassID()])) {
+                                        array_push($result[$eventType->getEventTypeID()][$slotClass->getSlotClassID()], $character);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
         return $result;
     }
 
@@ -71,6 +117,7 @@ class ParticipateService
         $slot->setTaken(true);
         $slot->setTakenCharID($takenCharID);
         $slot->setTakenUserID($character->getUserID());
+        $slot->setTakenCharClassID($character->getCharClassID());
         try {
             $dataService->updateSlot($slot);
         } catch (Exception $e) {
@@ -111,6 +158,7 @@ class ParticipateService
         /** @var Character $newTakenChar */
         $slot->setTakenCharID($newTakenChar->getCharID());
         $slot->setTakenUserID($newTakenChar->getUserID());
+        $slot->setTakenCharClassID($newTakenChar->getCharClassID());
         $dataService = new DataService();
         try {
             $dataService->updateSlot($slot);
@@ -129,6 +177,7 @@ class ParticipateService
         $slot->setTaken(false);
         $slot->setTakenCharID(NULL);
         $slot->setTakenUserID(NULL);
+        $slot->setTakenCharClassID(NULL);
         try {
             $dataService->updateSlot($slot);
         } catch (Exception $e) {
