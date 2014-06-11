@@ -8,7 +8,7 @@ class EventDAO
     {
         $sqlEvents = "SELECT events.*, eventTypes.eventName, eventTypes.accountCooldown, eventTypes.characterCooldown
                         FROM events LEFT JOIN eventTypes ON events.eventTypeID=eventTypes.eventTypeID
-                        ORDER BY eventID ASC;";
+                        ORDER BY startDate DESC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $resultSetEvents = $dbh->query($sqlEvents);
         $eventResults = $resultSetEvents->fetchAll(PDO::FETCH_ASSOC);
@@ -26,7 +26,7 @@ class EventDAO
                 $sqlEvents .= "OR " . $attribute . " = '" . $value . "'";
             }
         }
-        $sqlEvents .= "ORDER BY eventID ASC;";
+        $sqlEvents .= "ORDER BY startDate DESC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlEvents);
         $stmt->execute();
@@ -39,7 +39,7 @@ class EventDAO
         $sqlEvents = "SELECT events.*, eventTypes.eventName, eventTypes.accountCooldown, eventTypes.characterCooldown
                         FROM events LEFT JOIN eventTypes ON events.eventTypeID=eventTypes.eventTypeID
                         WHERE eventID = :eventID
-                        ORDER BY eventID ASC;";
+                        ORDER BY startDate DESC;";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlEvents);
         $stmt->bindParam(':eventID', $eventID);
@@ -77,7 +77,7 @@ class EventDAO
             return $dbh->lastInsertId();
         } else {
             $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
-            throw new Exception('Failed to add event (' . $eventName . ')');
+            throw new Exception('Failed to add event (' . $eventTypeID . ')');
         }
     }
 

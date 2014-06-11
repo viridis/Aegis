@@ -197,10 +197,9 @@
                 $i = 0;
                 foreach ($eventContainer as $event) {
                     /** @var Event $event */
-                    $i++;
                     ?>
                     <tr>
-                        <td><?php print($i); ?></td>
+                        <td><?php print($event->getEventID()); ?></td>
                         <td>
                             <?php if ($event->getEventState() == 0) : ?>
                                 <a href="./runs.php?editRun=<?php print($event->getEventID()) ?>">
