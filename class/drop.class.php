@@ -83,4 +83,10 @@ class Drop
         $this->soldPrice = $soldPrice;
     }
 
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
+    }
+
+
 }

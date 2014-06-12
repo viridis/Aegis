@@ -22,6 +22,13 @@ $usefulLinks = $pageService->generateUsefulLinks(5);
 $featuredLinks = $pageService->generateFeaturedLinks(5);
 
 $eventContainer = $dropsPageService->getAllClosedEvents();
+$eventDropCollation = $dropsPageService->collateDropsForEvents($eventContainer);
 /** @var User $currentUser */
 $currentUser = $dataService->getUserByUserID($_SESSION["userID"]);
+$itemContainer = $dataService->getAllItems();
+if (isset($_POST["addDrop"]) && isset($_POST["eventID"])) {
+    $dropsPageService->addDropToEventAJAX();
+    exit();
+}
+
 include("../view/drops.view.php");

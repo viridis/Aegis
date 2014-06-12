@@ -125,7 +125,7 @@ class DataService
     public function addSlotToEvent($event, $slotClassID)
     {
         /** @var Event $event */
-        $slot = new Slot($event->getEventID(), NULL, $slotClassID, NULL, NULL, NULL);
+        $slot = new Slot($event->getEventID(), NULL, $slotClassID, NULL, NULL, NULL, NULL);
         $slotService = new SlotService();
         return $slotService->createSlot($slot);
     }
@@ -195,7 +195,7 @@ class DataService
         return $itemDAO->getItemByID($itemID);
     }
 
-    public function listAllItems()
+    public function getAllItems()
     {
         $itemDAO = new ItemDAO();
         return $itemDAO->getAllItems();

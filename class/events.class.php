@@ -168,4 +168,9 @@ class Event
     {
         $this->accountCooldown = $accountCooldown;
     }
+
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
+    }
 }

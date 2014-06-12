@@ -111,6 +111,10 @@ class ParticipateService
         $character = $dataService->getCharacterByCharID($takenCharID);
         /** @var Slot $slot */
         $slot = $dataService->getSlotBySlotID($slotID);
+        $event = $dataService->getEventByEventID($slot->getEventID());
+        if (!$this->isOpenEvent($event)){
+            return false;
+        }
         if (!$this->isValidJoinEvent($character, $slot)) {
             return false;
         }
@@ -135,6 +139,10 @@ class ParticipateService
         $newTakenChar = $dataService->getCharacterByCharID($newTakenCharID);
         /** @var Slot $slot */
         $slot = $dataService->getSlotBySlotID($slotID);
+        $event = $dataService->getEventByEventID($slot->getEventID());
+        if (!$this->isOpenEvent($event)){
+            return false;
+        }
         if (!$this->isValidChangeCharacterInSlot($newTakenChar, $slot)) {
             return false;
         }
@@ -145,11 +153,26 @@ class ParticipateService
     {
         $slotID = $_GET["updateSlot"];
         $dataService = new DataService();
+        /** @var Slot $slot */
         $slot = $dataService->getSlotBySlotID($slotID);
-        if ($this->sessionUserOwnsSlot($slot) || $this->sessionUserHasPrivileges()) {
-            return $this->vacateSlot($slot);
+        $event = $dataService->getEventByEventID($slot->getEventID());
+        if (!$this->isOpenEvent($event)){
+            return false;
         }
-        return false;
+        if (!$this->sessionUserOwnsSlot($slot) && !$this->sessionUserHasPrivileges()) {
+            return false;
+        }
+        return $this->vacateSlot($slot);
+    }
+
+    private function isOpenEvent($event)
+    {
+        /** @var Event $event */
+        if ($event->getEventState() == 0){
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private function changeCharacterInSlot($newTakenChar, $slot)

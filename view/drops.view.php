@@ -3,6 +3,7 @@
 <head>
     <title>LandingsPage</title>
     <?php include('partials/headers.partial.view.php'); ?>
+
 </head>
 <body role="document">
 <?php include('partials/navbar.partial.view.php'); ?>
@@ -34,16 +35,86 @@
                 </div>
                 <div id="event<?php print $event->getEventID(); ?>" class="panel-collapse collapse">
                     <div class="panel-body">
-                        <table class="table">
+                        <form action="drops.php" method="post" class="form-horizontal">
+                            <label for="addDrop_<?php print $event->getEventID(); ?>">Add Drop</label>
+                            <input size="30" id="addDrop_<?php print $event->getEventID(); ?>" class="addDrop" name="addDrop">
+                            <input type="button" class="btn btn-xs btn-primary" value="Add Drop" id="addDropButton_<?php print $event->getEventID(); ?>" onclick="sendAddDropRequest(this); return false;">
+                        </form>
+                        <table id="dropTable_<?php print $event->getEventID(); ?>"
+                               class="table table-condensed table-hover table-striped table-bordered">
+                            <thead>
+                            <tr>
+                                <th>
+                                    Drop Name
+                                </th>
+                                <th>
+                                    Amount
+                                </th>
+                                <th>
+                                    Action
+                                </th>
+                            </tr>
+                            <?php foreach ($eventDropCollation[$event->getEventID()] as $dropArray) :
 
+                                /** @var Drop $drop */
+                                ?>
+                                <tr>
+                                    <td><?php print $dropArray[0]->getItemName() . " (" . $dropArray[0]->getAegisName() . ")"; ?></td>
+                                    <td><?php print sizeof($dropArray); ?></td>
+                                    <td></td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </thead>
                         </table>
                     </div>
                 </div>
             </div>
         <?php endforeach; ?>
     </div>
+</div>
+<?php include('partials/footer.partial.view.php') ?>
+<script>
+    $(function () {
+        var availableTags = [
+            <?php foreach ($itemContainer as $item)  {
+            /** @var Item $item */
+             print "\"" . $item->getItemID() . ": " . $item->getName()  . " (" . $item->getAegisName() . ")\",";} ?>
+        ];
+        $(".addDrop").autocomplete({
+            source: availableTags,
+            minLength: 3
+        });
+    });
 
+    function sendAddDropRequest(object) {
+        var assocInput = 'addDrop_' + $(object).attr('id').split('_')[1];
+        var eventID = $(object).attr('id').split('_')[1];
+        var selectedItem = $('#' + assocInput).val();
+        makeAjaxRequest(selectedItem, eventID);
+    }
 
-    <?php include('partials/footer.partial.view.php') ?>
+    function makeAjaxRequest(selectedItem, eventID) {
+        $.ajax({
+            type: "POST",
+            data: { addDrop: selectedItem, eventID: eventID},
+            url: "drops.php",
+            success: function (result) {
+                processJSONAddItem(result);
+            }
+        });
+    }
+
+    function processJSONAddItem(result) {
+        var resultArray = result.split('|');
+        var event = jQuery.parseJSON(resultArray[0]);
+        $("#dropTable_" + event.eventID).find("tr:gt(0)").remove();
+        for (var i = 1; i < resultArray.length; i++) {
+            var drop = jQuery.parseJSON(resultArray[i]);
+            $('#dropTable_' + event.eventID + ' tr:last').after('<tr><td>' + drop.itemName + ' (' + drop.aegisName + ')</td><td>' + drop.count + '</td><td>' + "" +  '</tr>');
+        }
+
+    }
+</script>
 </body>
+
 </html>
