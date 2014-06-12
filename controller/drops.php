@@ -31,4 +31,9 @@ if (isset($_POST["addDrop"]) && isset($_POST["eventID"])) {
     exit();
 }
 
+if (isset($_POST["removeDrop"]) && isset($_POST["eventID"])) {
+    $dropsPageService->removeDropFromEventAJAX();
+    exit();
+}
+
 include("../view/drops.view.php");

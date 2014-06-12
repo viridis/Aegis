@@ -61,7 +61,7 @@
                                 <tr>
                                     <td><?php print $dropArray[0]->getItemName() . " (" . $dropArray[0]->getAegisName() . ")"; ?></td>
                                     <td><?php print sizeof($dropArray); ?></td>
-                                    <td></td>
+                                    <td><input type="button" class="btn btn-xs btn-warning" value="Remove 1" id="removeDropButton_<?php print $event->getEventID(); ?>_<?php print $dropArray[0]->getItemID(); ?>" onclick="sendRemoveDropRequest(this); return false;"></td>
                                 </tr>
                             <?php endforeach; ?>
                             </thead>
@@ -90,29 +90,47 @@
         var assocInput = 'addDrop_' + $(object).attr('id').split('_')[1];
         var eventID = $(object).attr('id').split('_')[1];
         var selectedItem = $('#' + assocInput).val();
-        makeAjaxRequest(selectedItem, eventID);
+        makeAddAjaxRequest(selectedItem, eventID);
     }
 
-    function makeAjaxRequest(selectedItem, eventID) {
+    function makeAddAjaxRequest(itemID, eventID) {
+
         $.ajax({
             type: "POST",
-            data: { addDrop: selectedItem, eventID: eventID},
+            data: { addDrop: itemID, eventID: eventID},
             url: "drops.php",
             success: function (result) {
-                processJSONAddItem(result);
+                processJSONDisplayTable(result);
             }
         });
     }
 
-    function processJSONAddItem(result) {
+    function processJSONDisplayTable(result) {
         var resultArray = result.split('|');
         var event = jQuery.parseJSON(resultArray[0]);
         $("#dropTable_" + event.eventID).find("tr:gt(0)").remove();
         for (var i = 1; i < resultArray.length; i++) {
             var drop = jQuery.parseJSON(resultArray[i]);
-            $('#dropTable_' + event.eventID + ' tr:last').after('<tr><td>' + drop.itemName + ' (' + drop.aegisName + ')</td><td>' + drop.count + '</td><td>' + "" +  '</tr>');
+            $('#dropTable_' + event.eventID + ' tr:last').after('<tr><td>' + drop.itemName + ' (' + drop.aegisName + ')</td><td>' + drop.count + '</td><td>' + '<input type="button" class="btn btn-xs btn-warning" value="Remove 1" id="removeDropButton_' + event.eventID + '_' + drop.itemID + '" onclick="sendRemoveDropRequest(this); return false;">' +  '</tr>');
         }
+    }
 
+    function sendRemoveDropRequest(object) {
+        var eventID = $(object).attr('id').split('_')[1];
+        var itemID = $(object).attr('id').split('_')[2];
+        makeRemoveAjaxRequest(itemID, eventID);
+    }
+
+    function makeRemoveAjaxRequest(itemID, eventID) {
+
+        $.ajax({
+            type: "POST",
+            data: { removeDrop: itemID, eventID: eventID},
+            url: "drops.php",
+            success: function (result) {
+                processJSONDisplayTable(result);
+            }
+        });
     }
 </script>
 </body>
