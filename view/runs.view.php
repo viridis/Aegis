@@ -263,7 +263,8 @@
             event.preventDefault();
             var id = event.target.id;
             var result = id.split('_');
-            $('body').prepend('<div id="dataConfirmModal" class="modal fade">' +
+
+            $('body').prepend('<div id="dataConfirmModal' + result[2] + '" class="modal fade">' +
                 '<div class="modal-dialog modal-sm">' +
                 '<div class ="modal-content">' +
                 '<div class="modal-body"> <h3 id="dataConfirmLabel">Confirm ' + result[0] + ' ' + result[1] + ' ' + result[3] + '?</h3></div>' +
@@ -276,7 +277,7 @@
                 '<button id="openEventButton' + result[2] + '" type="submit" class="btn">Yes</button>' +
                 '</form>' +
                 '</div></div></div></div>');
-            $('#dataConfirmModal').modal({show:true});
+            $('#dataConfirmModal' + result[2]).modal({show:true});
         })
     });
 

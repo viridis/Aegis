@@ -52,7 +52,7 @@
                 <td><?php $collatedDrop->getSoldUnits() == 0 ? print 0 : print $collatedDrop->getTotalSoldValue() / $collatedDrop->getSoldUnits() ; ?></td>
                 <?php if ($canEditInventory) : ?>
                     <td>
-                        Action
+
                     </td>
                 <?php endif; ?>
             </tr>
