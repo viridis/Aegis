@@ -40,4 +40,13 @@ class DropService
         $dropDAO = new DropDAO();
         return $dropDAO->getDropByAttributeValuesArray($attribute, $attributeValue);
     }
+
+    public function removeDropFromEvent($event, $item)
+    {
+        /** @var Item $item */
+        /** @var Event $event */
+        $dropDAO = new DropDAO();
+        return $dropDAO->removeDropFromEvent($event->getEventID(), $item->getItemID());
+    }
+
 }

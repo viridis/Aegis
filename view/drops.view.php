@@ -37,8 +37,11 @@
                     <div class="panel-body">
                         <form action="drops.php" method="post" class="form-horizontal">
                             <label for="addDrop_<?php print $event->getEventID(); ?>">Add Drop</label>
-                            <input size="30" id="addDrop_<?php print $event->getEventID(); ?>" class="addDrop" name="addDrop">
-                            <input type="button" class="btn btn-xs btn-primary" value="Add Drop" id="addDropButton_<?php print $event->getEventID(); ?>" onclick="sendAddDropRequest(this); return false;">
+                            <input size="30" id="addDrop_<?php print $event->getEventID(); ?>" class="addDrop"
+                                   name="addDrop">
+                            <input type="button" class="btn btn-xs btn-primary" value="Add Drop"
+                                   id="addDropButton_<?php print $event->getEventID(); ?>"
+                                   onclick="sendAddDropRequest(this); return false;">
                         </form>
                         <table id="dropTable_<?php print $event->getEventID(); ?>"
                                class="table table-condensed table-hover table-striped table-bordered">
@@ -61,7 +64,9 @@
                                 <tr>
                                     <td><?php print $dropArray[0]->getItemName() . " (" . $dropArray[0]->getAegisName() . ")"; ?></td>
                                     <td><?php print sizeof($dropArray); ?></td>
-                                    <td><input type="button" class="btn btn-xs btn-warning" value="Remove 1" id="removeDropButton_<?php print $event->getEventID(); ?>_<?php print $dropArray[0]->getItemID(); ?>" onclick="sendRemoveDropRequest(this); return false;"></td>
+                                    <td><input type="button" class="btn btn-xs btn-warning" value="Remove 1"
+                                               id="removeDropButton_<?php print $event->getEventID(); ?>_<?php print $dropArray[0]->getItemID(); ?>"
+                                               onclick="sendRemoveDropRequest(this); return false;"></td>
                                 </tr>
                             <?php endforeach; ?>
                             </thead>
@@ -111,7 +116,7 @@
         $("#dropTable_" + event.eventID).find("tr:gt(0)").remove();
         for (var i = 1; i < resultArray.length; i++) {
             var drop = jQuery.parseJSON(resultArray[i]);
-            $('#dropTable_' + event.eventID + ' tr:last').after('<tr><td>' + drop.itemName + ' (' + drop.aegisName + ')</td><td>' + drop.count + '</td><td>' + '<input type="button" class="btn btn-xs btn-warning" value="Remove 1" id="removeDropButton_' + event.eventID + '_' + drop.itemID + '" onclick="sendRemoveDropRequest(this); return false;">' +  '</tr>');
+            $('#dropTable_' + event.eventID + ' tr:last').after('<tr><td>' + drop.itemName + ' (' + drop.aegisName + ')</td><td>' + drop.count + '</td><td>' + '<input type="button" class="btn btn-xs btn-warning" value="Remove 1" id="removeDropButton_' + event.eventID + '_' + drop.itemID + '" onclick="sendRemoveDropRequest(this); return false;">' + '</tr>');
         }
     }
 

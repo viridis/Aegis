@@ -189,6 +189,12 @@ class DataService
         return $dropService->removeDrop($drop);
     }
 
+    public function removeDropFromEvent($event, $item)
+    {
+        $dropService = new DropService();
+        return $dropService->removeDropFromEvent($event, $item);
+    }
+
     public function getItemByItemID($itemID)
     {
         $itemDAO = new ItemDAO();

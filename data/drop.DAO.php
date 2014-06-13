@@ -134,4 +134,25 @@ class DropDAO
             throw new Exception('Failed to delete drop (' . $dropID . ')');
         }
     }
+
+    public function removeDropFromEvent($eventID, $itemID)
+    {
+        $sqlDelete = "DELETE FROM drops WHERE eventID = :eventID AND itemID = :itemID LIMIT 1;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlDelete);
+        $stmt->bindParam(':eventID', $eventID);
+        $stmt->bindParam(':itemID', $itemID);
+        $binds = array(
+            ":eventID" => $eventID,
+            ":itemID" => $itemID,
+        );
+        $logDAO = new LogDAO();
+        if ($stmt->execute()) {
+            $logDAO->logPreparedStatement('DELETE', $stmt, $binds, 'SUCCESS');
+            return true;
+        } else {
+            $logDAO->logPreparedStatement('DELETE', $stmt, $binds, 'FAILED');
+            throw new Exception('Failed to delete drop from event.');
+        }
+    }
 }

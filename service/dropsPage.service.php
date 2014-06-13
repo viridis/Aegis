@@ -59,7 +59,7 @@ class DropsPageService
             return;
         }
         try {
-            $dataService->addDropToEvent($event, $item);
+            $dataService->removeDropFromEvent($event, $item);
         } catch (Exception $e) {
             return;
         }
