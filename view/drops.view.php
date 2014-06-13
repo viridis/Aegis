@@ -15,7 +15,7 @@
             <p><strong><?php print($notification['title']); ?></strong> - <?php print($notification['message']); ?></p>
         </div>
     <?php endif; ?>
-    <h3>Participate in Events</h3>
+    <h3>Manage Event Drops</h3>
 
     <div class="panel-group" id="eventPanels">
         <?php foreach ($eventContainer as $event) :
