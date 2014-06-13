@@ -195,6 +195,14 @@ class DataService
         return $dropService->removeDropFromEvent($event, $item);
     }
 
+    public function getAllDrops()
+    {
+        $dropService = new DropService();
+        $dropResults = $dropService->getAllDrops();
+        $completeDrops = $this->createDropArray($dropResults);
+        return $completeDrops;
+    }
+
     public function getItemByItemID($itemID)
     {
         $itemDAO = new ItemDAO();
