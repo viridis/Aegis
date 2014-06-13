@@ -27,5 +27,5 @@ if ($currentUser->getRoleLevel() == 10)
 {
     $canEditInventory = true;
 }
-$collatedDrops = $inventoryService->getAllCollatedDrops();
+$collatedDropsArray = $inventoryService->getAllCollatedDrops();
 include("../view/inventory.view.php");

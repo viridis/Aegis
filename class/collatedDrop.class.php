@@ -71,9 +71,9 @@ class CollatedDrop
         return $this->totalSoldValue;
     }
 
-    public function IncreaseTotalUnits($increment)
+    public function increaseTotalUnits($increment)
     {
-        $this->totalSoldValue += $increment;
+        $this->totalUnits += $increment;
     }
 
     public function increaseSoldUnit($numberSold, $price)

@@ -42,14 +42,14 @@
         </tr>
         </thead>
         <tbody>
-        <?php foreach ($collatedDrops as $collatedDrop) :
-        /** @var Drop $collatedDrop */?>
+        <?php foreach ($collatedDropsArray as $collatedDrop) :
+        /** @var CollatedDrop $collatedDrop */?>
             <tr>
                 <td><?php print $collatedDrop->getItemID(); ?></td>
                 <td><?php print $collatedDrop->getItemName() . " (" . $collatedDrop->getAegisName() . ")" ; ?></td>
-                <td>1</td>
-                <td>1</td>
-                <td>0</td>
+                <td><?php print $collatedDrop->getTotalUnits(); ?></td>
+                <td><?php print $collatedDrop->getSoldUnits(); ?></td>
+                <td><?php $collatedDrop->getSoldUnits() == 0 ? print 0 : print $collatedDrop->getTotalSoldValue() / $collatedDrop->getSoldUnits() ; ?></td>
                 <?php if ($canEditInventory) : ?>
                     <td>
                         Action
