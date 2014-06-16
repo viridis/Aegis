@@ -45,12 +45,12 @@
         <?php foreach ($collatedDropsArray as $collatedDrop) :
             /** @var CollatedDrop $collatedDrop */
             ?>
-            <tr>
+            <tr id="row<?php print $collatedDrop->getItemID(); ?>">
                 <td><?php print $collatedDrop->getItemID(); ?></td>
                 <td><?php print $collatedDrop->getItemName() . " (" . $collatedDrop->getAegisName() . ")"; ?></td>
                 <td><?php print $collatedDrop->getTotalUnits(); ?></td>
-                <td><?php print $collatedDrop->getSoldUnits(); ?></td>
-                <td><?php $collatedDrop->getSoldUnits() == 0 ? print 0 : print $collatedDrop->getTotalSoldValue() / $collatedDrop->getSoldUnits(); ?></td>
+                <td><span id="row<?php print $collatedDrop->getItemID();?>_colSold"><?php print $collatedDrop->getSoldUnits(); ?></span></td>
+                <td><span id="row<?php print $collatedDrop->getItemID();?>_colSoldPrice"><?php $collatedDrop->getSoldUnits() == 0 ? print 0 : print $collatedDrop->getTotalSoldValue() / $collatedDrop->getSoldUnits(); ?></span></td>
                 <?php if ($canEditInventory) : ?>
                     <td>
                         <a class="btn btn-xs btn-warning"
@@ -104,7 +104,6 @@
         var itemID = $('#' + index + '_itemID').attr('value');
         var sellAmount = $('#' + index + '_sellAmount').val();
         var sellPrice = $('#' + index + '_sellPrice').val();
-        alert(sellAmount);
         makeAddAjaxRequest(itemID, sellAmount, sellPrice);
     }
 
@@ -121,7 +120,8 @@
     }
 
     function processJSONDisplayTable(result) {
-        alert(result);
+        $('#row501_colSold').html("1");
+        $('#row501_colSoldPrice').html("100000");
     }
 </script>
 </body>

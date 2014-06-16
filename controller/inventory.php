@@ -31,5 +31,6 @@ $collatedDropsArray = $inventoryService->getAllCollatedDrops();
 
 if (isset($_POST["itemID"])){
     var_dump($_POST);
+    exit();
 }
 include("../view/inventory.view.php");
