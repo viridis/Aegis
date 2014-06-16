@@ -28,4 +28,8 @@ if ($currentUser->getRoleLevel() == 10)
     $canEditInventory = true;
 }
 $collatedDropsArray = $inventoryService->getAllCollatedDrops();
+
+if (isset($_POST["itemID"])){
+    var_dump($_POST);
+}
 include("../view/inventory.view.php");
