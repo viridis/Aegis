@@ -3,7 +3,10 @@
 <head>
     <title>LandingsPage</title>
     <?php include('partials/headers.partial.view.php'); ?>
-
+    <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+    <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
 </head>
 <body role="document">
 <?php include('partials/navbar.partial.view.php'); ?>
@@ -127,7 +130,6 @@
     }
 
     function makeRemoveAjaxRequest(itemID, eventID) {
-
         $.ajax({
             type: "POST",
             data: { removeDrop: itemID, eventID: eventID},
