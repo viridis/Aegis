@@ -77,6 +77,7 @@
                                           method="post">
                                         <?php if ($slot->isTaken()) : ?>
                                         <Select name="change_slot_<?php print $slot->getSlotID(); ?>">
+                                            <option selected value="<?php print $slot->getTakenCharClassID() ?>"><?php print $slot->getCharName() . " (" . $slot->getTakenCharClassName() . ")" ?></option>
                                             <?php else : ?>
                                             <Select name="join_slot_<?php print $slot->getSlotID(); ?>">
                                                 <option selected value="">Choose character!</option>

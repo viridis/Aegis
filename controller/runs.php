@@ -95,4 +95,5 @@ if (isset($_GET["addRun"]) && $_GET["addRun"] == 1 && isset($_POST["eventTypeID"
 
 $eventContainer = $dataService->getAllEventInfo();
 $eventTypeContainer = $dataService->getAllEventTypes();
+$slotClassArray = $dataService->getAllSlotClasses();
 include("../view/runs.view.php");

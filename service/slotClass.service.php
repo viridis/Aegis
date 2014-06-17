@@ -44,4 +44,10 @@ class SlotClassService
         $slotClassDAO = new SlotClassDAO();
         return $slotClassDAO->deleteSlotClassRule($slotClassID, $charClassID);
     }
+
+    public function createSlotClass($slotClass)
+    {
+        $slotClassDAO = new SlotClassDAO();
+        return $slotClassDAO->createSlotClass($slotClass);
+    }
 }

@@ -126,4 +126,24 @@ class SlotClassDAO
             throw new Exception('Failed to delete slot class rule');
         }
     }
+    public function createSlotClass($slotClass)
+    {
+        /** @var SlotClass $slotClass */
+        $sqlInsert = "INSERT INTO slotClasses VALUES (NULL, :slotClassName);";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlInsert);
+        $slotClassName = $slotClass->getSlotClassName();
+        $stmt->bindParam(':slotClassName', $slotClassName);
+        $binds = array(
+            ":slotClassName" => $slotClassName
+        );
+        $logDAO = new LogDAO();
+        if ($stmt->execute()) {
+            $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
+            return $dbh->lastInsertId();
+        } else {
+            $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
+            throw new Exception('Failed to create slot class');
+        }
+    }
 }

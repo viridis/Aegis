@@ -24,8 +24,10 @@
                         <div class="col-sm-8">
                             <select class="form-control" id="eventTypeID" name="eventTypeID">
                                 <?php foreach ($eventTypeContainer as $eventType) :
-                                    /** @var EventType $eventType */?>
-                                <option value="<?php print $eventType->getEventTypeID() ?>"><?php print $eventType->getEventName() ?></option>
+                                    /** @var EventType $eventType */
+                                    ?>
+                                    <option
+                                        value="<?php print $eventType->getEventTypeID() ?>"><?php print $eventType->getEventName() ?></option>
                                 <?php endforeach ?>
                             </select>
                         </div>
@@ -100,8 +102,10 @@
                     <div class="col-sm-8">
                         <select class="form-control" id="eventTypeID" name="eventTypeID">
                             <?php foreach ($eventTypeContainer as $eventType) :
-                                /** @var EventType $eventType */?>
-                                <option <?php if ($eventEditing->getEventTypeID() == $eventType->getEventTypeID()) print "selected=\"selected\"" ?> value="<?php print $eventType->getEventTypeID() ?>"><?php print $eventType->getEventName() ?></option>
+                                /** @var EventType $eventType */
+                                ?>
+                                <option <?php if ($eventEditing->getEventTypeID() == $eventType->getEventTypeID()) print "selected=\"selected\"" ?>
+                                    value="<?php print $eventType->getEventTypeID() ?>"><?php print $eventType->getEventName() ?></option>
                             <?php endforeach ?>
                         </select>
                     </div>
@@ -127,9 +131,15 @@
                                class="col-sm-4 control-label">Slot <?php print $slotNum ?> Class</label>
 
                         <div class="col-sm-8">
-                            <input type="text" class="form-control" id="slotEdit_<?php print $slot->getSlotID() ?>"
-                                   name="slotEdit_<?php print $slot->getSlotID() ?>"
-                                   value="<?php print $slot->getSlotClassID() ?>">
+                            <select class="form-control" id="slotEdit_<?php print $slot->getSlotID() ?>"
+                                    name="slotEdit_<?php print $slot->getSlotID() ?>">
+                                <?php foreach ($slotClassArray as $slotClass) :
+                                    /** @var SlotClass $slotClass */
+                                    ?>
+                                    <option <?php if ($slot->getSlotClassID() == $slotClass->getSlotClassID()) print "selected=\"selected\"" ?>
+                                        value="<?php print $slotClass->getSlotClassID() ?>"><?php print $slotClass->getSlotClassName() ?></option>
+                                <?php endforeach ?>
+                            </select>
                         </div>
                     <?php endforeach; ?>
                     <div><h5 style="padding-left: 200px">note: set class to -1 disable/reserve</h5></div>
@@ -219,12 +229,16 @@
                         <?php if (isset($allowedToCloseEvent) && $allowedToCloseEvent):
                             if ($event->getEventState() == 0) : ?>
                                 <td>
-                                    <a class="btn btn-xs btn-warning" id="close_event_<?php print $event->getEventID() . '_' .$i?>">Close this event</a>
+                                    <a class="btn btn-xs btn-warning"
+                                       id="close_event_<?php print $event->getEventID() . '_' . $i ?>">Close this
+                                        event</a>
                                 </td>
                             <?php endif;
                             if ($event->getEventState() == 1) : ?>
                                 <td>
-                                    <a class="btn btn-xs btn-warning" id="open_event_<?php print $event->getEventID() . '_' .$i?>">Open this event</a>
+                                    <a class="btn btn-xs btn-warning"
+                                       id="open_event_<?php print $event->getEventID() . '_' . $i ?>">Open this
+                                        event</a>
                                 </td>
                             <?php endif ?>
                         <?php endif ?>
@@ -259,7 +273,7 @@
             }
         });
 
-        $(".btn-warning").click(function(event){
+        $(".btn-warning").click(function (event) {
             event.preventDefault();
             var id = event.target.id;
             var result = id.split('_');
@@ -277,7 +291,7 @@
                 '<button id="openEventButton' + result[2] + '" type="submit" class="btn">Yes</button>' +
                 '</form>' +
                 '</div></div></div></div>');
-            $('#dataConfirmModal' + result[2]).modal({show:true});
+            $('#dataConfirmModal' + result[2]).modal({show: true});
         })
     });
 
