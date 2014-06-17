@@ -203,6 +203,22 @@ class DataService
         return $completeDrops;
     }
 
+    public function getEarliestDropsNotSoldByItemID($itemID, $num)
+    {
+        $dropService = new DropService();
+        $dropResults = $dropService->getEarliestDropsNotSoldByItemID($itemID, $num);
+        $completeDrops = $this->createDropArray($dropResults);
+        return $completeDrops;
+    }
+
+    public function getDropsByItemID($itemID)
+    {
+        $dropService = new DropService();
+        $dropResults = $dropService->getDropByAttributeValuesArray("drops.itemID", array($itemID));
+        $completeDrops = $this->createDropArray($dropResults);
+        return $completeDrops;
+    }
+
     public function getItemByItemID($itemID)
     {
         $itemDAO = new ItemDAO();
@@ -263,6 +279,13 @@ class DataService
     {
         /** @var User $user */
         $user->setPayout($payout);
+        return $this->updateUser($user);
+    }
+
+    public function increaseUserPayout($user, $payoutIncrement)
+    {
+        /** @var User $user */
+        $user->incrementPayout($payoutIncrement);
         return $this->updateUser($user);
     }
 

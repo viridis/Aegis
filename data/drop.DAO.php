@@ -155,4 +155,19 @@ class DropDAO
             throw new Exception('Failed to delete drop from event.');
         }
     }
+
+    public function getEarliestDropsNotSoldByItemID($itemID, $num)
+    {
+        $sqlDrops = "SELECT drops.*, items.name, items.aegisName
+                        FROM drops
+                        LEFT JOIN items ON items.itemID = drops.itemID
+                        WHERE drops.itemID = " . $itemID . " AND sold = 0
+                        ORDER BY drops.dropID
+                        LIMIT " . $num  . ";";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlDrops);
+        $stmt->execute();
+        $dropResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $dropResults;
+    }
 }

@@ -118,4 +118,8 @@ class User
         $this->gmt = $gmt;
     }
 
+    public function incrementPayout($payoutIncrement)
+    {
+        $this->payout += $payoutIncrement;
+    }
 }

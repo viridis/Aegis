@@ -83,6 +83,11 @@ class Drop
         $this->soldPrice = $soldPrice;
     }
 
+    public function setHoldingUserID($holdingUserID)
+    {
+        $this->holdingUserID = $holdingUserID;
+    }
+
     public function jsonSerialize()
     {
         return get_object_vars($this);

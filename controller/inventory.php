@@ -23,14 +23,16 @@ $featuredLinks = $pageService->generateFeaturedLinks(5);
 /** @var User $currentUser */
 $currentUser = $dataService->getUserByUserID($_SESSION["userID"]);
 $canEditInventory = false;
-if ($currentUser->getRoleLevel() == 10)
-{
+if ($currentUser->getRoleLevel() == 10) {
     $canEditInventory = true;
 }
 $collatedDropsArray = $inventoryService->getAllCollatedDrops();
 
-if (isset($_POST["itemID"])){
-    var_dump($_POST);
+if (isset($_POST["itemID"])) {
+    if ($canEditInventory) {
+        $inventoryService->processInventoryEdit();
+    }
     exit();
 }
+
 include("../view/inventory.view.php");

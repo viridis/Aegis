@@ -49,4 +49,10 @@ class DropService
         return $dropDAO->removeDropFromEvent($event->getEventID(), $item->getItemID());
     }
 
+    public function getEarliestDropsNotSoldByItemID($itemID, $num)
+    {
+        $dropDAO = new DropDAO();
+        return $dropDAO->getEarliestDropsNotSoldByItemID($itemID, $num);
+    }
+
 }
