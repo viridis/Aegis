@@ -78,7 +78,7 @@ CREATE TABLE `cooldowns` (
   CONSTRAINT `cooldowns_ibfk_3` FOREIGN KEY (`charID`) REFERENCES `characters` (`charID`),
   CONSTRAINT `cooldowns_ibfk_4` FOREIGN KEY (`eventTypeID`) REFERENCES `eventTypes` (`eventTypeID`),
   CONSTRAINT `cooldowns_ibfk_5` FOREIGN KEY (`eventTypeID`) REFERENCES `eventTypes` (`eventTypeID`)
-) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=122 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -99,10 +99,10 @@ CREATE TABLE `drops` (
   KEY `eventID` (`eventID`),
   KEY `holdingUserID` (`holdingUserID`),
   KEY `itemID` (`itemID`),
-  CONSTRAINT `drops_ibfk_3` FOREIGN KEY (`itemID`) REFERENCES `items` (`itemID`),
   CONSTRAINT `drops_ibfk_1` FOREIGN KEY (`eventID`) REFERENCES `events` (`eventID`),
-  CONSTRAINT `drops_ibfk_2` FOREIGN KEY (`holdingUserID`) REFERENCES `useraccount` (`userID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+  CONSTRAINT `drops_ibfk_2` FOREIGN KEY (`holdingUserID`) REFERENCES `useraccount` (`userID`),
+  CONSTRAINT `drops_ibfk_3` FOREIGN KEY (`itemID`) REFERENCES `items` (`itemID`)
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -208,7 +208,7 @@ CREATE TABLE `logs` (
   `result` varchar(10) NOT NULL,
   `timestamp` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=5536 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=5651 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -225,7 +225,7 @@ CREATE TABLE `navbarlinks` (
   `visibility` varchar(10) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `id` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -259,9 +259,9 @@ CREATE TABLE `slotClassRules` (
   PRIMARY KEY (`id`),
   KEY `slotClassID` (`slotClassID`),
   KEY `charClassID` (`charClassID`),
-  CONSTRAINT `slotClassRules_ibfk_2` FOREIGN KEY (`charClassID`) REFERENCES `charClasses` (`charClassID`),
-  CONSTRAINT `slotClassRules_ibfk_1` FOREIGN KEY (`slotClassID`) REFERENCES `slotClasses` (`slotClassID`)
-) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=latin1;
+  CONSTRAINT `slotClassRules_ibfk_1` FOREIGN KEY (`slotClassID`) REFERENCES `slotClasses` (`slotClassID`),
+  CONSTRAINT `slotClassRules_ibfk_2` FOREIGN KEY (`charClassID`) REFERENCES `charClasses` (`charClassID`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -275,7 +275,7 @@ CREATE TABLE `slotClasses` (
   `slotClassID` int(11) NOT NULL AUTO_INCREMENT,
   `slotClassName` varchar(50) NOT NULL,
   PRIMARY KEY (`slotClassID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -372,4 +372,4 @@ CREATE TABLE `users` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-06-11 11:07:53
+-- Dump completed on 2014-06-17  9:40:45
