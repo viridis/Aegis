@@ -7,14 +7,10 @@
 <body role="document">
 <?php include('partials/navbar.partial.view.php') ?>
 
-<?php if (isset($notification)): ?>
-    <div class="alert alert-<?php print($notification['type']); ?> alert-dismissable">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-        <p><strong><?php print($notification['title']); ?></strong> - <?php print($notification['message']); ?></p>
-    </div>
-<?php endif; ?>
+
 
 <div class="container" role="main">
+    <div id="alerts"></div>
     <h3>Inventory Listing</h3>
     <table class="table table-hover table-striped">
         <thead>
@@ -126,7 +122,14 @@
         var parsedResult = jQuery.parseJSON(result);
         $('#row' + parsedResult.itemID + '_colSold').html(parsedResult.totalSold);
         $('#row' + parsedResult.itemID + '_colSoldPrice').html(parsedResult.averageSoldPrice);
+        addAlert(parsedResult.alertMessage);
+    }
 
+    function addAlert(message) {
+        $('#alerts').append(
+            '<div class="alert alert-warning fade in">' +
+                '<button type="button" class="close" data-dismiss="alert">' +
+                '&times;</button>' + message + '</div>');
     }
 </script>
 </body>

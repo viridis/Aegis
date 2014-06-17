@@ -39,6 +39,7 @@ class InventoryService
         $sellAmount = $_POST["sellAmount"];
         $sellPrice = $_POST["sellPrice"];
         $soldDropsArray = $dataService->getEarliestDropsNotSoldByItemID($itemID, $sellAmount);
+        $successfulSells = 0;
         try {
             foreach ($soldDropsArray as $drop) {
                 /** @var Drop $drop */
@@ -55,12 +56,13 @@ class InventoryService
                 foreach ($shareHoldersIDArray as $userID) {
                     $this->increaseUserPayout($userID, $payoutPerUserID);
                 }
+                $successfulSells += 1;
             }
         } catch (Exception $e) {
             print $e->getMessage();
-            return false;
+            $this->printJSONResponseForFailedSell();
         }
-        $this->printJSONResponseForSuccessfulSell();
+        $this->printJSONResponseForSuccessfulSell($successfulSells);
         return true;
     }
 
@@ -85,7 +87,7 @@ class InventoryService
         return $shareHoldersIDArray;
     }
 
-    private function printJSONResponseForSuccessfulSell()
+    private function printJSONResponseForSuccessfulSell($successfulSells)
     {
         $dataService = new DataService();
         $dropsArray = $dataService->getDropsByItemID($_POST["itemID"]);
@@ -103,11 +105,22 @@ class InventoryService
         } else {
             $averageSoldPrice = 0;
         }
-        $result = array(
+        /** @var Item $item */
+        $item = $dataService->getItemByItemID($_POST["itemID"]);
+        $response = array(
             "itemID" => $_POST["itemID"],
             "totalSold" => $totalSold,
-            "averageSoldPrice" => $averageSoldPrice
+            "averageSoldPrice" => $averageSoldPrice,
+            "alertMessage" => "Successfully sold " . $successfulSells . " " . $item->getName() . " for " .$_POST["sellAmount"] . "z each!"
         );
-        print json_encode($result);
+        print json_encode($response);
+    }
+
+    private function printJSONResponseForFailedSell()
+    {
+        $response = array(
+            "alertMessage" => "Failed to sell itemID " . $_POST["itemID"]
+        );
+        print json_encode($response);
     }
 }
