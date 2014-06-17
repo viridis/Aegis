@@ -442,6 +442,24 @@ class DataService
         return current($completeSlotClasses);
     }
 
+    public function updateSlotClass($slotClass)
+    {
+        $slotClassService = new SlotClassService();
+        $slotClassService->updateSlotClass($slotClass);
+    }
+
+    public function createSlotClassRule($slotClassID, $charClassID)
+    {
+        $slotClassService = new SlotClassService();
+        $slotClassService->createSlotClassRule($slotClassID, $charClassID);
+    }
+
+    public function deleteSlotClassRule($slotClassID, $charClassID)
+    {
+        $slotClassService = new SlotClassService();
+        $slotClassService->deleteSlotClassRule($slotClassID, $charClassID);
+    }
+
     private function createSlotClassArray($slotClassResults, $slotClassRulesResults)
     {
         $result = array();

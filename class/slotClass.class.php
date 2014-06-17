@@ -41,4 +41,9 @@ class SlotClass
     {
         $this->allowedCharClassArray = $allowedCharClassArray;
     }
+
+    public function setSlotClassName($slotClassName)
+    {
+        $this->slotClassName = $slotClassName;
+    }
 }

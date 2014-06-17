@@ -26,4 +26,22 @@ class SlotClassService
         $slotClassDAO = new SlotClassDAO();
         return $slotClassDAO->getSlotClassRulesByAttributeValuesArray($attribute, $attributeValue);
     }
+
+    public function updateSlotClass($slotClass)
+    {
+        $slotClassDAO = new SlotClassDAO();
+        return $slotClassDAO->updateSlotClass($slotClass);
+    }
+
+    public function createSlotClassRule($slotClassID, $charClassID)
+    {
+        $slotClassDAO = new SlotClassDAO();
+        return $slotClassDAO->createSlotClassRule($slotClassID, $charClassID);
+    }
+
+    public function deleteSlotClassRule($slotClassID, $charClassID)
+    {
+        $slotClassDAO = new SlotClassDAO();
+        return $slotClassDAO->deleteSlotClassRule($slotClassID, $charClassID);
+    }
 }

@@ -5,6 +5,7 @@ require_once("../service/data.service.php");
 
 $pageService = new PageService();
 $manageSlotsService = new ManageSlotsService();
+$dataService = new DataService();
 
 if (!$pageService->authorizedUser(10)) {
     header("location: ./home.php");
@@ -19,5 +20,14 @@ if (isset($_SESSION["userID"])) {
 }
 $usefulLinks = $pageService->generateUsefulLinks(5);
 $featuredLinks = $pageService->generateFeaturedLinks(5);
+
+if(isset($_POST["id"]) && isset($_POST["value"]))
+{
+    $manageSlotsService->updateSlotClassRuleFromAJAX();
+    exit();
+}
+
+$charClassArray = $dataService->getAllCharClasses();
+$slotClassArray = $dataService->getAllSlotClasses();
 
 include("../view/manageSlots.view.php");
