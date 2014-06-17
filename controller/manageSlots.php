@@ -21,9 +21,13 @@ if (isset($_SESSION["userID"])) {
 $usefulLinks = $pageService->generateUsefulLinks(5);
 $featuredLinks = $pageService->generateFeaturedLinks(5);
 
-if(isset($_POST["id"]) && isset($_POST["value"]))
-{
+if (isset($_POST["id"]) && isset($_POST["value"])) {
     $manageSlotsService->updateSlotClassRuleFromAJAX();
+    exit();
+}
+
+if (isset($_POST["newSlotClassName"])) {
+    $manageSlotsService->createNewSlotClassFromAJAX();
     exit();
 }
 
