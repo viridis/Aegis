@@ -10,7 +10,7 @@ $participateService = new ParticipateService();
 if (!$pageService->authorizedUser(1)) {
     header("location: ./home.php");
 }
-$currentPageID = "Participate in Events";
+$currentPageID = "Participate";
 if (isset($_SESSION["userID"])) {
     $sessionUser = $pageService->whoIsSessionUser($_SESSION["userID"]);
     $navBarLinks = $pageService->generateNavLinksForUser($_SESSION["userID"]);

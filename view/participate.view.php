@@ -13,23 +13,23 @@
             <p><strong><?php print($notification['title']); ?></strong> - <?php print($notification['message']); ?></p>
         </div>
     <?php endif; ?>
-    <h3>Manage Drops from Events</h3>
+    <h3>Participate in Events</h3>
 
     <?php if ($canAdmin) : ?>
-    <form action="participate.php" method="get">
-        <div>
-            <input type="hidden" name="admin" value="true">
-            <button type="submit">Admin View</button>
-        </div>
-    </form>
+        <form action="participate.php" method="get">
+            <div>
+                <input type="hidden" name="admin" value="true">
+                <button type="submit">Admin View</button>
+            </div>
+        </form>
     <?php endif; ?>
 
     <div class="panel-group" id="eventPanels">
         <?php foreach ($eventContainer as $event) :
             /** @var Event $event */
             $eventDate = strtotime($event->getStartDate());
-            $displayEventDate = date('d M gA', $eventDate+($currentUser->getGMT()*3600));
-            $hoursToEvent = round(($eventDate-time())/3600,1);
+            $displayEventDate = date('d M gA', $eventDate + ($currentUser->getGMT() * 3600));
+            $hoursToEvent = round(($eventDate - time()) / 3600, 1);
             ?>
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -68,7 +68,7 @@
                                 <td><?php print $slotNum . ". "; ?></td>
                                 <td> <?php print $slot->getSlotClassName(); ?></td>
                                 <?php if (($slot->isTaken()) && ($slot->getTakenUserID() != $_SESSION["userID"]) && !$isAdmin): ?>
-                                <td><?php print $slot->getCharName() . " (" . $slot->getTakenCharClassName() . ")"    ; ?></td>
+                                <td><?php print $slot->getCharName() . " (" . $slot->getTakenCharClassName() . ")"; ?></td>
                             <?php else : ?>
 
                                 <td>
@@ -77,7 +77,8 @@
                                           method="post">
                                         <?php if ($slot->isTaken()) : ?>
                                         <Select name="change_slot_<?php print $slot->getSlotID(); ?>">
-                                            <option selected value="<?php print $slot->getTakenCharClassID() ?>"><?php print $slot->getCharName() . " (" . $slot->getTakenCharClassName() . ")" ?></option>
+                                            <option selected
+                                                    value="<?php print $slot->getTakenCharClassID() ?>"><?php print $slot->getCharName() . " (" . $slot->getTakenCharClassName() . ")" ?></option>
                                             <?php else : ?>
                                             <Select name="join_slot_<?php print $slot->getSlotID(); ?>">
                                                 <option selected value="">Choose character!</option>
@@ -112,6 +113,7 @@
                                                    value="Vacate Slot">
                                         </form>
                                     </td>
+                                <?php else : print "<td></td>"; ?>
                                 <?php endif; ?>
                                 </tr>
                             <?php endif; ?>
