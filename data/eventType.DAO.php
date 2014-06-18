@@ -28,7 +28,7 @@ class EventTypeDAO
     public function updateEventType($eventType)
     {
         /** @var EventType $eventType */
-        $sqlUpdate = "UPDATE TABLE eventTypes
+        $sqlUpdate = "UPDATE eventTypes
                         SET eventName = :eventName,
                         characterCooldown = :characterCooldown,
                         accountCooldown = :accountCooldown,
