@@ -10,7 +10,7 @@
 <div class="container" role="main">
     <h3>Manage Users</h3>
     Note: click to edit, enter to save
-    <table class="table table-bordered" id="eventTemplateTable">
+    <table class="table table-bordered" id="userTable">
         <thead>
         <tr>
             <th>Username</th>
@@ -31,6 +31,7 @@
                 <td class="edit" id="email_<?php print $user->getUserID();?>"><?php print $user->getEmail(); ?></td>
                 <td class="edit" id="mailChar_<?php print $user->getUserID();?>"><?php print $user->getMailChar(); ?></td>
                 <td class="edit" id="password_<?php print $user->getUserID();?>">Click to Change</td>
+                <td class="edit" id="forumAccount_<?php print $user->getUserID();?>"><?php print $user->getForumAccount();?></td>
             </tr>
         <?php endforeach; ?>
         </tbody>
@@ -45,7 +46,7 @@
                 </div>
                 <div class="col-sm-2">
                     <input type="button" class="btn btn-primary" value="Create"
-                           id="createUser" onclick="createUser(); return false;">
+                           id="createUserButton" onclick="createUser(); return false;">
                 </div>
             </div>
         </form>
@@ -56,7 +57,7 @@
 
 <?php include('partials/footer.partial.view.php') ?>
 
-<script>
+<script type="text/javascript">
     $(document).ready(function () {
         $('.edit').editable('users.php', {
             id: 'id',
@@ -70,7 +71,6 @@
     }
 
     function makeAddAjaxRequest(newUserLogin) {
-
         $.ajax({
             type: "POST",
             data: { newUserLogin: newUserLogin},
@@ -82,7 +82,15 @@
     }
 
     function processJSONUpdateTable(result) {
-        $('#eventTemplateTable tr:last').after(result);
+        $('#userTable tr:last').after(result);
+        makeEditable();
+    }
+
+    function makeEditable () {
+        $('.edit').editable('users.php', {
+            id: 'id',
+            name: 'value'
+        });
     }
 </script>
 </body>

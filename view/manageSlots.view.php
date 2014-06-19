@@ -80,6 +80,14 @@
 
     function processJSONUpdateTable(result) {
         $('#slotClassRuleTable tr:last').after(result);
+        makeEditable();
+    }
+
+    function makeEditable () {
+        $('.edit').editable('manageSlots.php', {
+            id: 'id',
+            name: 'value'
+        });
     }
 </script>
 </body>

@@ -21,13 +21,34 @@ class ManageUsersService
                 $this->updateMailCharFromAJAX($user, $newValue);
             } else if ($idArray[0] == "password") {
                 $this->updatePasswordFromAJAX($user, $newValue);
+            } else if ($idArray[0] == "forumAccount") {
+                $this->updateForumAccountFromAJAX($user, $newValue);
             }
         }
     }
 
     public function createUserByAJAX()
     {
-
+        if (!is_string($_POST["newUserLogin"])) {
+            return;
+        }
+        $dataService = new DataService();
+        try {
+            $user = new User(NULL, $_POST["newUserLogin"], "Not Set", "Not Set", "password", 0, "Not Set", 0, 0);
+            $userID = $dataService->createUser($user);
+        } catch (Exception $e) {
+            print $e->getMessage();
+            return;
+        }
+        /** @var User $newUser */
+        $newUser = $dataService->getUserByUserID($userID);
+        print '<tr><td>' . $newUser->getUserLogin() . '</td>';
+        print '<td class="edit" id="roleLevel_' . $newUser->getUserID() . '">' . $newUser->getRoleLevel() . '</td>';
+        print '<td class="edit" id="GMT_' . $newUser->getUserID() . '">' . $newUser->getGMT() . '</td>';
+        print '<td class="edit" id="email_' . $newUser->getUserID() . '">' . $newUser->getEmail() . '</td>';
+        print '<td class="edit" id="mailChar_' . $newUser->getUserID() . '">' . $newUser->getMailChar() . '</td>';
+        print '<td class="edit" id="password_' . $newUser->getUserID() . '">Click to Change</td>';
+        print '<td class="edit" id="forumAccount_' . $newUser->getUserID() . '">' . $newUser->getForumAccount() . '</td></tr>';
     }
 
     private function updateRoleLevelFromAJAX($user, $roleLevel)
@@ -164,6 +185,36 @@ class ManageUsersService
 
     private function validPassword($password)
     {
+        if (empty($password)) {
+            return false;
+        }
+        return true;
+    }
+
+    private function updateForumAccountFromAJAX($user, $forumAccount)
+    {
+        if (!$this->validForumAccount($forumAccount)) {
+            return;
+        }
+        /** @var User $user */
+        $dataService = new DataService();
+        $user->setForumAccount($forumAccount);
+        try {
+            $dataService->updateUser($user);
+        } catch (Exception $e) {
+            print $e->getMessage();
+            return;
+        }
+        /** @var User $updatedUser */
+        $updatedUser = $dataService->getUserByUserID($user->getUserID());
+        print $updatedUser->getForumAccount();
+    }
+
+    private function validForumAccount($forumAccount)
+    {
+        if (empty($forumAccount)) {
+            return false;
+        }
         return true;
     }
 }

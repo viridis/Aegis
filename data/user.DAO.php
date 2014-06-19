@@ -59,7 +59,7 @@ class UserDAO
         $logDAO = new LogDAO();
         if ($stmt->execute()) { //1 if success, 0 if fail
             $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'SUCCESS');
-            return true;
+            return $dbh->lastInsertId();
         }
         $logDAO->logPreparedStatement('INSERT', $stmt, $binds, 'FAILED');
         throw new Exception('Failed to add user. (' . $userLogin . ')');

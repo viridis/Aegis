@@ -56,7 +56,7 @@ class ManageSlotsService
         print '<tr><td class="edit" id="slotClassName_' . $newSlotClass->getSlotClassID() . '">' . $newSlotClass->getSlotClassName() . '</td>';
         foreach ($charClassArray as $charClass) {
             print '<td class="edit" id="';
-            print 'slotClassRule_' . $newSlotClass->getSlotClassID() . '_' . $charClass->getCharClassID() . '\">';
+            print 'slotClassRule_' . $newSlotClass->getSlotClassID() . '_' . $charClass->getCharClassID() . '">';
             isset($slotClass->getAllowedCharClassArray()[$charClass->getCharClassID()]) ? print 'Y' : print  'N';
             print '</td>';
         }

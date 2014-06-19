@@ -132,4 +132,9 @@ class User
     {
         $this->email = $email;
     }
+
+    public function setForumAccount($forumAccount)
+    {
+        $this->forumAccount = $forumAccount;
+    }
 }

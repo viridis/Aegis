@@ -76,6 +76,14 @@
 
     function processJSONUpdateTable(result) {
         $('#eventTemplateTable tr:last').after(result);
+        makeEditable();
+    }
+
+    function makeEditable () {
+        $('.edit').editable('manageEventTemplate.php', {
+            id: 'id',
+            name: 'value'
+        });
     }
 </script>
 </body>
