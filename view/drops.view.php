@@ -3,7 +3,6 @@
 <head>
     <title>LandingsPage</title>
     <?php include('partials/headers.partial.view.php'); ?>
-    <script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
     <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
