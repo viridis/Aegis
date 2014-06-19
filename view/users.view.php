@@ -29,7 +29,7 @@
                 <td class="edit" id="roleLevel_<?php print $user->getUserID();?>"><?php print $user->getRoleLevel();?></td>
                 <td class="edit" id="GMT_<?php print $user->getUserID();?>"><?php print $user->getGMT(); ?></td>
                 <td class="edit" id="email_<?php print $user->getUserID();?>"><?php print $user->getEmail(); ?></td>
-                <td class="edit" id="mailChar<?php print $user->getUserID();?>"><?php print $user->getMailChar(); ?></td>
+                <td class="edit" id="mailChar_<?php print $user->getUserID();?>"><?php print $user->getMailChar(); ?></td>
                 <td class="edit" id="password_<?php print $user->getUserID();?>">Click to Change</td>
             </tr>
         <?php endforeach; ?>
@@ -58,7 +58,7 @@
 
 <script>
     $(document).ready(function () {
-        $('.edit').editable('manageEventTemplate.php', {
+        $('.edit').editable('users.php', {
             id: 'id',
             name: 'value'
         });

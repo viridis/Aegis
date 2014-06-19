@@ -8,6 +8,7 @@ if (!$_SESSION["userID"]) {
 }
 $pageservice = new PageService();
 $dataService = new DataService();
+$manageUsersService = new ManageUsersService();
 $currentPageID = "Manage Users";
 if (isset($_SESSION["userID"])) {
     $sessionUser = $pageservice->whoIsSessionUser($_SESSION["userID"]);
@@ -18,7 +19,15 @@ if (isset($_SESSION["userID"])) {
 $usefulLinks = $pageservice->generateUsefulLinks(5);
 $featuredLinks = $pageservice->generateFeaturedLinks(5);
 
+if (isset($_POST["id"]) && isset($_POST["value"])) {
+    $manageUsersService->updateUserByAJAX();
+    exit();
+}
 
+if (isset($_POST["newUserLogin"])){
+    $manageUsersService->createUserByAJAX();
+    exit();
+}
 
-$userContainer  = $dataService->getAllUserInfo();
+$userContainer = $dataService->getAllUserInfo();
 include("../view/users.view.php");

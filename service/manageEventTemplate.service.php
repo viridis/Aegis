@@ -21,12 +21,6 @@ class ManageEventTemplateService
             } else if ($idArray[0] == "numSlots") {
                 $this->updateNumSlotsFromAJAX($eventType, $newValue);
             }
-            try {
-                $dataService->updateEventType($eventType);
-            } catch (Exception $e) {
-                print $e->getMessage();
-                return;
-            }
         }
     }
 

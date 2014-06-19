@@ -122,4 +122,14 @@ class User
     {
         $this->payout += $payoutIncrement;
     }
+
+    public function setRoleLevel($roleLevel)
+    {
+        $this->roleLevel = $roleLevel;
+    }
+
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
 }
