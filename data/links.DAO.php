@@ -48,7 +48,7 @@ class NavBarLinksDAO
                 ";
             $stmt = $dbh->prepare($sql);
         } else {
-            $sql = "SELECT l.id, l.name, l.location
+            $sql = "SELECT l.id, l.name, l.location, l.visibility
                     FROM navbarlinks l
                     JOIN useraccount u on u.roleLevel >= visibility
                     WHERE u.userID = :userid
@@ -60,7 +60,9 @@ class NavBarLinksDAO
         $stmt->execute();
         $resultSet = $stmt->fetchAll();
         foreach ($resultSet as $row) {
+            /** @var Links $link */
             $link = LINKS::create($row["id"], $row["name"], $row["location"]);
+            $link->setVisibility($row["visibility"]);
             array_push($result, $link);
         }
         return $result;

@@ -34,5 +34,4 @@ if (isset($_POST["itemID"])) {
     }
     exit();
 }
-
 include("../view/inventory.view.php");

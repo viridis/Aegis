@@ -13,19 +13,37 @@
             <div class="navbar-collapse collapse navbar-right">
                 <ul class="nav navbar-nav">
                     <?php
-                    foreach ($navBarLinks as $link) {
-                        if (strtoupper($currentPageID) == strtoupper($link->getName())) {
-                            print('<li class="active"><a href="' . $link->getLocation() . '">' . $link->getName() . '</a></li>');
-                        } else {
-                            print('<li><a href="' . $link->getLocation() . '">' . $link->getName() . '</a></li>');
-                        }
-                    }
-                    ?>
+                    $manageLinks = array();
+                    foreach ($navBarLinks as $link) :
+                        /** @var Links $link */
+                        if ($link->getVisibility() != 10) :
+                            if (strtoupper($currentPageID) == strtoupper($link->getName())) {
+                                print('<li class="active"><a href="' . $link->getLocation() . '">' . $link->getName() . '</a></li>');
+                            } else {
+                                print('<li><a href="' . $link->getLocation() . '">' . $link->getName() . '</a></li>');
+                            }
+                        else :
+                            array_push($manageLinks, $link);
+                        endif;
+                    endforeach;
+                    if (sizeof($manageLinks) > 0) : ?>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                Manage<b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <?php foreach ($manageLinks as $link) :
+                                    print('<li><a href="' . $link->getLocation() . '">' . $link->getName() . '</a></li>');
+                                endforeach; ?>
+                            </ul>
+                        </li>
+                    <?php endif; ?>
                     <?php if (!isset($_SESSION["userID"])): ?>
                         <form class="navbar-form navbar-left" action="home.php?action=login" method="post"
                               role="Sign In">
                             <div class="form-group">
-                                <input name="name" id="name" type="text" class="form-control" placeholder="Username">
+                                <input name="name" id="name" type="text" class="form-control"
+                                       placeholder="Username">
                                 <input name="password" id="password" type="password" class="form-control"
                                        placeholder="Password">
                             </div>

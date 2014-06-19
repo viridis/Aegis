@@ -30,10 +30,13 @@ class LINKS
         return $this->location;
     }
 
-    public function getWeight()
+    public function getVisibility()
     {
         return $this->visibility;
     }
-}
 
-?>
+    public function setVisibility($visibility)
+    {
+        $this->visibility = $visibility;
+    }
+}
