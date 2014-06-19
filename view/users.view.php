@@ -19,6 +19,7 @@
             <th>Email</th>
             <th>Mail Char</th>
             <th>Password</th>
+            <th>Forum Account</th>
         </tr>
         </thead>
         <tbody>
