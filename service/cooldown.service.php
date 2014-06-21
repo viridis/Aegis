@@ -52,4 +52,10 @@ class CooldownService
         $cooldownDAO = new CooldownDAO();
         return $cooldownDAO->getCooldownByUserID($userID);
     }
+
+    public function getCooldownsByAttributeValuesArray($attribute, $attributeValuesArray)
+    {
+        $cooldownDAO = new CooldownDAO();
+        return $cooldownDAO->getCooldownsByAttributeValuesArray($attribute, $attributeValuesArray);
+    }
 }

@@ -40,4 +40,10 @@ class GameAccountService
         return $gameAccountDAO->getGameAccountByAccountID($accountID);
     }
 
+    public function getGameAccountByAttributeValuesArray($attribute, $attributeValuesArray)
+    {
+        $gameAccountDAO = new GameAccountDAO();
+        return $gameAccountDAO->getGameAccountByAttributeValuesArray($attribute, $attributeValuesArray);
+    }
+
 }

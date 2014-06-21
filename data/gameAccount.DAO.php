@@ -108,4 +108,23 @@ class GameAccountDAO
         $gameAccountResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $gameAccountResults;
     }
+
+    public function getGameAccountByAttributeValuesArray($attribute, $attributeValuesArray)
+    {
+        $sqlGameAccounts = "SELECT *
+                        FROM gameaccounts
+                        WHERE " . $attribute . " = '" . $attributeValuesArray[0] . "'";
+        if (count($attributeValuesArray) > 1) {
+            array_shift($attributeValue);
+            foreach ($attributeValue as $value) {
+                $sqlGameAccounts .= "OR " . $attribute . " = '" . $value . "'";
+            }
+        }
+        $sqlGameAccounts .= "ORDER BY userID DESC;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlGameAccounts);
+        $stmt->execute();
+        $gameAccountResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $gameAccountResults;
+    }
 }

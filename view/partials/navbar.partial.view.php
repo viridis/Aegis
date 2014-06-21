@@ -49,6 +49,10 @@
                             </div>
                             <button type="submit" class="btn btn-success">Sign In</button>
                         </form>
+
+                        <form class="navbar-form navbar-left" action="register.php" method="post" role="Sign Up">
+                            <button type="submit" class="btn btn-primary">Sign Up</button>
+                        </form>
                     <?php else: ?>
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">

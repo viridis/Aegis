@@ -127,7 +127,26 @@ class UserDAO
         $stmt->bindParam(':userPassword', $userPassword);
         $stmt->execute();
         $userAccountResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        if (isset($userAccountResults[0]))
-            return $userAccountResults[0]["userID"];
+        return current($userAccountResults[0])["userID"];
+    }
+
+    public function getUserByAttributeValuesArray($attribute, $attributeValuesArray)
+    {
+        $sqlUsers = "SELECT *
+                        FROM useraccount
+                        WHERE " . $attribute . " = '" . $attributeValuesArray[0] . "'";
+        if (count($attributeValuesArray) > 1) {
+            array_shift($attributeValue);
+            foreach ($attributeValue as $value) {
+                $sqlUsers .= "OR " . $attribute . " = '" . $value . "'";
+            }
+        }
+        $sqlUsers .= "ORDER BY userID DESC;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlUsers);
+        $stmt->execute();
+        $userResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        var_dump($sqlUsers);
+        return $userResults;
     }
 }

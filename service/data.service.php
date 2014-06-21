@@ -315,6 +315,32 @@ class DataService
         return $userService->createUser($user);
     }
 
+    public function getUserByUserLogin($userLogin)
+    {
+        $userService = new UserService();
+        $userResults = $userService->getUserByAttributeValuesArray("userLogin", array($userLogin));
+        $userArray = $this->createUserArray($userResults);
+        $userIDArray = array();
+        foreach ($userArray as $user) {
+            /** @var User $user */
+            array_push($userIDArray, $user->getUserID());
+        }
+        if (sizeof($userIDArray) == 0) {
+            return NULL;
+        }
+        $gameAccountService = new GameAccountService();
+        $gameAccountResults = $gameAccountService->getGameAccountByAttributeValuesArray("userID", $userIDArray);
+        $gameAccountArray = $this->createGameAccountArray($gameAccountResults);
+        $characterService = new CharacterService();
+        $characterResults = $characterService->getCharactersByAttributeValuesArray("userID", $userIDArray);
+        $characterArray = $this->createCharacterArray($characterResults);
+        $cooldownService = new CooldownService();
+        $cooldownResults = $cooldownService->getCooldownsByAttributeValuesArray("userID", $userIDArray);
+        $cooldownArray = $this->createCooldownArray($cooldownResults);
+        $completeUsers = $this->createCompleteUserArray($userArray, $gameAccountArray, $characterArray, $cooldownArray);
+        return current($completeUsers);
+    }
+
     public function createGameAccount($gameAccount)
     {
         $gameAccountService = new GameAccountService();

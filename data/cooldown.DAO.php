@@ -164,4 +164,23 @@ class CooldownDAO
         $cooldownResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
         return $cooldownResults;
     }
+
+    public function getCooldownsByAttributeValuesArray($attribute, $attributeValuesArray)
+    {
+        $sqlCooldowns = "SELECT *
+                        FROM cooldowns
+                        WHERE (" . $attribute . " = '" . $attributeValuesArray[0] . "'";
+        if (count($attributeValuesArray) > 1) {
+            array_shift($attributeValuesArray);
+            foreach ($attributeValuesArray as $value) {
+                $sqlCooldowns .= "OR " . $attribute . " = '" . $value . "'";
+            }
+        }
+        $sqlCooldowns .= ") AND endDate > now() ORDER BY startDate DESC;";
+        $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
+        $stmt = $dbh->prepare($sqlCooldowns);
+        $stmt->execute();
+        $cooldownResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return $cooldownResults;
+    }
 }

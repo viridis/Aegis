@@ -32,4 +32,10 @@ class UserService
         $userDAO = new UserDAO();
         return $userDAO->getUserIDByLoginAndPassword($userLogin, $userPassword);
     }
+
+    public function getUserByAttributeValuesArray($attribute, $attributeValuesArray)
+    {
+        $userDAO = new UserDAO();
+        return $userDAO->getUserByAttributeValuesArray($attribute, $attributeValuesArray);
+    }
 }
