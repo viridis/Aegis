@@ -127,7 +127,8 @@ class UserDAO
         $stmt->bindParam(':userPassword', $userPassword);
         $stmt->execute();
         $userAccountResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        return current($userAccountResults[0])["userID"];
+        $userAccount = current($userAccountResults);
+        return $userAccount["userID"];
     }
 
     public function getUserByAttributeValuesArray($attribute, $attributeValuesArray)
