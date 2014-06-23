@@ -112,6 +112,9 @@ class ParticipateService
         /** @var Slot $slot */
         $slot = $dataService->getSlotBySlotID($slotID);
         $event = $dataService->getEventByEventID($slot->getEventID());
+        if ($character == NULL){
+            return false;
+        }
         if (!$this->isOpenEvent($event)){
             return false;
         }
