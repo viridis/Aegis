@@ -28,6 +28,34 @@ class RegisterService
             );
             $report[] = $reportEntry;
         }
+
+        if (!$this->isValidEmail($registrationData['email'])) {
+            $reportEntry = array(
+                'Status' => 'Error',
+                'Message' => 'Email is not valid.'
+            );
+            $report[] = $reportEntry;
+        }
+
+        if (!$this->isValidTimezone($registrationData['GMT'])) {
+            $reportEntry = array(
+                'Status' => 'Error',
+                'Message' => 'Timezone is not valid.'
+            );
+            $report[] = $reportEntry;
+        }
+
+        if (sizeof($report) == 0) {
+            try {
+                $this->registerNewUser($registrationData);
+            } catch (Exception $e) {
+                $reportEntry = array(
+                    'Status' => 'Error',
+                    'Message' => 'Failed to register user'
+                );
+                $report[] = $reportEntry;
+            }
+        }
         return $report;
     }
 
@@ -37,7 +65,7 @@ class RegisterService
             if ($reportEntry['Status'] == 'Error') {
                 $feedback['type'] = 'danger';
                 $feedback['title'] = 'Error';
-                if (!isset($feedback['message'])){
+                if (!isset($feedback['message'])) {
                     $feedback['message'] = '';
                 }
                 $feedback['message'] .= $reportEntry['Message'] . ' ';
@@ -51,6 +79,31 @@ class RegisterService
             );
         }
         return $feedback;
+    }
+
+    private function registerNewUser($registrationData)
+    {
+        $dataService = new DataService();
+        $user = new User(NULL, $registrationData['name'], $registrationData['email'], $registrationData['mailChar'], md5($registrationData['password']),
+            0, $registrationData['aegisName'], 0, $registrationData['GMT']);
+        $dataService->createUser($user);
+    }
+
+    private function isValidEmail($email)
+    {
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return false;
+        }
+
+        return true;
+    }
+    private function isValidTimeZone($GMT)
+    {
+        if (!is_numeric($GMT)) {
+            return false;
+        }
+
+        return true;
     }
 
     private function isValidName($name)
@@ -70,8 +123,7 @@ class RegisterService
             return false;
         }
 
-        if (is_null($existingUser))
-        {
+        if (is_null($existingUser)) {
             return false;
         } else {
             return true;

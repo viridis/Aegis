@@ -146,7 +146,6 @@ class UserDAO
         $stmt = $dbh->prepare($sqlUsers);
         $stmt->execute();
         $userResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        var_dump($sqlUsers);
         return $userResults;
     }
 }

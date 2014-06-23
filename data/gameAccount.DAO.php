@@ -115,8 +115,8 @@ class GameAccountDAO
                         FROM gameaccounts
                         WHERE " . $attribute . " = '" . $attributeValuesArray[0] . "'";
         if (count($attributeValuesArray) > 1) {
-            array_shift($attributeValue);
-            foreach ($attributeValue as $value) {
+            array_shift($attributeValuesArray);
+            foreach ($attributeValuesArray as $value) {
                 $sqlGameAccounts .= "OR " . $attribute . " = '" . $value . "'";
             }
         }
