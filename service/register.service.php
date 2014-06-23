@@ -85,7 +85,7 @@ class RegisterService
     {
         $dataService = new DataService();
         $user = new User(NULL, $registrationData['name'], $registrationData['email'], $registrationData['mailChar'], md5($registrationData['password']),
-            0, $registrationData['aegisName'], 0, $registrationData['GMT']);
+            1, $registrationData['aegisName'], 0, $registrationData['GMT']);
         $dataService->createUser($user);
     }
 

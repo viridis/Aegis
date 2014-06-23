@@ -1,71 +1,54 @@
 <?php
 require_once("../service/page.service.php");
-require_once("../service/user.service.php");
+require_once("../service/data.service.php");
+require_once("../service/settings.service.php");
 
-$pageservice = new PageService();
+$pageService = new PageService();
+$dataService = new DataService();
+$settingsService = new SettingsService();
+
 $currentPageID = "Settings";
 if (isset($_SESSION["userID"])) {
-    $sessionUser = $pageservice->whoIsSessionUser($_SESSION["userID"]);
-    $navbarlinks = $pageservice->generateNavLinksForUser($_SESSION["userID"]);
+    $sessionUser = $pageService->whoIsSessionUser($_SESSION["userID"]);
+    $navBarLinks = $pageService->generateNavLinksForUser($_SESSION["userID"]);
 } else {
     header("location: ./home.php");
 }
 
-$userservice = new UserService();
-if(isset($_POST) && isset($_GET['action']) && $_GET['action'] == 'edit'){
-    try {
-        $user = $userservice->editUser($sessionUser->getId(), $_POST['mailname'], $_POST['forumname'], $_POST['email']);
+if (isset($_GET["action"]) && $_GET["action"] == "edit")
+{
+    if ($settingsService->updateUserInfo()){
         $notification = array(
             'type' => 'success',
-            'title' => 'Confirmation',
-            'message' => 'Successfully changed user. (' . $sessionUser->getName() . ')',
-        );
-    } catch (Exception $e) {
-        $notification = array(
-            'type' => 'danger',
-            'title' => 'Error',
-            'message' => $e->getMessage(),
-        );
-    }
-}
-
-if(isset($_POST) && isset($_GET['action']) && $_GET['action'] == 'password'){
-    if($_POST['newpassword'] != $_POST['confirmpassword']){
-        $notification = array(
-            'type' => 'danger',
-            'title' => 'Error',
-            'message' => 'New Passwords don\'t match.',
+            'title' => 'Success',
+            'message' => 'Successfully updated your details.',
         );
     } else {
-        $userservice = new UserService();
-        $user = $userservice->getUserIDByLoginAndPassword($sessionUser->getName(), md5($_POST['oldpassword']));
-        if ($user) {
-            try {
-                $user = $userservice->editPasswordOfUser($sessionUser->getId(), md5($_POST['newpassword']));
-                $notification = array(
-                    'type' => 'success',
-                    'title' => 'Confirmation',
-                    'message' => 'Successfully changed password.',
-                );
-            } catch (Exception $e) {
-                $notification = array(
-                    'type' => 'danger',
-                    'title' => 'Error',
-                    'message' => $e->getMessage(),
-                );
-            }
-        } else {
-            $notification = array(
-                'type' => 'danger',
-                'title' => 'Error',
-                'message' => 'Wrong password.',
-            );
-        }
+        $notification = array(
+            'type' => 'danger',
+            'title' => 'Error',
+            'message' => 'Failed to update details.',
+        );
     }
 }
 
-$usefulllinks = $pageservice->generateUsefulLinks(5);
-$featuredlinks = $pageservice->generateFeaturedLinks(5);
+if (isset($_GET["action"]) && $_GET["action"] == "password")
+{
+    if ($settingsService->updateUserPassword()){
+        $notification = array(
+            'type' => 'success',
+            'title' => 'Success',
+            'message' => 'Successfully updated your password.',
+        );
+    } else {
+        $notification = array(
+            'type' => 'danger',
+            'title' => 'Error',
+            'message' => 'Failed to update your password.',
+        );
+    }
+}
 
-$user = $userservice->getUserByUserID($_SESSION["userID"]);
+
+$user = $dataService->getUserByUserID($_SESSION["userID"]);
 include("../view/settings.view.php");

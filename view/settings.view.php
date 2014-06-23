@@ -22,23 +22,15 @@
                 <label for="name" class="col-sm-2 control-label">Username</label>
 
                 <div class="col-sm-4">
-                    <?php print($user->getName()); ?>
+                    <?php print($user->getUserLogin()); ?>
                 </div>
             </div>
             <div class="form-group">
-                <label for="mailname" class="col-sm-2 control-label">Mail Name (ingame)</label>
+                <label for="mailChar" class="col-sm-2 control-label">Mail Name (ingame)</label>
 
                 <div class="col-sm-4">
-                    <input type="text" class="form-control" id="mailname" name="mailname"
-                           placeholder="Ingame Mailname" value="<?php print($user->getMailName()) ?>">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="forumname" class="col-sm-2 control-label">Forum Name</label>
-
-                <div class="col-sm-4">
-                    <input type="text" class="form-control" id="forumname" name="forumname"
-                           placeholder="Forum Name" value="<?php print($user->getForumName()) ?>">
+                    <input type="text" class="form-control" id="mailChar" name="mailChar"
+                           placeholder="Ingame Mailname" value="<?php print($user->getMailChar()) ?>">
                 </div>
             </div>
             <div class="form-group">
@@ -47,6 +39,23 @@
                 <div class="col-sm-4">
                     <input type="text" class="form-control" id="email" name="email"
                            placeholder="E-mail Address" value="<?php print($user->getEmail()) ?>">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="GMT" class="col-sm-2 control-label">Timezone GMT</label>
+
+                <div class="col-sm-2">
+                    <select class="form-control" id="GMT" name="GMT">
+                        <?php for ($i = -12;
+                                   $i <= 13;
+                                   $i++) :
+                            print "<option value=" . $i;
+                            if ($user->getGMT() == $i) {
+                                print " selected";
+                            }
+                            print ">" . $i . "</option>";
+                        endfor; ?>
+                    </select>
                 </div>
             </div>
             <div class="form-group">
@@ -60,7 +69,7 @@
     <div class="jumbotron">
         <form action="settings.php?action=password" method="post" class="form-horizontal" role="form">
             <div class="form-group">
-                <label for="mailname" class="col-sm-2 control-label">Old Password</label>
+                <label for="oldpassword" class="col-sm-2 control-label">Old Password</label>
 
                 <div class="col-sm-4">
                     <input type="password" class="form-control" id="oldpassword" name="oldpassword"
