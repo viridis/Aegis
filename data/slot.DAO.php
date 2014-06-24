@@ -47,7 +47,7 @@ class SlotDAO
     public function createSlot($slot)
     {
         /** @var Slot $slot */
-        $sqlInsert = "INSERT INTO slots VALUES(:eventID, NULL, :slotClassID, FALSE, NULL, NULL);";
+        $sqlInsert = "INSERT INTO slots VALUES(:eventID, NULL, :slotClassID, FALSE, NULL, NULL, NULL);";
         $dbh = new PDO(DBconfig::$DB_CONNSTRING, DBConfig::$DB_USERNAME, DBConfig::$DB_PASSWORD);
         $stmt = $dbh->prepare($sqlInsert);
         $eventID = $slot->getEventID();
